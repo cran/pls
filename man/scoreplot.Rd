@@ -1,4 +1,5 @@
-%% $Id: scoreplot.Rd 7 2005-03-29 15:03:10Z  $
+%% $Id: scoreplot.Rd 22 2005-04-02 11:44:04Z bhm $
+\encoding{latin1}
 \name{scoreplot}
 \alias{scoreplot}
 \alias{plot.scores}

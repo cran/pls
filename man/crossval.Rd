@@ -1,4 +1,5 @@
-%% $Id: crossval.Rd 3 2005-03-29 14:40:56Z  $
+%% $Id: crossval.Rd 22 2005-04-02 11:44:04Z bhm $
+\encoding{latin1}
 \name{crossval}
 \alias{crossval}
 \title{Cross-validation of PLSR and PCR models}

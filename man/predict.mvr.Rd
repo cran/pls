@@ -1,4 +1,5 @@
-%% $Id: predict.mvr.Rd 2 2005-03-29 14:31:42Z  $
+%% $Id: predict.mvr.Rd 22 2005-04-02 11:44:04Z bhm $
+\encoding{latin1}
 \name{predict.mvr}
 \alias{predict.mvr}
 \title{Predict Method for PLSR and PCR}

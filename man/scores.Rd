@@ -1,4 +1,5 @@
-%% $Id: scores.Rd 19 2005-04-01 10:22:38Z bhm $
+%% $Id: scores.Rd 24 2005-04-02 12:15:03Z bhm $
+\encoding{latin1}
 \name{scores}
 \alias{scores}
 \alias{scores.prcomp}

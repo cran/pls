@@ -1,4 +1,5 @@
-%% $Id: plot.mvr.Rd 2 2005-03-29 14:31:42Z  $
+%% $Id: plot.mvr.Rd 22 2005-04-02 11:44:04Z bhm $
+\encoding{latin1}
 \name{plot.mvr}
 \alias{plot.mvr}
 \title{Plot Method for MVR objects}
