@@ -1,0 +1,24 @@
+R port by Kjetil Halvorsen
+Note that NO changes have been made in the S-Plus code. 
+
+
+--- Original readme below this line ---
+Splus functions for performing univariate 
+Partial Least Squares Regression.
+------------------------------------------------
+To install the software:
+
+sh pls.sh
+# pick one of the following
+S < pls1.s
+#Splus < pls1.s
+--------------------------
+
+Please send bug reports to:
+Mike Denham             snsdenhm@reading.ac.uk
++44 734 318 914		(FAX) +44 734 753169
+Department of Applied Statistics, Harry Pitt Building
+University of Reading, Whiteknights Road, PO Box 240
+Reading RG6 2FN, United Kingdom.
+
+
