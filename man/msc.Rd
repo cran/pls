@@ -1,5 +1,4 @@
-%% $Id: msc.Rd 98 2006-10-03 21:21:48Z bhm $
-\encoding{latin1}
+%% $Id: msc.Rd 6 2005-03-29 14:56:18Z  $
 \name{msc}
 \alias{msc}
 \alias{predict.msc}
@@ -24,7 +23,7 @@ msc(X, reference = NULL)
   \item{\dots}{other arguments.  Currently ignored.}
 }
 \details{
-  \code{makepredictcall.msc} is an internal utility function; it is not
+  \code{makepredictcall.msc} is an internal utility function; it is noe
   meant for interactive use.  See \code{\link{makepredictcall}} for details.
 }
 \value{
@@ -34,22 +33,18 @@ msc(X, reference = NULL)
     "matrix")}.  For \code{predict.msc}, the \code{"reference"}
   attribute of \code{object} is used as reference spectre.
 }
-\references{
-  Martens, H., Næs, T. (1989) \emph{Multivariate calibration.}
-  Chichester: Wiley.
-}
+\references{Mar/Næs}
 \author{Bjørn-Helge Mevik and Ron Wehrens}
-\seealso{\code{\link{mvr}}, \code{\link{pcr}}, \code{\link{plsr}},
-  \code{\link{stdize}}}
+\seealso{\code{\link{mvr}}, \code{\link{pcr}}, \code{\link{plsr}}}
 \examples{
-data(yarn)
+data(NIR)
 ## Direct correction:
-Ztrain <- msc(yarn$NIR[yarn$train,])
-Ztest <- predict(Ztrain, yarn$NIR[!yarn$train,])
+Ztrain <- msc(NIR$X[NIR$train,])
+Ztest <- predict(Ztrain, NIR$X[!NIR$train,])
 
 ## Used in formula:
-mod <- plsr(density ~ msc(NIR), ncomp = 6, data = yarn[yarn$train,])
-pred <- predict(mod, newdata = yarn[!yarn$train,]) # Automatically scatter corrected
+mod <- plsr(y ~ msc(X), ncomp = 6, data = NIR[NIR$train,])
+pred <- predict(mod, newdata = NIR[!NIR$train,]) # Automatically scatter correction
 }
 \keyword{regression}
 \keyword{multivariate}

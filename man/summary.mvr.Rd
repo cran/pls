@@ -1,5 +1,4 @@
-%% $Id: summary.mvr.Rd 92 2006-09-20 17:44:25Z bhm $
-\encoding{latin1}
+%% $Id: summary.mvr.Rd 11 2005-03-31 10:11:07Z bhm $
 \name{summary.mvr}
 \alias{summary.mvr}
 \alias{print.mvr}
@@ -16,16 +15,16 @@
 }
 \arguments{
   \item{x, object}{an \code{mvr} object}
-  \item{what}{one of \code{"all"}, \code{"validation"} or \code{"training"}}
+  \item{what}{one of \samp{"all"}, \samp{"validation"} or \samp{"training"}}
   \item{digits}{integer.  Minimum number of significant digits in the
     output.  Default is 4.}
   \item{print.gap}{Integer.  Gap between coloumns of the printed tables.}
   \item{\dots}{Other arguments sent to underlying methods.}
 }
 \details{
-  If \code{what} is \code{"training"}, the explained variances are
-  given; if it is \code{"validation"}, the cross-validated RMSEPs (if
-  available) are given; if it is \code{"all"}, both are given.
+  If \code{what} equals \samp{"training"}, the explained variances are
+  given; if it equals "validation", the cross-validated RMSEPs (if
+  available) are given; if it equals \samp{"all"}, both are given.
 }
 \value{
   \code{print.mvr} and \code{print.mvrVal} return the object invisibly.
@@ -34,8 +33,8 @@
 \seealso{\code{\link{mvr}}, \code{\link{pcr}},
   \code{\link{plsr}}, \code{\link{RMSEP}}, \code{\link{MSEP}}}
 \examples{
-data(yarn)
-nir.mvr <- mvr(density ~ NIR, ncomp = 8, validation = "LOO", data = yarn)
+data(NIR)
+nir.mvr <- mvr(y ~ X, ncomp = 8, CV = TRUE, length.seg = 1, data = NIR)
 nir.mvr
 summary(nir.mvr)
 RMSEP(nir.mvr)

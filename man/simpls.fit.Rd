@@ -1,5 +1,4 @@
-%% $Id: simpls.fit.Rd 132 2007-08-24 09:21:05Z bhm $
-\encoding{latin1}
+%% $Id: simpls.fit.Rd 6 2005-03-29 14:56:18Z  $
 \name{simpls.fit}
 \alias{simpls.fit}
 \title{Sijmen de Jong's SIMPLS}
@@ -64,7 +63,6 @@
   \code{\link{plsr}}
   \code{\link{pcr}}
   \code{\link{kernelpls.fit}}
-  \code{\link{widekernelpls.fit}}
   \code{\link{oscorespls.fit}}
 }
 \keyword{regression}

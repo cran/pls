@@ -1,39 +1,15 @@
 ### mvr_wrappers.R: plsr, pls and pcr wrappers for mvr
-### $Id: mvr_wrappers.R 229 2013-07-13 13:15:25Z bhm $
+### $Id: mvr_wrappers.R 6 2005-03-29 14:56:18Z  $
 
-plsr <- function(..., method = pls.options()$plsralg)
+plsr <- function(..., method = c("kernelpls", "simpls", "oscorespls"))
 {
     cl <- match.call()
-    cl$method <- match.arg(method, c("kernelpls", "widekernelpls", "simpls",
-                                     "oscorespls", "model.frame"))
-    cl[[1]] <- quote(pls::mvr)
+    cl$method <- match.arg(method)
+    cl[[1]] <- as.name("mvr")
     res <- eval(cl, parent.frame())
-    ## Fix call component
-    if (cl$method != "model.frame") res$call[[1]] <- as.name("plsr")
-    if (missing(method)) res$call$method <- NULL
+    res$call <- match.call()            # Fix call component
     res
 }
 
-pcr <- function(..., method = pls.options()$pcralg)
-{
-    cl <- match.call()
-    cl$method <- match.arg(method, c("svdpc", "model.frame"))
-    cl[[1]] <- quote(pls::mvr)
-    res <- eval(cl, parent.frame())
-    ## Fix call component
-    if (cl$method != "model.frame") res$call[[1]] <- as.name("pcr")
-    if (missing(method)) res$call$method <- NULL
-    res
-}
-
-cppls <- function(..., Y.add, weights, method = pls.options()$cpplsalg)
-{
-    cl <- match.call()
-    cl$method <- match.arg(method, c("cppls", "model.frame"))
-    cl[[1]] <- quote(pls::mvr)
-    res <- eval(cl, parent.frame())
-    ## Fix call component
-    if (cl$method != "model.frame") res$call[[1]] <- as.name("cppls")
-    if (missing(method)) res$call$method <- NULL
-    res
-}
+pcr <- plsr
+formals(pcr)$method <- "svdpc"

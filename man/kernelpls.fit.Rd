@@ -1,5 +1,4 @@
-%% $Id: kernelpls.fit.Rd 203 2011-11-27 14:16:11Z bhm $
-\encoding{latin1}
+%% $Id: kernelpls.fit.Rd 6 2005-03-29 14:56:18Z  $
 \name{kernelpls.fit}
 \alias{kernelpls.fit}
 \title{Kernel PLS (Dayal and MacGregor)}
@@ -37,7 +36,6 @@
     predicted in \code{Y}.}
   \item{scores}{a matrix of scores.}
   \item{loadings}{a matrix of loadings.}
-  \item{loading.weights}{a matrix of loading weights.}
   \item{Yscores}{a matrix of Y-scores.}
   \item{Yloadings}{a matrix of Y-loadings.}
   \item{projection}{the projection matrix used to convert X to scores.}
@@ -67,9 +65,7 @@
 \seealso{
   \code{\link{mvr}}
   \code{\link{plsr}}
-  \code{\link{cppls}}
   \code{\link{pcr}}
-  \code{\link{widekernelpls.fit}}
   \code{\link{simpls.fit}}
   \code{\link{oscorespls.fit}}
 }

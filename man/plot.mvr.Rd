@@ -1,15 +1,14 @@
-%% $Id: plot.mvr.Rd 98 2006-10-03 21:21:48Z bhm $
-\encoding{latin1}
+%% $Id: plot.mvr.Rd 2 2005-03-29 14:31:42Z  $
 \name{plot.mvr}
 \alias{plot.mvr}
 \title{Plot Method for MVR objects}
 \description{
-  \code{plot.mvr} plots predictions, coefficients, scores, loadings,
-  biplots, correlation loadings or validation plots (RMSEP curves, etc.).
+  \code{plot.mvr} plots predictions, coefficients, scores, loadings, biplots or
+  validation plots (RMSEP curves, etc.).
 }
 \usage{
 \method{plot}{mvr}(x, plottype = c("prediction", "validation", "coefficients",
-                     "scores", "loadings", "biplot", "correlation"), \dots)
+                     "scores", "loadings", "biplot"), \dots)
 }
 \arguments{
   \item{x}{an object of class \code{mvr}.  The fitted model to plot.}
@@ -20,29 +19,27 @@
   The function is simply a wrapper for the underlying plot functions
   used to make the selected plots.  See \code{\link{predplot.mvr}},
   \code{\link{validationplot}}, \code{\link{coefplot}},
-  \code{\link{scoreplot}}, \code{\link{loadingplot}},
-  \code{\link{biplot.mvr}} or \code{\link{corrplot}} for details.  Note
-  that all arguments except \code{x} and \code{plottype} must be named.
+  \code{\link{scoreplot}}, \code{\link{loadingplot}} or
+  \code{\link{biplot.mvr}} for details.  Note that all arguments except
+  \code{x} and \code{plottype} must be named.
 }
 \value{
   \code{plot.mvr} returns whatever the underlying plot function returns.
 }
 \author{Ron Wehrens and Bjørn-Helge Mevik}
-\seealso{\code{\link{mvr}}, \code{\link{predplot.mvr}},
+\seealso{\code{\link{mvr}},\code{\link{predplot.mvr}},
   \code{\link{validationplot}}, \code{\link{coefplot}},
   \code{\link{scoreplot}}, \code{\link{loadingplot}},
-  \code{\link{biplot.mvr}}, \code{\link{corrplot}}}
+  \code{\link{biplot.mvr}}}
 \examples{
-data(yarn)
-nir.pcr <- pcr(density ~ NIR, ncomp = 9, data = yarn, validation = "CV")
-\dontrun{
-plot(nir.pcr, ncomp = 5) # Plot of cross-validated predictions
-plot(nir.pcr, "scores") # Score plot
-plot(nir.pcr, "loadings", comps = 1:3) # The three first loadings
-plot(nir.pcr, "coef", ncomp = 5) # Coefficients
-plot(nir.pcr, "val") # RMSEP curves
-plot(nir.pcr, "val", val.type = "MSEP", estimate = "CV") # CV MSEP
-}
+data(NIR)
+nir.pcr <- pcr(y ~ X, ncomp = 9, data = NIR, CV = TRUE)
+\dontrun{plot(nir.pcr, ncomp = 5) # Plot of cross-validated predictions}
+\dontrun{plot(nir.pcr, "scores") # Score plot}
+\dontrun{plot(nir.pcr, "loadings", comps = 1:3) # The three first loadings}
+\dontrun{plot(nir.pcr, "coef", ncomp = 5) # Coefficients}
+\dontrun{plot(nir.pcr, "val") # RMSEP curves}
+\dontrun{plot(nir.pcr, "val", val.type = "MSEP", estimate = "CV") # CV MSEP}
 }
 \keyword{regression}
 \keyword{multivariate}

@@ -1,8 +1,7 @@
-%% $Id: svdpc.fit.Rd 203 2011-11-27 14:16:11Z bhm $
-\encoding{latin1}
+%% $Id: svdpc.fit.Rd 6 2005-03-29 14:56:18Z  $
 \name{svdpc.fit}
 \alias{svdpc.fit}
-\title{Principal Component Regression}
+\title{Principal Components Regression}
 \description{Fits a PCR model using the singular value decomposition.}
 \usage{svdpc.fit(X, Y, ncomp, stripped = FALSE, \dots)}
 \arguments{
@@ -31,7 +30,6 @@
     predicted in \code{Y}.}
   \item{scores}{a matrix of scores.}
   \item{loadings}{a matrix of loadings.}
-  \item{Yloadings}{a matrix of Y-loadings.}
   \item{projection}{the projection matrix used to convert X to scores.}
   \item{Xmeans}{a vector of means of the X variables.}
   \item{Ymeans}{a vector of means of the Y variables.}
@@ -44,20 +42,16 @@
   \item{Xvar}{a vector with the amount of X-variance explained by each
     number of components.}
   \item{Xtotvar}{Total variance in \code{X}.}
-
+  
   If \code{stripped} is \code{TRUE}, only the components
   \code{coefficients}, \code{Xmeans} and \code{Ymeans} are returned.
 }
-\references{
-  Martens, H., Næs, T. (1989) \emph{Multivariate calibration.}
-  Chichester: Wiley.
-}
+%\references{}
 \author{Ron Wehrens and Bjørn-Helge Mevik}
 \seealso{
   \code{\link{mvr}}
-  \code{\link{plsr}}
   \code{\link{pcr}}
-  \code{\link{cppls}}
+  \code{\link{plsr}}
 }
 \keyword{regression}
 \keyword{multivariate}

@@ -1,12 +1,9 @@
-%% $Id: oscorespls.fit.Rd 132 2007-08-24 09:21:05Z bhm $
-\encoding{latin1}
+%% $Id: oscorespls.fit.Rd 6 2005-03-29 14:56:18Z  $
 \name{oscorespls.fit}
 \alias{oscorespls.fit}
 \title{Orthogonal scores PLSR}
-\description{Fits a PLSR model with the orthogonal scores algorithm
-(aka the NIPALS algorithm).}
-\usage{oscorespls.fit(X, Y, ncomp, stripped = FALSE,
-               tol = .Machine$double.eps^0.5, \dots)}
+\description{Fits a PLSR model with the orthogonal scores algorithm.}
+\usage{oscorespls.fit(X, Y, ncomp, stripped = FALSE, tol = 1e-6, \dots)}
 \arguments{
   \item{X}{a matrix of observations.  \code{NA}s and \code{Inf}s are not
     allowed.} 
@@ -37,7 +34,6 @@
   \item{scores}{a matrix of scores.}
   \item{loadings}{a matrix of loadings.}
   \item{loading.weights}{a matrix of loading weights.}
-  \item{Yscores}{a matrix of Y-scores.}
   \item{Yloadings}{a matrix of Y-loadings.}
   \item{projection}{the projection matrix used to convert X to scores.}
   \item{Xmeans}{a vector of means of the X variables.}
@@ -51,7 +47,7 @@
   \item{Xvar}{a vector with the amount of X-variance explained by each
     number of components.}
   \item{Xtotvar}{Total variance in \code{X}.}
-
+  
   If \code{stripped} is \code{TRUE}, only the components
   \code{coefficients}, \code{Xmeans} and \code{Ymeans} are returned.
 }
@@ -65,7 +61,6 @@
   \code{\link{plsr}}
   \code{\link{pcr}}
   \code{\link{kernelpls.fit}}
-  \code{\link{widekernelpls.fit}}
   \code{\link{simpls.fit}}
 }
 \keyword{regression}

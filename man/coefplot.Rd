@@ -1,5 +1,4 @@
-%% $Id: coefplot.Rd 168 2007-11-23 11:17:59Z bhm $
-\encoding{latin1}
+%% $Id: coefplot.Rd 2 2005-03-29 14:31:42Z  $
 \name{coefplot}
 \alias{coefplot}
 \title{Plot Regression Coefficients of PLSR and PCR models}
@@ -7,61 +6,26 @@
   Function to plot the regression coefficients of an \code{mvr} object.
 }
 \usage{
-coefplot(object, ncomp = object$ncomp, comps, intercept = FALSE,
-         separate = FALSE, se.whiskers = FALSE, nCols, nRows, labels,
-         type = "l", lty, lwd = NULL, pch, cex = NULL, col, legendpos,
-         xlab = "variable", ylab = "regression coefficient", main,
-         pretty.xlabels = TRUE, xlim, ylim, \dots)
+coefplot(object, ncomp = object$ncomp, separate = FALSE, cumulative = TRUE,
+         intercept = FALSE, nCols, nRows, type = "l", \dots)
 }
 \arguments{
   \item{object}{an \code{mvr} object.  The fitted model.}
-  \item{ncomp, comps}{vector of positive integers.  The components to
-    plot.  See \code{\link{coef.mvr}} for details.}
+  \item{ncomp}{integer vector.  The number of components to include.  If
+    \code{length(ncomp) > 1}, coefficients for each model size is plotted.}
   \item{separate}{logical.  If \code{TRUE}, coefficients for different model
     sizes are blotted in separate plots.}
-  \item{se.whiskers}{logical.  If \code{TRUE}, whiskers at plus/minus
-    1 estimated standard error are added to the plot.  This is only available if
-    the model was cross-validated with \code{jackknife = TRUE}.  Also, in the
-    current implementation, \code{intercept} must be \code{FALSE}, and
-    \code{separate} must be \code{TRUE} if \code{length(ncomp) > 1}.}
+  \item{cumulative}{logical.  Whether cumulative (the default) or
+    individual coefficients for each component should be plotted.  See
+    \code{\link{coef.mvr}} for details.}
   \item{intercept}{logical.  Whether coefficients for the intercept should
-    be plotted.  Ignored if \code{comps} is specified.  Defaults to
-    \code{FALSE}.  See \code{\link{coef.mvr}} for details.}
+    be plotted.  Ignored if \code{cumulative = FALSE}.  Defaults to
+    \samp{FALSE}.  See \code{\link{coef.mvr}} for details.}
   \item{nCols, nRows}{integer.  The number of coloumns and rows the
     plots will be laid out in.  If not specified, \code{coefplot} tries
     to be intelligent.}
-  \item{labels}{optional.  Alternative \eqn{x} axis labels.  See Details.}
   \item{type}{character.  What type of plot to make.  Defaults to
-    \code{"l"} (lines).  Alternative types include \code{"p"} (points)
-    and \code{"b"} (both).  See \code{\link{plot}} for a complete list
-    of types.}
-  \item{lty}{vector of line types (recycled as neccessary).  Line types can be
-    specified as integers or character strings (see \code{\link{par}}
-    for the details).}
-  \item{lwd}{vector of positive numbers (recycled as neccessary), giving
-    the width of the lines.}
-  \item{pch}{plot character.  A character string or a vector of
-    single characters or integers (recycled as neccessary).  See
-    \code{\link{points}} for all alternatives.}
-  \item{cex}{numeric vector of character expansion sizes (recycled as
-    neccessary) for the plotted symbols.}
-  \item{col}{character or integer vector of colors for plotted lines and
-    symbols (recycled as neccessary).  See \code{\link{par}} for the details.}
-  \item{legendpos}{Legend position.  Optional.  Ignored if \code{separate} is
-    \code{TRUE}.  If present, a legend is drawn at the given position.
-    The position can be specified symbolically (e.g., \code{legendpos =
-      "topright"}).  This requires \R >= 2.1.0.  Alternatively, the
-    position can be specified explicitly (\code{legendpos = t(c(x,y))})
-    or interactively (\code{legendpos = \link{locator}()}).  This only
-    works well for plots of single-response models.}
-  \item{xlab,ylab}{titles for \eqn{x} and \eqn{y} axes.  Typically
-    character strings, but can be expressions (e.g.,
-    \code{expression(R^2)} or lists.  See \code{\link{title}} for details.}
-  \item{main}{optional main title for the plot.  See Details.}
-  \item{pretty.xlabels}{logical.  If \code{TRUE}, \code{coefplot}
-    tries to plot the \eqn{x} labels more nicely.  See Details.}
-  \item{xlim,ylim}{optional vector of length two, with the \eqn{x} or
-    \eqn{y} limits of the plot.}
+    \samp{"l"} (lines).  See \code{\link{plot}} for details.}
   \item{\dots}{Further arguments sent to the underlying plot functions.}
 }
 \details{
@@ -70,68 +34,23 @@ coefplot(object, ncomp = object$ncomp, comps, intercept = FALSE,
   for each combination of model size and response.  The plots are laid
   out in a rectangular fashion.
 
-  If \code{legendpos} is given, a legend is drawn at the given position
-  (unless \code{separate} is \code{TRUE}).
-
-  The argument \code{labels} can be a vector of labels or one of
-  \code{"names"} and \code{"numbers"}.  The labels are
-  used as \eqn{x} axis labels.  If \code{labels} is \code{"names"} or
-  \code{"numbers"}, the variable names are used as labels, the
-  difference being that with \code{"numbers"}, the variable names are
-  converted to numbers, if possible.  Variable names of the forms
-  \samp{"number"} or \samp{"number text"} (where the space is optional),
-  are handled.
-
-  The argument \code{main} can be used to specify the main title of the
-  plot.  It is handled in a non-standard way.  If there is only on (sub)
-  plot, \code{main} will be used as the main title of the plot.  If
-  there is \emph{more} than one (sub) plot, however, the presence of
-  \code{main} will produce a corresponding \sQuote{global} title on the
-  page.  Any graphical parametres, e.g., \code{cex.main}, supplied to
-  \code{coefplot} will only affect the \sQuote{ordinary} plot titles,
-  not the \sQuote{global} one.  Its appearance can be changed by setting
-  the parameters with \code{\link{par}}, which will affect \emph{both}
-  titles.  (To have different settings for the two titles, one can
-  override the \code{par} settings with arguments to \code{coefplot}.)
-
-  The argument \code{pretty.xlabels} is only used when \code{labels} is
-  specified.  If \code{TRUE} (default), the code tries
-  to use a \sQuote{pretty} selection of labels.  If \code{labels} is
-  \code{"numbers"}, it also uses the numerical values of the labels for
-  horisontal spacing.  If one has excluded parts of the spectral
-  region, one might therefore want to use \code{pretty.xlabels = FALSE}.
-
-  When \code{separate} is \code{TRUE}, the arguments \code{lty},
-  \code{col}, and \code{pch} default to their \code{par()} setting.
-  Otherwise, the default for all of them is \code{1:nLines}, where
-  \code{nLines} is the number of model sizes specified, i.e., the length
-  of \code{ncomp} or \code{comps}.
-
   The function can also be called through the \code{mvr} plot method by
   specifying \code{plottype = "coefficients"}.
 }
 \author{Ron Wehrens and Bjørn-Helge Mevik}
-\note{\code{\link{legend}} has many options.  If you want greater
-  control over the appearance of the legend, omit the \code{legendpos}
-  argument and call \code{legend} manually.
-
-  The handling of \code{labels} and \code{pretty.xlabels} is experimental.
-}
-\seealso{\code{\link{mvr}}, \code{\link{plot.mvr}}, \code{\link{coef.mvr}},
-  \code{\link{plot}}, \code{\link{legend}}}
+\seealso{\code{\link{mvr}}, \code{\link{plot.mvr}},
+  \code{\link{coef.mvr}}, \code{\link{plot}}}
 \examples{
-data(yarn)
-mod.nir <- plsr(density ~ NIR, ncomp = 8, data = yarn)
+data(NIR)
+mod.nir <- plsr(y ~ X, ncomp = 8, data = NIR)
 \dontrun{
 coefplot(mod.nir, ncomp = 1:6)
 plot(mod.nir, plottype = "coefficients", ncomp = 1:6) # Equivalent to the previous
-## Plot with legend:
-coefplot(mod.nir, ncom = 1:6, legendpos = "bottomright")
 }
 
-data(oliveoil)
-mod.sens <- plsr(sensory ~ chemical, ncomp = 4, data = oliveoil)
-\dontrun{coefplot(mod.sens, ncomp = 2:4, separate = TRUE)}
+data(sensory)
+mod.sens <- plsr(Quality ~ Panel, ncomp = 4, data = sensory)
+\dontrun{plot(mod.sens, ncomp = 2:4, separate = TRUE)}
 }
 \keyword{regression}
 \keyword{multivariate}
