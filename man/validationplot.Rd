@@ -1,4 +1,5 @@
-%% $Id: validationplot.Rd 2 2005-03-29 14:31:42Z  $
+%% $Id: validationplot.Rd 22 2005-04-02 11:44:04Z bhm $
+\encoding{latin1}
 \name{validationplot}
 \alias{validationplot}
 \alias{plot.mvrVal}

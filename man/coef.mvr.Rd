@@ -1,4 +1,5 @@
-%% $Id: coef.mvr.Rd 11 2005-03-31 10:11:07Z bhm $
+%% $Id: coef.mvr.Rd 22 2005-04-02 11:44:04Z bhm $
+\encoding{latin1}
 \name{coef.mvr}
 \alias{coef.mvr}
 \alias{model.matrix.mvr}

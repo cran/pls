@@ -2,7 +2,7 @@
 ### algorithm (Martens and Næs, pp. 121--122 and 157--158)
 ###
 ### By Bjørn-Helge Mevik
-### $Id: oscorespls.fit.R 16 2005-04-01 10:13:26Z bhm $
+### $Id: oscorespls.fit.R 24 2005-04-02 12:15:03Z bhm $
 
 oscorespls.fit <- function(X, Y, ncomp, stripped = FALSE, tol = 1e-6, ...)
 {
