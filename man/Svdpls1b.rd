@@ -18,7 +18,7 @@ centred. The number of rows of \code{X} should equal the number of observations 
 \code{y}. \code{NA}s and \code{Inf}s are not allowed. 
 }
 \item{y}{
-Vector of responses. y is assumed to have been centred.
+Vector of responses. \code{y} is assumed to have been centred.
 \code{NA}s and \code{Inf}s are not allowed.
 }
 \item{K}{
@@ -41,22 +41,23 @@ the response variable \code{y}.
 \references{
 Denham, M. C. (1994).
 Implementing partial least squares.
-Statistics and Computing (to appear)
+\emph{Statistics and Computing} (to appear)
 
 Helland, I. S. (1988).
 On the Structure of partial least squares regression,
-Communications in Statistics, 17, pp. 581-607
+\emph{Communications in Statistics}, \bold{17}, pp. 581-607
 
 Martens, H.  and Naes, T. (1989).
-Multivariate Calibration.
+\emph{Multivariate Calibration.}
 Wiley, New York.
 }
 \seealso{
-pls1a,pls1b,pls1c,svdpls1a,svdpls1c
+  \code{\link{pls1a}}, \code{\link{pls1b}}, \code{\link{pls1c}},
+  \code{\link{svdpls1a}},\code{\link{svdpls1c}}
 }
 \examples{
-data(crimes)
-attach(crimes)
+data(USArrests)
+attach(USArrests)
 svdpls1b(scale(cbind(Murder, Assault, UrbanPop),scale=FALSE), 
       scale(Rape,scale=FALSE), 2)
 }

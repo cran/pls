@@ -232,7 +232,7 @@ function(x, nu = min(n, p), nv = min(n, p))
 		1
 	else stop("Invalid value for nu (must be 0, number of rows, or number of cols)"
 			))
-	z <- .Fortran(if(!cmplx) "dsvdcs" else "zsvdcs",
+	z <- .Fortran(if(!cmplx) "dsvdc" else "zsvdc",
 		x,
 		as.integer(n),
 		as.integer(n),

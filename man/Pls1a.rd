@@ -41,63 +41,25 @@ the response variable \code{y}.
 \references{
 Denham, M. C. (1994).
 Implementing partial least squares.
-Statistics and Computing (to appear)
+\emph{Statistics and Computing} (to appear)
 
 Helland, I. S. (1988).
 On the Structure of partial least squares regression,
-Communications in Statistics, 17, pp. 581-607
+\emph{Communications in Statistics}, \bold{17}, pp. 581-607
 
 Martens, H.  and Naes, T. (1989).
-Multivariate Calibration.
+\emph{Multivariate Calibration.}
 Wiley, New York.
 }
 \seealso{
-pls1b,pls1c,svdpls1a,svdpls1b,svdpls1c
+  \code{\link{pls1b}}, \code{\link{pls1c}}, \code{\link{svdpls1a}},
+  \code{\link{svdpls1b}},\code{\link{svdpls1c}}
 }
 \examples{
-data(crimes)
-attach(crimes)
+data(USArrests)
+attach(USArrests)
 pls1a(scale(cbind(Murder, Assault, UrbanPop),scale=FALSE), 
       scale(Rape,scale=FALSE), 2)
 }
-# The function is currently defined as
-#function(X, y, K=min(dx[1]-1,dx[2]))
-#{
-# Copyright (c) October 1993, Mike Denham.
-# Comments and Complaints to: snsdenhm@reading.ac.uk
-#
-# Orthogonal Scores Algorithm for PLS (Martens and Naes, pp. 121--123)
-#
-# X: A matrix which is assumed to have been centred so that columns
-#    sum to zero.
-#
-# y: A vector assumed to sum to zero.
-#
-# K: The number of PLS factors in the model which must be less than or
-#    equal to the  rank of X.
-#
-# Returned Value is the vector of PLS regression coefficients
-#
-#        X <- as.matrix(X)
-#        dx <- dim(X)
-#        W <- matrix(0, dx[2], K)
-#        P <- matrix(0, dx[2], K)
-#        Q <- numeric(K)
-#        for(i in 1:K) {
-#                w <- crossprod(X, y)
-#                w <- w/sqrt(crossprod(w)[1])
-#                W[, i] <- w
-#                tee <- X \%*\% w
-#                cee <- crossprod(tee)[1]
-#                p <- crossprod(X, (tee/cee))
-#                P[, i] <- p
-#                q <- crossprod(y, tee)[1]/cee
-#                Q[i] <- q
-#                X <- X - tee \%*\% t(p)
-#                y <- y - q * tee
-#        }
-#        W \%*\% solve(crossprod(P, W), Q)
-#}
-#}
 \keyword{regression}
 % Converted by Sd2Rd version 0.3-2.
