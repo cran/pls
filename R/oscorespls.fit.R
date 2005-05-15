@@ -2,7 +2,7 @@
 ### algorithm (Martens and Næs, pp. 121--122 and 157--158)
 ###
 ### By Bjørn-Helge Mevik
-### $Id: oscorespls.fit.R 24 2005-04-02 12:15:03Z bhm $
+### $Id: oscorespls.fit.R 40 2005-05-15 14:19:17Z bhm $
 
 oscorespls.fit <- function(X, Y, ncomp, stripped = FALSE, tol = 1e-6, ...)
 {
@@ -81,8 +81,6 @@ oscorespls.fit <- function(X, Y, ncomp, stripped = FALSE, tol = 1e-6, ...)
     ## It is known that P^tW is right bi-diagonal (one response) or upper
     ## triangular (multiple responses), with all diagonal elements equal to 1.
     diag(PW) <- 1
-    ## R1.9.1/Linux: When p > n, PW[-((n-1):n),n] can be far from 0, especially
-    ## for the first components.  This has an effect on the n'th component.
     if (dy[2] == 1) {
         ## Single response; make shure all elements above the bidiagonal are 0:
         PW[row(PW) < col(PW)-1] <- 0
@@ -126,7 +124,7 @@ oscorespls.fit <- function(X, Y, ncomp, stripped = FALSE, tol = 1e-6, ...)
              projection = R,
              Xmeans = X.mean, Ymeans = Y.mean,
              fitted.values = fitted, residuals = residuals,
-             Xvar = colSums(P^2) * colSums(TEE^2),
+             Xvar = colSums(P^2) * colSums(TEE^2),# FIXME: Is this the best way?
              Xtotvar = sum(X0^2))
     }
 }

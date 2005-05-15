@@ -1,4 +1,4 @@
-%% $Id: mvr.Rd 24 2005-04-02 12:15:03Z bhm $
+%% $Id: mvr.Rd 36 2005-05-15 12:36:19Z bhm $
 \encoding{latin1}
 \name{mvr}
 \alias{mvr}
@@ -11,6 +11,7 @@
   Cross-validation can be used.  Prediction, model extraction, plot,
   print and summary methods exist.
 }
+%% FIXME: Maybe use a \synopsis section, and show typical uses in \usage:
 \usage{
 mvr(formula, ncomp, data, subset, na.action,
     method = c("kernelpls", "simpls", "oscorespls", "svdpc"),
@@ -21,7 +22,7 @@ pcr(\dots, method = "svdpc")
 }
 \arguments{
   \item{formula}{a model formula.  Most of the \code{lm} formula
-    constructs are supported.}
+    constructs are supported.  See below.}
   \item{ncomp}{the number of components to include in the model (see below).}
   \item{data}{an optional data frame with the data to fit the model from.}
   \item{subset}{an optional vector specifying a subset of observations
@@ -41,6 +42,20 @@ pcr(\dots, method = "svdpc")
   The functions fit PLSR or PCR models with 1, \eqn{\ldots},
   \code{ncomp} number of components.  Multi-response models are fully
   supported.
+
+  The \code{formula} argument should be a symbolic formula of the form
+  \code{response ~ terms}, where \code{response} is the name of the
+  response vector or matrix (for multi-response models) and \code{terms}
+  is the name of one or more predictor matrices, usually separated by
+  \code{+}, e.g., \code{water ~ FTIR} or \code{y ~ X + Z}.  See
+  \code{\link{lm}} for a detailed description.  The named
+  variables should exist in the supplied \code{data} data frame or in
+  the global environment.  Note: Do not use \code{mvr(mydata$y ~
+    mydata$X, \ldots)}, instead use \code{mvr(y ~ X, data = mydata,
+    \ldots)}.  Otherwise, \code{\link{predict.mvr}} will not work properly.
+  The chapter \samp{Statistical models in R} of the manual \samp{An
+    Introduction to R} distributed with \R is a good reference on
+  formulas in \R.
 
   Three PLSR algorithms are available: the kernel algorithm, SIMPLS and
   the classical orthogonal scores algorithm.  One PCR algorithm is
@@ -84,6 +99,7 @@ pcr(\dots, method = "svdpc")
   Chichester: Wiley.
 }
 \author{Ron Wehrens and Bjørn-Helge Mevik}
+%% FIXME: Add more functions:
 \seealso{
   \code{\link{kernelpls.fit}},
   \code{\link{simpls.fit}},
@@ -101,13 +117,13 @@ pcr(\dots, method = "svdpc")
 \examples{
 data(NIR)
 ## Default methods:
-NIR.pcr <- pcr(y ~ X, 6, data = NIR, CV = TRUE)
-NIR.pls <- plsr(y ~ X, 6, data = NIR, CV = TRUE)
+NIR.pcr <- pcr(y ~ X, 6, data = NIR, validation = "CV")
+NIR.pls <- plsr(y ~ X, 6, data = NIR, validation = "CV")
 
 ## Alternative methods:
-NIR.oscorespls <- mvr(y ~ X, 6, data = NIR, CV = TRUE,
+NIR.oscorespls <- mvr(y ~ X, 6, data = NIR, validation = "CV",
                       method = "oscorespls")
-NIR.simpls <- mvr(y ~ X, 6, data = NIR, CV = TRUE,
+NIR.simpls <- mvr(y ~ X, 6, data = NIR, validation = "CV",
                   method = "simpls")
 
 data(sensory)

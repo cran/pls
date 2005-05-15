@@ -1,5 +1,5 @@
 ### mvrCv.R: The basic cross-validation function
-### $Id: mvrCv.R 4 2005-03-29 14:45:43Z  $
+### $Id: mvrCv.R 34 2005-05-13 08:23:59Z bhm $
 
 ## X and Y can not contain NA.  They are not supposed to be centered.
 
@@ -49,11 +49,11 @@ mvrCv <- function(X, Y, ncomp,
         if (trace) cat(n.seg, "")
         seg <- segments[[n.seg]]
         fit <- fitFunc(X[-seg,], Y[-seg,], ncomp, stripped = TRUE, ...)
-        for (a in 1:ncomp) {
-            Xtest <- sweep(X, 2, fit$Xmeans)
+        Xtest <- sweep(X, 2, fit$Xmeans)
+        for (a in 1:ncomp) 
             pred[,,a] <-
                 sweep(Xtest %*% fit$coefficients[,,a], 2, fit$Ymeans, "+")
-        }
+
         ## Save the cross-validated predictions:
         cvPred[seg,,] <- pred[seg,,, drop=FALSE]
         adj <- adj + length(seg) * colSums((pred - c(Y))^2)
@@ -66,7 +66,7 @@ mvrCv <- function(X, Y, ncomp,
 
     ## Calculate R2:
     R2 <- matrix(nrow = dy[2], ncol = ncomp)
-    for (i in 1:dy[2]) R2[i,] <- cor(cvPred[,i,], Y[,i])
+    for (i in 1:dy[2]) R2[i,] <- cor(cvPred[,i,], Y[,i])^2
     
     ## Add dimnames:
     objnames <- dnX[[1]]

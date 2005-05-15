@@ -1,4 +1,4 @@
-%% $Id: coefplot.Rd 22 2005-04-02 11:44:04Z bhm $
+%% $Id: coefplot.Rd 37 2005-05-15 13:39:40Z bhm $
 \encoding{latin1}
 \name{coefplot}
 \alias{coefplot}
@@ -21,12 +21,12 @@ coefplot(object, ncomp = object$ncomp, separate = FALSE, cumulative = TRUE,
     \code{\link{coef.mvr}} for details.}
   \item{intercept}{logical.  Whether coefficients for the intercept should
     be plotted.  Ignored if \code{cumulative = FALSE}.  Defaults to
-    \samp{FALSE}.  See \code{\link{coef.mvr}} for details.}
+    \code{FALSE}.  See \code{\link{coef.mvr}} for details.}
   \item{nCols, nRows}{integer.  The number of coloumns and rows the
     plots will be laid out in.  If not specified, \code{coefplot} tries
     to be intelligent.}
   \item{type}{character.  What type of plot to make.  Defaults to
-    \samp{"l"} (lines).  See \code{\link{plot}} for details.}
+    \code{"l"} (lines).  See \code{\link{plot}} for details.}
   \item{\dots}{Further arguments sent to the underlying plot functions.}
 }
 \details{
@@ -51,7 +51,7 @@ plot(mod.nir, plottype = "coefficients", ncomp = 1:6) # Equivalent to the previo
 
 data(sensory)
 mod.sens <- plsr(Quality ~ Panel, ncomp = 4, data = sensory)
-\dontrun{plot(mod.sens, ncomp = 2:4, separate = TRUE)}
+\dontrun{coefplot(mod.sens, ncomp = 2:4, separate = TRUE)}
 }
 \keyword{regression}
 \keyword{multivariate}

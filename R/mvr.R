@@ -1,6 +1,6 @@
 ### mvr.R: plsr/pcr modelling functions
 ###
-### $Id: mvr.R 24 2005-04-02 12:15:03Z bhm $
+### $Id: mvr.R 40 2005-05-15 14:19:17Z bhm $
 
 ## The top level user function.  Implements a formula interface and calls the
 ## correct fit function to do the work.

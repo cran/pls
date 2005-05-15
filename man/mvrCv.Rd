@@ -1,4 +1,4 @@
-%% $Id: mvrCv.Rd 22 2005-04-02 11:44:04Z bhm $
+%% $Id: mvrCv.Rd 37 2005-05-15 13:39:40Z bhm $
 \encoding{latin1}
 \name{mvrCv}
 \alias{mvrCv}
@@ -33,8 +33,8 @@ mvrCv(X, Y, ncomp,
 \details{
   This function is not meant to be called directly, but through
   the generic functions \code{pcr}, \code{plsr} or \code{mvr} with the
-  argument \code{CV = TRUE}.  All arguments to \code{mvrCv} can be
-  specified in the generic function call.
+  argument \code{validation} set to \code{"CV"} or \code{"LOO"}.  All
+  arguments to \code{mvrCv} can be specified in the generic function call.
 
   If \code{length.seg} is specified, segments of the requested length
   are used.  Otherwise:
@@ -56,7 +56,7 @@ mvrCv(X, Y, ncomp,
 }
 \value{
   A list with the following components:
-  \item{method}{euqals \samp{"CV"} for cross-validation.}
+  \item{method}{euqals \code{"CV"} for cross-validation.}
   \item{pred}{an array with the cross-validated predictions.}
   \item{MSEP0}{a vector of MSEP values (one for each response variable)
     for a model with zero components, i.e., only the intercept.}
@@ -88,7 +88,7 @@ mvrCv(X, Y, ncomp,
 }
 \examples{
 data(NIR)
-NIR.pcr <- pcr(y ~ X, 6, data = NIR, CV = TRUE, segments = 10)
+NIR.pcr <- pcr(y ~ X, 6, data = NIR, validation = "CV", segments = 10)
 \dontrun{plot(MSEP(NIR.pcr))}
 }
 \keyword{regression}

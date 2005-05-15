@@ -1,4 +1,4 @@
-%% $Id: MSEP.Rd 22 2005-04-02 11:44:04Z bhm $
+%% $Id: MSEP.Rd 38 2005-05-15 13:50:17Z bhm $
 \encoding{latin1}
 \name{MSEP}
 \alias{MSEP}
@@ -19,7 +19,7 @@ R2(object, estimate, newdata, comps = 1:object$ncomp,
    cumulative = TRUE, intercept = cumulative, se = FALSE, \dots)
 }
 \arguments{
-  \item{object}{a \code{mvr} object}
+  \item{object}{an \code{mvr} object}
   \item{estimate}{a character vector.  Which estimators to use.
     Should be a subset of \code{c("all", "train", "CV", "adjCV",
       "test")}.  \code{"adjCV"} is only available for (R)MSEP.  See
@@ -39,15 +39,15 @@ R2(object, estimate, newdata, comps = 1:object$ncomp,
   \code{RMSEP} simply calls \code{MSEP} and takes the square root of the
   estimates.  It therefore accepts the same arguments as \code{MSEP}.
 
-  Several estimators can be used.  \samp{"train"} is the training
+  Several estimators can be used.  \code{"train"} is the training
   or calibration data estimate, also called (R)MSEC.  For \code{R2},
   this is the unadjusted \eqn{R^2}.  It is
   overoptimistic and should not be used for assessing models.
-  \samp{"CV"} is the cross-validation estimate, and \samp{"adjCV"} (for
+  \code{"CV"} is the cross-validation estimate, and \code{"adjCV"} (for
   \code{RMSEP} and \code{MSEP}) is
   the bias-corrected cross-validation estimate.  They can only be
   calculated if the model has been cross-validated.
-  Finally, \samp{"test"} is the test set estimate, using \code{newdata}
+  Finally, \code{"test"} is the test set estimate, using \code{newdata}
   as test set.
 
   Which estimators to use is decided as follows.  If
@@ -55,7 +55,7 @@ R2(object, estimate, newdata, comps = 1:object$ncomp,
   \code{newdata} is specified, otherwise the CV and adjusted CV (for
   \code{RMSEP} and \code{MSEP})
   estimates if the model has been cross-validated, otherwise the
-  training data estimate.  If \code{estimate} is \samp{"all"}, all
+  training data estimate.  If \code{estimate} is \code{"all"}, all
   possible estimates are calculated.  Otherwise, the specified estimates
   are calculated.
 
@@ -90,8 +90,7 @@ R2(object, estimate, newdata, comps = 1:object$ncomp,
   \code{\link{validationplot}}, \code{\link{plot.mvrVal}}}
 \examples{
 data(sensory)
-mod <- plsr(Panel ~ Quality, ncomp = 4, data = sensory, CV = TRUE,
-            length.seg = 1)
+mod <- plsr(Panel ~ Quality, ncomp = 4, data = sensory, validation = "LOO")
 RMSEP(mod)
 \dontrun{plot(R2(mod))}
 }

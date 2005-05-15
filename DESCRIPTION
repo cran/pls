@@ -1,13 +1,12 @@
 Package: pls
-Version: 1.0-2
-Date: 2005-04-02
+Version: 1.0-3
+Date: 2005-05-15
 Title: Partial Least Squares Regression (PLSR) and Principal Component Regression (PCR)
 Author: Ron Wehrens and Bjørn-Helge Mevik
 Maintainer: Bjørn-Helge Mevik and Ron Wehrens <pls@mevik.net>
-ZipData: no
 Encoding: latin1
 Description: Multivariate regression by partial least squares
 	regression (PLSR) and principal components regression (PCR).
 	This package supersedes the pls.pcr package.
 License: GPL version 2
-Packaged: Sat Apr  2 14:19:23 2005; bhm
+Packaged: Sun May 15 16:19:51 2005; bhm

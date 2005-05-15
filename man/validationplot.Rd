@@ -1,4 +1,4 @@
-%% $Id: validationplot.Rd 22 2005-04-02 11:44:04Z bhm $
+%% $Id: validationplot.Rd 37 2005-05-15 13:39:40Z bhm $
 \encoding{latin1}
 \name{validationplot}
 \alias{validationplot}
@@ -30,7 +30,7 @@ validationplot(object, val.type = c("RMSEP", "MSEP", "R2"), estimate,
     plots will be laid out in.  If not specified, \code{plot.mvrVal} tries
     to be intelligent.}
   \item{type}{character.  What type of plots to create.  Defaults to
-    \samp{"l"} (lines).}
+    \code{"l"} (lines).}
   \item{\dots}{Further arguments sent to underlying plot functions.}
 }
 \details{
@@ -53,7 +53,7 @@ validationplot(object, val.type = c("RMSEP", "MSEP", "R2"), estimate,
   \code{\link{MSEP}}, \code{\link{R2}}}
 \examples{
 data(sensory)
-mod <- plsr(Panel ~ Quality, data = sensory, CV = TRUE, length.seg = 1)
+mod <- plsr(Panel ~ Quality, data = sensory, validation = "LOO")
 \dontrun{
 ## These three are equivalent:
 validationplot(mod, estimate = "all")
