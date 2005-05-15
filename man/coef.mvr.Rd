@@ -1,4 +1,4 @@
-%% $Id: coef.mvr.Rd 22 2005-04-02 11:44:04Z bhm $
+%% $Id: coef.mvr.Rd 37 2005-05-15 13:39:40Z bhm $
 \encoding{latin1}
 \name{coef.mvr}
 \alias{coef.mvr}
@@ -20,7 +20,7 @@
     fitting the model.}
   \item{intercept}{logical.  Whether coefficients for the intercept should
     be included.  Ignored if \code{cumulative = FALSE}.  Defaults to
-    \samp{FALSE}.}
+    \code{FALSE}.}
   \item{cumulative}{logical.  Whether cumulative (the default) or
     individual coefficients for each component should be returned.  See below.}
   \item{\dots}{other arguments sent to underlying functions.  Currently

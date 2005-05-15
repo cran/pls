@@ -1,7 +1,7 @@
 ### mvrVal.R: Functions for calculating validation statistics, such
 ### as MSEP, RMSEP and R2, for mvr objects.
 ###
-### $Id: mvrVal.R 24 2005-04-02 12:15:03Z bhm $
+### $Id: mvrVal.R 40 2005-05-15 14:19:17Z bhm $
 
 MSEP <- function(object, estimate, newdata, comps = 1:object$ncomp,
                  cumulative = TRUE, intercept = cumulative, se = FALSE, ...)

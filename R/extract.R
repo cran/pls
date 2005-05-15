@@ -1,5 +1,5 @@
 ### extract.R:  Extraction functions
-### $Id: extract.R 24 2005-04-02 12:15:03Z bhm $
+### $Id: extract.R 40 2005-05-15 14:19:17Z bhm $
 
 ## coef.mvr: Extract the base variable regression coefficients from
 ## an mvr object.
@@ -36,7 +36,7 @@ coef.mvr <- function(object, comps = object$ncomp, intercept = FALSE,
 
 ## fitted.default is in stats.
 
-## loadings is in stats
+## loadings is in stats, but unfortunately doesn't work for prcomp objects.
 
 ## scores: Return the scores (also works for prcomp/princomp objects):
 scores <- function(object, ...) UseMethod("scores")

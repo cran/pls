@@ -1,10 +1,10 @@
-%% $Id: predict.mvr.Rd 22 2005-04-02 11:44:04Z bhm $
+%% $Id: predict.mvr.Rd 37 2005-05-15 13:39:40Z bhm $
 \encoding{latin1}
 \name{predict.mvr}
 \alias{predict.mvr}
 \title{Predict Method for PLSR and PCR}
 \description{
-  Prediction for MVR (PCR, PLSR) models.  New responses or scores are
+  Prediction for mvr (PCR, PLSR) models.  New responses or scores are
   predicted using a fitted model and a new matrix of observations.
 }
 \usage{
@@ -19,11 +19,11 @@
     the prediction.  See below.}
   \item{type}{character.  Whether to predict scores or response values}
   \item{cumulative}{logical.  How the elements of \code{comps} are
-    interpreted.  Ignored if \code{type} is \samp{"scores"}.  See below}
+    interpreted.  Ignored if \code{type} is \code{"scores"}.  See below}
   \item{\dots}{further arguments.  Currently not used}
 }
 \details{
-  When \code{type} is \samp{"response"} (default), predicted response
+  When \code{type} is \code{"response"} (default), predicted response
   values are returned.  If \code{cumulative} is \code{TRUE}, the
   elements of \code{comps} are interpreted cumulatively,
   i.e. predictions for models with \code{comps[1]} components,
@@ -31,18 +31,34 @@
   response values for a single model with the exact components in
   \code{comps} are returned.
 
-  When \code{type} is \samp{"scores"}, predicted score values are
+  When \code{type} is \code{"scores"}, predicted score values are
   returned for the components given in \code{comps}.
+
+  It is also possible to supply a matrix instead of a data frame as
+  \code{newdata}, which is then assumed to be the \eqn{X} data matrix.
+  Note that the usual checks for the size and type of the data are then
+  omitted.  Also note that this is
+  \emph{only} possible with \code{predict}; it will not work in
+  functions like \code{\link{predplot}}, \code{\link{RMSEP}} or
+  \code{\link{R2}}, because they also need the response variable of the new
+  data.
 }
 \value{
-  When \code{type} is \samp{"response"}, a three dimensional array of
+  When \code{type} is \code{"response"}, a three dimensional array of
   predicted response values is returned.  The dimensions correspond to
   the observations, the response variables and the model sizes,
   respectively.
 
-  When \code{type} is \samp{"scores"}, a score matrix is returned.
+  When \code{type} is \code{"scores"}, a score matrix is returned.
 }
-\author{Ron Wehnrens and Bjørn-Helge Mevik}
+\note{
+  A warning message like \samp{'newdata' had 10 rows but variable(s)
+    found have 106 rows} means that not all variables were found in the
+  \code{newdata} data frame.  This (usually) happens if the formula
+  contains terms like \code{NIR$X}.  Do not use such terms; use the
+  \code{data} argument instead.  See \code{\link{mvr}} for details.
+ }
+\author{Ron Wehrens and Bjørn-Helge Mevik}
 \seealso{\code{\link{mvr}}, \code{\link{summary.mvr}},
   \code{\link{coef.mvr}}, \code{\link{plot.mvr}}}
 \examples{

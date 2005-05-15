@@ -1,4 +1,4 @@
-%% $Id: crossval.Rd 22 2005-04-02 11:44:04Z bhm $
+%% $Id: crossval.Rd 38 2005-05-15 13:50:17Z bhm $
 \encoding{latin1}
 \name{crossval}
 \alias{crossval}
@@ -12,7 +12,7 @@ crossval(object, segments = 10,
          length.seg, trace = 15, \dots)
 }
 \arguments{
-  \item{object}{a \code{mvr} object; the regression to cross-validate.}
+  \item{object}{an \code{mvr} object; the regression to cross-validate.}
   \item{segments}{the number of segments to use, or a list with segments
     (see below).  Ignored if \code{loo = TRUE}.}
   \item{segment.type}{the type of segments to use.  Ignored if
@@ -29,8 +29,8 @@ crossval(object, segments = 10,
   It can handle models such as \code{plsr(y ~ msc(X), \dots)} or other
   models where the predictor variables need to be recalculated for each
   segment.  When recalculation is not needed, the result of
-  \code{crossval(mvr(\dots))} is identical to \code{mvr(\dots, CV = TRUE)},
-  but slower.
+  \code{crossval(mvr(\dots))} is identical to \code{mvr(\dots,
+    validation = "CV")}, but slower.
 
   If \code{length.seg} is specified, segments of the requested length
   are used.  Otherwise:
@@ -48,7 +48,7 @@ crossval(object, segments = 10,
 \value{
   The supplied \code{object} is returned, with an additional component
   \code{validation}, which is a list with components
-  \item{method}{euqals \samp{"CV"} for cross-validation.}
+  \item{method}{euqals \code{"CV"} for cross-validation.}
   \item{pred}{an array with the cross-validated predictions.}
   \item{MSEP0}{a vector of MSEP values (one for each response variable)
     for a model with zero components, i.e., only the intercept.}
@@ -81,7 +81,7 @@ crossval(object, segments = 10,
 \examples{
 data(NIR)
 NIR.pcr <- pcr(y ~ msc(X), 6, data = NIR)
-NIR.cv <- crossval(NIR.pcr, CV = TRUE, segments = 10)
+NIR.cv <- crossval(NIR.pcr, segments = 10)
 plot(MSEP(NIR.cv))
 }
 \keyword{regression}

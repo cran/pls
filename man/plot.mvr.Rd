@@ -1,4 +1,4 @@
-%% $Id: plot.mvr.Rd 22 2005-04-02 11:44:04Z bhm $
+%% $Id: plot.mvr.Rd 36 2005-05-15 12:36:19Z bhm $
 \encoding{latin1}
 \name{plot.mvr}
 \alias{plot.mvr}
@@ -34,13 +34,15 @@
   \code{\link{biplot.mvr}}}
 \examples{
 data(NIR)
-nir.pcr <- pcr(y ~ X, ncomp = 9, data = NIR, CV = TRUE)
-\dontrun{plot(nir.pcr, ncomp = 5) # Plot of cross-validated predictions}
-\dontrun{plot(nir.pcr, "scores") # Score plot}
-\dontrun{plot(nir.pcr, "loadings", comps = 1:3) # The three first loadings}
-\dontrun{plot(nir.pcr, "coef", ncomp = 5) # Coefficients}
-\dontrun{plot(nir.pcr, "val") # RMSEP curves}
-\dontrun{plot(nir.pcr, "val", val.type = "MSEP", estimate = "CV") # CV MSEP}
+nir.pcr <- pcr(y ~ X, ncomp = 9, data = NIR, validation = "CV")
+\dontrun{
+plot(nir.pcr, ncomp = 5) # Plot of cross-validated predictions
+plot(nir.pcr, "scores") # Score plot
+plot(nir.pcr, "loadings", comps = 1:3) # The three first loadings
+plot(nir.pcr, "coef", ncomp = 5) # Coefficients
+plot(nir.pcr, "val") # RMSEP curves
+plot(nir.pcr, "val", val.type = "MSEP", estimate = "CV") # CV MSEP
+}
 }
 \keyword{regression}
 \keyword{multivariate}
