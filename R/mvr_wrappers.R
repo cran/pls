@@ -1,7 +1,7 @@
 ### mvr_wrappers.R: plsr, pls and pcr wrappers for mvr
-### $Id: mvr_wrappers.R 6 2005-03-29 14:56:18Z  $
+### $Id: mvr_wrappers.R 44 2005-07-17 20:49:17Z bhm $
 
-plsr <- function(..., method = c("kernelpls", "simpls", "oscorespls"))
+plsr <- function(..., method = c("kernelpls", "simpls", "oscorespls", "model.frame"))
 {
     cl <- match.call()
     cl$method <- match.arg(method)
@@ -12,4 +12,4 @@ plsr <- function(..., method = c("kernelpls", "simpls", "oscorespls"))
 }
 
 pcr <- plsr
-formals(pcr)$method <- "svdpc"
+formals(pcr)$method <- c("svdpc", "model.frame")

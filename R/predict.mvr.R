@@ -1,5 +1,5 @@
 ### predict.mvr.R: A predict method
-### $Id: predict.mvr.R 35 2005-05-15 09:45:53Z bhm $
+### $Id: predict.mvr.R 46 2005-07-18 09:37:43Z bhm $
 
 predict.mvr <- function(object, newdata, comps = 1:object$ncomp,
                         type = c("response", "scores"), cumulative = TRUE,
@@ -15,6 +15,8 @@ predict.mvr <- function(object, newdata, comps = 1:object$ncomp,
             .checkMFClasses(cl, m)
         newX <- model.matrix(Terms, m)
     }
+    ## Perform any scaling:
+    if (!is.null(object$scale)) newX <- sweep(newX, 2, object$scale, "/")
     type <- match.arg(type)
     if (type == "response") {
         if (cumulative) {

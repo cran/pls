@@ -1,4 +1,4 @@
-%% $Id: msc.Rd 22 2005-04-02 11:44:04Z bhm $
+%% $Id: msc.Rd 46 2005-07-18 09:37:43Z bhm $
 \encoding{latin1}
 \name{msc}
 \alias{msc}
@@ -34,9 +34,13 @@ msc(X, reference = NULL)
     "matrix")}.  For \code{predict.msc}, the \code{"reference"}
   attribute of \code{object} is used as reference spectre.
 }
-\references{Mar/Næs}
+\references{
+  Martens, H., Næs, T. (1989) \emph{Multivariate calibration.}
+  Chichester: Wiley.
+}
 \author{Bjørn-Helge Mevik and Ron Wehrens}
-\seealso{\code{\link{mvr}}, \code{\link{pcr}}, \code{\link{plsr}}}
+\seealso{\code{\link{mvr}}, \code{\link{pcr}}, \code{\link{plsr}},
+  \code{\link{stdize}}}
 \examples{
 data(NIR)
 ## Direct correction:

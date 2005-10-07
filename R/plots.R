@@ -1,14 +1,15 @@
 ### Plots for mvr objects.  Some of them also work for other
 ### objects, but that is not a priority.
 ###
-### $Id: plots.R 40 2005-05-15 14:19:17Z bhm $
+### $Id: plots.R 48 2005-10-07 12:52:59Z bhm $
 
 ###
 ### Plot method for mvr objects
 ###
 
 plot.mvr <- function(x, plottype = c("prediction", "validation",
-                        "coefficients", "scores", "loadings", "biplot"),
+                        "coefficients", "scores", "loadings", "biplot",
+                        "correlation"),
                      ...)
 {
     plottype <- match.arg(plottype)
@@ -18,7 +19,8 @@ plot.mvr <- function(x, plottype = c("prediction", "validation",
                        coefficients = coefplot,
                        scores = scoreplot,
                        loadings = loadingplot,
-                       biplot = biplot.mvr)
+                       biplot = biplot.mvr,
+                       correlation = corrplot)
     plotFunc(x, ...)
 }
 
@@ -27,30 +29,20 @@ plot.mvr <- function(x, plottype = c("prediction", "validation",
 ### Scoreplot
 ###
 
-## Works on mvr and princomp objects
-
 scoreplot <- function(object, comps = 1:2, labels, identify = FALSE,
-                      type = "p", ...) {
+                      type = "p", xlab, ylab, ...) {
     nComps <- length(comps)
     if (nComps == 0) stop("At least one component must be selected.")
     if (is.matrix(object)) {
         ## Assume this is already a score matrix
         S <- object[,comps, drop = FALSE]
-        expl.var <- NULL
+        varlab <- colnames(S)
     } else {
         S <- scores(object)[,comps, drop = FALSE]
         if (is.null(S))
             stop("`", deparse(substitute(object)), "' has no scores")
-        expl.var <- switch(class(object),
-                           mvr = 100 * object$Xvar[comps] / object$Xtotvar,
-                           princomp =, 
-                           prcomp = 100 * object$sdev[comps]^2 / sum(object$sdev^2)
-                           )
+        varlab <- compnames(object, comps, explvar = TRUE)
     }
-    varlab <- colnames(S)               # Default variable labels
-    if (!is.null(expl.var))             # Add explained variance
-        varlab <- paste(varlab, " (", format(expl.var, digits = 2, trim = TRUE),
-                        " %)", sep = "")
     if (!missing(labels)) {
         ## Set up point labels
         if (length(labels) == 1) {
@@ -62,29 +54,31 @@ scoreplot <- function(object, comps = 1:2, labels, identify = FALSE,
         labels <- as.character(labels)
         type <- "n"
     }
-    switch(as.character(nComps),        # as.character to get "otherwise"
-           ## One component versus index
-           "1" = { plot(S, xlab = "observation", ylab = varlab, type = type,
-                        ...)
-                   if (!missing(labels)) text(S, labels, ...)
-               },
-           ## Second component versus first
-           "2" = { plot(S, xlab = varlab[1], ylab = varlab[2], type = type, ...)
-                   if (!missing(labels)) text(S, labels, ...)
-               },
-           ## Pairwise scatterplots of several components
-           { panel <- if (missing(labels))
-                 function(x, y, ...) points(x, y, type = type, ...) else
-                 function(x, y, ...) text(x, y, labels = labels, ...)
-             pairs(S, labels = varlab, panel = panel, ...)
-           } 
-           )
-    if (identify && nComps <= 2) {
-        if (!is.null(rownames(S))) {
-            identify(S, labels = rownames(S))
+    if (nComps <= 2) {
+        if (nComps == 1) {
+            ## One component versus index
+            if (missing(xlab)) xlab <- "observation"
+            if (missing(ylab)) ylab <- varlab
         } else {
-            identify(S)
+            ## Second component versus first
+            if (missing(xlab)) xlab <- varlab[1]
+            if (missing(ylab)) ylab <- varlab[2]
         }
+        plot(S, xlab = xlab, ylab = ylab, type = type, ...)
+        if (!missing(labels)) text(S, labels, ...)
+        if (identify) {
+            if (!is.null(rownames(S))) {
+                identify(S, labels = rownames(S))
+            } else {
+                identify(S)
+            }
+        }
+    } else {
+        ## Pairwise scatterplots of several components
+        panel <- if (missing(labels))
+            function(x, y, ...) points(x, y, type = type, ...) else
+            function(x, y, ...) text(x, y, labels = labels, ...)
+        pairs(S, labels = varlab, panel = panel, ...)
     }
 }
 
@@ -96,77 +90,169 @@ plot.scores <- function(x, ...) scoreplot(x, ...)
 ### Loadingplot
 ###
 
-## Works on mvr and princomp objects
-
 loadingplot <- function(object, comps = 1:2, scatter = FALSE, labels,
-                        identify = FALSE, type, ...)
+                        identify = FALSE, type, lty, lwd = NULL, pch,
+                        cex = NULL, col, legendpos, xlab, ylab, ...)
 {
     nComps <- length(comps)
     if (nComps == 0) stop("At least one component must be selected.")
+    if (!missing(type) && sum(nchar(type)) != 1) stop("invalid plot type")
     if (is.matrix(object)) {
         ## Assume this is already a loading matrix
         L <- object[,comps, drop = FALSE]
-        expl.var <- NULL
+        varlab <- colnames(L)
     } else {
         L <- loadings(object)[,comps, drop = FALSE]
         if (is.null(L))
             stop("`", deparse(substitute(object)), "' has no loadings")
-        expl.var <- switch(class(object),
-                           mvr = 100 * object$Xvar[comps] / object$Xtotvar,
-                           princomp =, 
-                           prcomp = 100 * object$sdev[comps]^2 / sum(object$sdev^2)
-                           )
+        varlab <- compnames(object, comps, explvar = TRUE)
     }
-    varlab <- colnames(L)               # Default variable labels
-    if (!is.null(expl.var))             # Add explained variance
-        varlab <- paste(varlab, " (", format(expl.var, digits = 2, trim = TRUE),
-                        " %)", sep = "")
+    if (!missing(labels)) {
+        ## Set up point/tick mark labels
+        if (length(labels) == 1) {
+            labels <- switch(match.arg(labels, c("names", "numbers")),
+                             names = rownames(L),
+                             numbers = 1:nrow(L)
+                             )
+        }
+        labels <- as.character(labels)
+    }
     if (scatter) {
         ## Scatter plots
         if (missing(type)) type <- "p"
-        if (!missing(labels)) {
-            ## Set up point labels
-            if (length(labels) == 1) {
-                labels <- switch(match.arg(labels, c("names", "numbers")),
-                                 names = rownames(L),
-                                 numbers = 1:nrow(L)
-                                 )
+        if (!missing(labels)) type <- "n"
+        if (missing(lty)) lty <- NULL
+        if (missing(pch)) pch <- NULL
+        if (missing(col)) col <- par("col") # `NULL' means `no colour'
+        if (nComps <= 2) {
+            if (nComps == 1) {
+                ## One component versus index
+                if (missing(xlab)) xlab <- "variable"
+                if (missing(ylab)) ylab <- varlab
+            } else {
+                ## Second component versus first
+                if (missing(xlab)) xlab <- varlab[1]
+                if (missing(ylab)) ylab <- varlab[2]
             }
-            labels <- as.character(labels)
-            type <- "n"
+            plot(L, xlab = xlab, ylab = ylab, type = type, lty = lty,
+                 lwd = lwd, pch = pch, cex = cex, col = col, ...)
+            if (!missing(labels)) text(L, labels, cex = cex, col = col, ...)
+            if (identify)
+                identify(L, labels = paste(1:nrow(L), rownames(L), sep = ": "))
+        } else {
+            ## Pairwise scatterplots of several components
+            panel <- if (missing(labels)) {
+                function(x, y, ...)
+                    points(x, y, type = type, lty = lty, lwd = lwd,
+                           pch = pch, col = col, ...)
+            } else {
+                function(x, y, ...)
+                    text(x, y, labels = labels, col = col, ...)
+            }
+            pairs(L, labels = varlab, panel = panel, cex = cex, ...)
         }
-        switch(as.character(nComps),    # as.character to get "otherwise"
-               ## One component versus index
-               "1" = { plot(L, xlab = "observation", ylab = varlab, type = type,
-                            ...)
-                       if (!missing(labels)) text(L, labels, ...)
-                   },
-               ## Second component versus first
-               "2" = { plot(L, xlab = varlab[1], ylab = varlab[2], type = type,
-                            ...)
-                       if (!missing(labels)) text(L, labels, ...)
-                   },
-               ## Pairwise scatterplots of several components
-               { panel <- if (missing(labels))
-                     function(x, y, ...) points(x, y, type = type, ...) else
-                     function(x, y, ...) text(x, y, labels = labels, ...)
-                 pairs(L, labels = varlab, panel = panel, ...)
-               }
-               )
-        if (identify && nComps <= 2)
-            identify(L, labels = paste(1:nrow(L), rownames(L), sep = ": "))
-    } else {
+    } else {                            # if (scatter)
         ## Line plots
         if (missing(type)) type <- "l"
-        matplot(L, xlab = "variable", ylab = "loading value", type = type, ...)
+        if (missing(lty)) lty <- 1:nComps
+        if (missing(pch)) pch <- 1:nComps
+        if (missing(col)) col <- 1:nComps
+        if (missing(xlab)) xlab <- "variable"
+        if (missing(ylab)) ylab <- "loading value"
+        xaxt <- if (missing(labels)) "s" else "n"
+        matplot(L, xlab = xlab, ylab = ylab, type = type,
+                lty = lty, lwd = lwd, pch = pch, cex = cex, col = col,
+                xaxt = xaxt, ...)
+        if (!missing(labels))
+            axis(1, at = seq(along = labels), labels = labels, ...)
+        if (!missing(legendpos)) {
+            ## Are we plotting lines?
+            dolines <- type %in% c("l", "b", "c", "o", "s", "S", "h")
+            ## Are we plotting points?
+            dopoints <- type %in% c("p", "b", "o")
+            if (length(lty) > nComps) lty <- lty[1:nComps]
+            do.call("legend", c(list(legendpos, varlab, col = col),
+                                if (dolines) list(lty = lty, lwd = lwd),
+                                if (dopoints) list(pch = pch, pt.cex = cex,
+                                                   pt.lwd = lwd)))
+        }
         if (identify)
             identify(c(row(L)), c(L),
                      labels = paste(c(col(L)), rownames(L), sep = ": "))
-    }
+    }                                   # if (scatter)
 }
 
 ## A plot method for loadings (loadings, loading.weights or Yloadings):
 plot.loadings <- function(x, ...) loadingplot(x, ...)
+
+
+###
+### Correlation loadings plot
+###
+
+corrplot <- function(object, comps = 1:2, labels, identify = FALSE,
+                     type = "p", xlab, ylab, ...) {
+    nComps <- length(comps)
+    if (nComps < 2) stop("At least two components must be selected.")
+    if (is.matrix(object)) {
+        ## Assume this is already a correlation matrix
+        cl <- object[,comps, drop = FALSE]
+        varlab <- colnames(cl)
+    } else {
+        S <- scores(object)[,comps, drop = FALSE]
+        if (is.null(S))
+            stop("`", deparse(substitute(object)), "' has no scores")
+        cl <- cor(model.matrix(object), S)
+        varlab <- compnames(object, comps, explvar = TRUE)
+    }
+    if (!missing(labels)) {
+        ## Set up point labels
+        if (length(labels) == 1) {
+            labels <- switch(match.arg(labels, c("names", "numbers")),
+                             names = rownames(cl),
+                             numbers = 1:nrow(cl)
+                             )
+        }
+        labels <- as.character(labels)
+        type <- "n"
+    }
+    if (nComps == 2) {
+        ## Second component versus first
+        if (missing(xlab)) xlab <- varlab[1]
+        if (missing(ylab)) ylab <- varlab[2]
+        plot(cl, xlim = c(-1,1), ylim = c(-1,1), asp = 1,
+             xlab = xlab, ylab = ylab, type = type, ...)
+        symbols(c(0, 0), c(0, 0), circles = c(0.5, 1), inches = FALSE,
+                add = TRUE)
+        segments(x0 = c(-1, 0), y0 = c(0, -1), x1 = c(1, 0), y1 = c(0, 1))
+        if (!missing(labels)) text(cl, labels, ...)
+        if (identify) {
+            if (!is.null(rownames(cl))) {
+                identify(cl, labels = rownames(cl))
+            } else {
+                identify(cl)
+            }
+        }
+    } else {
+        ## Pairwise scatterplots of several components
+        pointsOrText <- if (missing(labels)) {
+            function(x, y, ...) points(x, y, type = type, ...)
+        } else {
+            function(x, y, ...) text(x, y, labels = labels, ...)
+        }
+        panel <- function(x, y, ...) {
+            ## Ignore the leading `ghost points':
+            pointsOrText(x[-(1:2)], y[-(1:2)], ...)
+            symbols(c(0, 0), c(0, 0), circles = c(0.5, 1),
+                    inches = FALSE, add = TRUE)
+            segments(x0 = c(-1, 0), y0 = c(0, -1), x1 = c(1, 0),
+                     y1 = c(0, 1))
+        }
+        ## Call `pairs' with two leading `ghost points', to get
+        ## correct xlab and ylab:
+        pairs(rbind(-1, 1, cl), labels = varlab, panel = panel, asp = 1, ...)
+    }
+}
 
 
 ###
@@ -186,7 +272,8 @@ predplot.default <- function(object, ...) {
 
 ## Method for mvr objects:
 predplot.mvr <- function(object, ncomp = object$ncomp, which, newdata,
-                         nCols, nRows, ...)
+                         nCols, nRows, xlab = "measured", ylab = "predicted",
+                         font.main = 1, cex.main = 1.1, ...)
 {
     ## Select type(s) of prediction
     if (missing(which)) {
@@ -208,7 +295,7 @@ predplot.mvr <- function(object, ncomp = object$ncomp, which, newdata,
             stop("`which' should be a subset of ",
                  paste(allTypes, collapse = ", "))
     }
-    
+
     ## Help variables
     nEst <- length(which)
     nSize <- length(ncomp)
@@ -218,6 +305,9 @@ predplot.mvr <- function(object, ncomp = object$ncomp, which, newdata,
     dims <- c(nEst, nSize, nResp)
     dims <- dims[dims > 1]
     if (length(dims) > 0) {
+        ## Show the *labs in the margin:
+        mXlab <- xlab
+        mYlab <- ylab
         xlab <- ylab <- ""
         if(missing(nCols)) nCols <- min(c(3, dims[1]))
         if(missing(nRows))
@@ -228,8 +318,6 @@ predplot.mvr <- function(object, ncomp = object$ncomp, which, newdata,
             oma = c(1,1,0,0) + 0.1, mar = c(3,3,3,1) + 0.1)
         if (nRows * nCols < prod(dims)) par(ask = TRUE)
     } else {
-        xlab <- "measured"
-        ylab <- "predicted"
         nCols <- nRows <- 1
     }
 
@@ -251,15 +339,15 @@ predplot.mvr <- function(object, ncomp = object$ncomp, which, newdata,
                                                               data = newdata)))
         test.predicted <- predict(object, comps = ncomp, newdata = newdata)
     }
-  
+
     ## Do the plots
     plotNo <- 0
     for (resp in 1:nResp) {
         for (size in 1:nSize) {
             for (est in 1:nEst) {
                 plotNo <- plotNo + 1
-                main <- paste(colnames(object$fitted)[resp], ncomp[size],
-                              "comps,", which[est])
+                main <- sprintf("%s, %d comps, %s", respnames(object)[resp],
+                                ncomp[size], which[est])
                 sub <- which[est]
                 switch(which[est],
                        train = {
@@ -278,11 +366,11 @@ predplot.mvr <- function(object, ncomp = object$ncomp, which, newdata,
                 if (length(dims) > 0 &&
                     (plotNo %% (nCols * nRows) == 0 || plotNo == prod(dims))) {
                     ## Last plot on a page; add outer margin text:
-                    mtext("measured", side = 1, outer = TRUE)
-                    mtext("predicted", side = 2, outer = TRUE)
+                    mtext(mXlab, side = 1, outer = TRUE)
+                    mtext(mYlab, side = 2, outer = TRUE)
                 }
-                predplotXy(measured, predicted,
-                           main = main, font.main = 1, cex.main = 1.1, 
+                predplotXy(measured, predicted, main = main,
+                           font.main = font.main, cex.main = cex.main,
                            xlab = xlab, ylab = ylab, ...)
             }
         }
@@ -306,16 +394,23 @@ predplotXy <- function(x, y, line = FALSE, main = "Prediction plot",
 
 coefplot <- function(object, ncomp = object$ncomp, separate = FALSE,
                      cumulative = TRUE, intercept = FALSE,
-                     nCols, nRows, type = "l", ...)
+                     nCols, nRows, varnames = FALSE, type = "l",
+                     lty = 1:nLines, lwd = NULL,
+                     pch = 1:nLines, cex = NULL, col = 1:nLines, legendpos,
+                     xlab = "variable", ylab = "regression coefficient", ...)
 {
     ## Help variables
     nSize <- if (separate) length(ncomp) else 1
     nResp <- dim(object$fitted.values)[2]
+    nLines <- length(ncomp)
 
     ## Set plot parametres as needed:
     dims <- c(nSize, nResp)
     dims <- dims[dims > 1]
     if (length(dims) > 0) {
+        ## Show the *labs in the margin:
+        mXlab <- xlab
+        mYlab <- ylab
         xlab <- ylab <- ""
         if(missing(nCols)) nCols <- min(c(3, dims[1]))
         if(missing(nRows))
@@ -326,35 +421,59 @@ coefplot <- function(object, ncomp = object$ncomp, separate = FALSE,
             oma = c(1,1,0,0) + 0.1, mar = c(3,3,3,1) + 0.1)
         if (nRows * nCols < prod(dims)) par(ask = TRUE)
     } else {
-        xlab <- "variable"
-        ylab <- "regression coefficient"
         nCols <- nRows <- 1
     }
-  
+    if (length(lty) > nLines) lty <- lty[1:nLines] # otherwise legend chokes
+    if (sum(nchar(type)) != 1) stop("invalid plot type")
+    ## Are we plotting lines?
+    dolines <- type %in% c("l", "b", "c", "o", "s", "S", "h")
+    ## Are we plotting points?
+    dopoints <- type %in% c("p", "b", "o")
+
     coefs <- coef(object, comps = ncomp, intercept = intercept,
                   cumulative = cumulative)
-  
+    complabs <- dimnames(coefs)[[3]]
+    if (varnames) {
+        varlabs <- prednames(object, intercept = intercept)
+        xaxt <- "n"
+    } else {
+        xaxt <- "s"
+    }
+
     ## Do the plots
     plotNo <- 0
     for (resp in 1:nResp) {
-        respname <- dimnames(coefs)[[2]][resp]
+        respname <- respnames(object)[resp]
         for (size in 1:nSize) {
             plotNo <- plotNo + 1
-            main <- if (separate) paste(respname, dimnames(coefs)[[3]][size]) else respname
 
             if (length(dims) > 0 &&
                 (plotNo %% (nCols * nRows) == 0 || plotNo == prod(dims))) {
                 ## Last plot on a page; add outer margin text:
-                mtext("variable", side = 1, outer = TRUE)
-                mtext("regression coefficient", side = 2, outer = TRUE)
+                mtext(mXlab, side = 1, outer = TRUE)
+                mtext(mYlab, side = 2, outer = TRUE)
             }
 
             if (separate) {
-                plot(coefs[,resp,size], main = main, xlab = xlab, ylab = ylab,
-                     type = type, ...)
+                plot(coefs[,resp,size],
+                     main = paste(respname, complabs[size], sep = ", "),
+                     xlab = xlab, ylab = ylab, type = type,
+                     lty = lty, lwd = lwd, pch = pch, cex = cex,
+                     col = col, xaxt = xaxt, ...)
             } else {
-                matplot(coefs[,resp,], main = main, xlab = xlab, ylab = ylab,
-                        type = type, ...)
+                matplot(coefs[,resp,], main = respname, xlab = xlab,
+                        ylab = ylab, type = type, lty = lty, lwd = lwd,
+                        pch = pch, cex = cex, col = col, xaxt = xaxt, ...)
+                if (!missing(legendpos)) {
+                    do.call("legend", c(list(legendpos, complabs, col = col),
+                                        if(dolines) list(lty = lty, lwd = lwd),
+                                        if(dopoints) list(pch = pch,
+                                                          pt.cex = cex,
+                                                          pt.lwd = lwd)))
+                }
+            }
+            if (varnames) {
+                axis(1, at = seq(along = varlabs), labels = varlabs, ...)
             }
             abline(h = 0, col = "gray")
         }
@@ -377,13 +496,18 @@ validationplot <- function(object, val.type = c("RMSEP", "MSEP", "R2"),
 }
 
 ## A plot method for mvrVal objects:
-plot.mvrVal <- function(x, nCols, nRows, type = "l", ...)
+plot.mvrVal <- function(x, nCols, nRows, type = "l", lty = 1:nEst, lwd = NULL,
+                        pch = 1:nEst, cex = NULL, col = 1:nEst, legendpos,
+                        xlab = "number of components", ylab = x$type, ...)
 {
     if (!is.null(x$call$cumulative) && eval(x$call$cumulative) == FALSE)
         stop("`cumulative = FALSE' not supported.")
     ## Set plot parametres as needed:
-    nResp <- dim(x$val)[2]
+    nResp <- dim(x$val)[2]              # Number of response variables
     if (nResp > 1) {
+        ## Show the *labs in the margin:
+        mXlab <- xlab
+        mYlab <- ylab
         xlab <- ylab <- ""
         if(missing(nCols)) nCols <- min(c(3, nResp))
         if(missing(nRows)) nRows <- min(c(3, ceiling(nResp / nCols)))
@@ -393,30 +517,44 @@ plot.mvrVal <- function(x, nCols, nRows, type = "l", ...)
             oma = c(1,1,0,0) + 0.1, mar = c(3,3,3,1) + 0.1)
         if (nRows * nCols < nResp) par(ask = TRUE)
     } else {
-        xlab <- "number of components"
-        ylab <- x$type
         nCols <- nRows <- 1
     }
+    ynames <- dimnames(x$val)[[2]]      # Names of response variables
+    estnames <- dimnames(x$val)[[1]]    # Names of estimators
+    nEst <- length(estnames)
+    if (length(lty) > nEst) lty <- lty[1:nEst] # otherwise legend chokes
+    if (sum(nchar(type)) != 1) stop("invalid plot type")
+    ## Are we plotting lines?
+    dolines <- type %in% c("l", "b", "c", "o", "s", "S", "h")
+    ## Are we plotting points?
+    dopoints <- type %in% c("p", "b", "o")
 
-    ynames <- dimnames(x$val)[[2]]
     for (resp in 1:nResp) {
         if (nResp > 1 && (resp %% (nCols * nRows) == 0 || resp == nResp)) {
             ## Last plot on a page; add outer margin text:
-            mtext("number of components", side = 1, outer = TRUE)
-            mtext(x$type, side = 2, outer = TRUE)
+            mtext(mXlab, side = 1, outer = TRUE)
+            mtext(mYlab, side = 2, outer = TRUE)
         }
-        
+
         y <- x$val[,resp,]
         if (is.matrix(y)) y <- t(y)
         if (identical(all.equal(x$comps, min(x$comps):max(x$comps)),
                       TRUE)) {
-            matplot(x$comps, y, xlab = xlab, ylab = ylab,
-                    main = ynames[resp], type = type, ...)
+            matplot(x$comps, y, xlab = xlab, ylab = ylab, main = ynames[resp],
+                    type = type, lty = lty, lwd = lwd, pch = pch, cex = cex,
+                    col = col, ...)
         } else {
             ## Handle irregular x$comps:
-            matplot(y, xlab = xlab, ylab = ylab,
-                    main = ynames[resp], type = type, xaxt = "n", ...)
+            matplot(y, xlab = xlab, ylab = ylab, main = ynames[resp],
+                    xaxt = "n", type = type, lty = lty, lwd = lwd,
+                    pch = pch, cex = cex, col = col, ...)
             axis(1, seq(along = x$comps), x$comps)
+        }
+        if (!missing(legendpos)) {
+            do.call("legend", c(list(legendpos, estnames, col = col),
+                                if (dolines) list(lty = lty, lwd = lwd),
+                                if (dopoints) list(pch = pch, pt.cex = cex,
+                                                   pt.lwd = lwd)))
         }
     }
 }

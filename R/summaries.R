@@ -1,5 +1,5 @@
 ### summaries.R: print and summary methods.
-### $Id: summaries.R 5 2005-03-29 14:51:46Z  $
+### $Id: summaries.R 48 2005-10-07 12:52:59Z bhm $
 
 ## Print method for mvr objects:
 print.mvr <- function(x, ...) {
@@ -17,7 +17,7 @@ print.mvr <- function(x, ...) {
                alg = "orthogonal scores"
            },
            svdpc = {
-               regr = "Principal components"
+               regr = "Principal component"
                alg = "singular value decomposition"
            },
            stop("Unknown fit method.")
@@ -40,7 +40,7 @@ summary.mvr <- function(object, what = c("all", "validation", "training"),
   
     nobj <- nrow(object$scores)
     npred <- length(object$Ymeans)
-    yvarnames <- dimnames(object$fitted.values)[[2]]
+    yvarnames <- respnames(object)
     cat("Data: \tX dimension:", nobj, length(object$Xmeans),
         "\n\tY dimension:", nobj, npred)
     cat("\nFit method:", object$method)
@@ -49,9 +49,10 @@ summary.mvr <- function(object, what = c("all", "validation", "training"),
     for (wh in what) {
         if (wh == "training") {
             cat("\nTRAINING: % variance explained\n")
-            xve <- object$Xvar / object$Xtotvar
-            yve <- drop(R2(object, estimate = "train", intercept = FALSE)$val)
-            tbl <- 100 * rbind(cumsum(xve), yve)
+            xve <- explvar(object)
+            yve <- 100 * drop(R2(object, estimate = "train",
+                                 intercept = FALSE)$val)
+            tbl <- rbind(cumsum(xve), yve)
             dimnames(tbl) <- list(c("X", yvarnames),
                                   paste(1:object$ncomp, "comps"))
             print(tbl, digits = digits, print.gap = print.gap, ...)

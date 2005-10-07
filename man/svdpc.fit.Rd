@@ -1,8 +1,8 @@
-%% $Id: svdpc.fit.Rd 22 2005-04-02 11:44:04Z bhm $
+%% $Id: svdpc.fit.Rd 48 2005-10-07 12:52:59Z bhm $
 \encoding{latin1}
 \name{svdpc.fit}
 \alias{svdpc.fit}
-\title{Principal Components Regression}
+\title{Principal Component Regression}
 \description{Fits a PCR model using the singular value decomposition.}
 \usage{svdpc.fit(X, Y, ncomp, stripped = FALSE, \dots)}
 \arguments{
@@ -43,16 +43,19 @@
   \item{Xvar}{a vector with the amount of X-variance explained by each
     number of components.}
   \item{Xtotvar}{Total variance in \code{X}.}
-  
+
   If \code{stripped} is \code{TRUE}, only the components
   \code{coefficients}, \code{Xmeans} and \code{Ymeans} are returned.
 }
-%\references{}
+\references{
+  Martens, H., Næs, T. (1989) \emph{Multivariate calibration.}
+  Chichester: Wiley.
+}
 \author{Ron Wehrens and Bjørn-Helge Mevik}
 \seealso{
   \code{\link{mvr}}
-  \code{\link{pcr}}
   \code{\link{plsr}}
+  \code{\link{pcr}}
 }
 \keyword{regression}
 \keyword{multivariate}
