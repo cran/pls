@@ -1,4 +1,4 @@
-%% $Id: predplot.Rd 36 2005-05-15 12:36:19Z bhm $
+%% $Id: predplot.Rd 42 2005-05-19 21:26:38Z bhm $
 \encoding{latin1}
 \name{predplot}
 \alias{predplot}
@@ -14,7 +14,8 @@
 predplot(object, \dots)
 \method{predplot}{default}(object, \dots)
 \method{predplot}{mvr}(object, ncomp = object$ncomp, which, newdata, nCols, 
-         nRows, \dots)
+         nRows, xlab = "measured", ylab = "predicted",
+         font.main = 1, cex.main = 1.1, \dots)
 predplotXy(x, y, line = FALSE, main = "Prediction plot",
            xlab = "measured response", ylab = "predicted response", \dots)
 }
@@ -36,8 +37,13 @@ predplotXy(x, y, line = FALSE, main = "Prediction plot",
   \item{y}{numeric vector.  The predicted response values.}
   \item{line}{logical.  Whether a target line should be shown.}
   \item{main}{character.  Main title of plot.}
-  \item{xlab}{character.  X axis label.}
-  \item{ylab}{character.  Y axis label.}
+  \item{xlab,ylab}{titles for \eqn{x} and \eqn{y} axes.  Typically
+    character strings, but can be expressions or lists.  See
+    \code{\link{title}} for details.}
+  \item{font.main}{font to use for main title.  See \code{\link{par}}
+    for details.}
+  \item{cex.main}{numeric.  The magnification to be used for main titles
+    relative to the current size.}
   \item{\dots}{further arguments sent to underlying plot functions.}
 }
 \details{

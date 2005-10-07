@@ -1,24 +1,24 @@
-%% $Id: mvr.Rd 36 2005-05-15 12:36:19Z bhm $
+%% $Id: mvr.Rd 46 2005-07-18 09:37:43Z bhm $
 \encoding{latin1}
 \name{mvr}
 \alias{mvr}
 \alias{pcr}
 \alias{plsr}
-\title{Partial Least Squares and Principal Components Regression}
+\title{Partial Least Squares and Principal Component Regression}
 \description{
   Functions to perform partial least squares regression (PLSR) or
-  principal components regression (PCR), with a formula interface.
+  principal component regression (PCR), with a formula interface.
   Cross-validation can be used.  Prediction, model extraction, plot,
   print and summary methods exist.
 }
 %% FIXME: Maybe use a \synopsis section, and show typical uses in \usage:
 \usage{
 mvr(formula, ncomp, data, subset, na.action,
-    method = c("kernelpls", "simpls", "oscorespls", "svdpc"),
-    validation = c("none", "CV", "LOO"),
+    method = c("kernelpls", "simpls", "oscorespls", "svdpc", "model.frame"),
+    scale = FALSE, validation = c("none", "CV", "LOO"),
     model = TRUE, x = FALSE, y = FALSE, \dots)
-plsr(\dots, method = c("kernelpls", "simpls", "oscorespls"))
-pcr(\dots, method = "svdpc")
+plsr(\dots, method = c("kernelpls", "simpls", "oscorespls", "model.frame"))
+pcr(\dots, method = c("svdpc", "model.frame"))
 }
 \arguments{
   \item{formula}{a model formula.  Most of the \code{lm} formula
@@ -29,7 +29,14 @@ pcr(\dots, method = "svdpc")
     to be used in the fitting process.}
   \item{na.action}{a function which indicates what should happen when
     the data contain missing values.}
-  \item{method}{the multivariate regression method to be used.}
+  \item{method}{the multivariate regression method to be used.  If
+    \code{"model.frame"}, the model frame is returned.}
+  \item{scale}{numeric vector, or logical.  If numeric vector, \eqn{X}
+    is scaled by dividing each variable with the corresponding element
+    of \code{scale}.  If \code{scale} is \code{TRUE}, \eqn{X} is scaled
+    by dividing each variable by its sample standard deviation.  If
+    cross-validation is selected, scaling by the standard deviation is
+    done for every segment.}
   \item{validation}{character.  What kind of (internal) validation to
     use.  See below.}
   \item{model}{a logical.  If \code{TRUE}, the model frame is returned.}
@@ -74,13 +81,15 @@ pcr(\dots, method = "svdpc")
   Note that the cross-validation is optimised for speed, and some
   generality has been sacrificed.  Especially, the model matrix is
   calculated only once for the complete cross-validation, so models like
-  \code{y ~ msc(X)} will not be properly cross-validated.  For proper
-  cross-validation of models where the model matrix must be
+  \code{y ~ msc(X)} will not be properly cross-validated.  However,
+  scaling requested by \code{scale = TRUE} is properly cross-validated.
+  For proper cross-validation of models where the model matrix must be
   updated/regenerated for each segment, use the separate function
   \code{\link{crossval}}.
 }
 \value{
-  \code{mvr} returns an object of class \code{mvr}.
+  If \code{method = "model.frame"}, the model frame is returned.
+  Otherwise, an object of class \code{mvr} is returned.
   The object contains all components returned by the underlying fit
   function.  In addition, it contains the following components:
   \item{validation}{if validation was requested, the results of the
@@ -88,6 +97,8 @@ pcr(\dots, method = "svdpc")
   \item{ncomp}{the number of components of the model.}
   \item{method}{the method used to fit the model.  See the argument
     \code{method} for possible values.}
+  \item{scale}{if scaling was requested (with \code{scale}), the
+    scaling used.}
   \item{call}{the function call.}
   \item{terms}{the model terms.}
   \item{model}{if \code{model = TRUE}, the model frame.}
@@ -99,13 +110,13 @@ pcr(\dots, method = "svdpc")
   Chichester: Wiley.
 }
 \author{Ron Wehrens and Bjørn-Helge Mevik}
-%% FIXME: Add more functions:
 \seealso{
   \code{\link{kernelpls.fit}},
   \code{\link{simpls.fit}},
   \code{\link{oscorespls.fit}},
   \code{\link{svdpc.fit}},
   \code{\link{mvrCv}},
+  \code{\link{crossval}},
   \code{\link[stats]{loadings}},
   \code{\link{scores}},
   \code{\link{loading.weights}},
@@ -113,7 +124,8 @@ pcr(\dots, method = "svdpc")
   \code{\link{predict.mvr}},
   \code{\link{R2}},
   \code{\link{MSEP}},
-  \code{\link{RMSEP}}}
+  \code{\link{RMSEP}},
+  \code{\link{plot.mvr}}}
 \examples{
 data(NIR)
 ## Default methods:

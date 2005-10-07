@@ -1,5 +1,5 @@
 ### extract.R:  Extraction functions
-### $Id: extract.R 40 2005-05-15 14:19:17Z bhm $
+### $Id: extract.R 49 2005-10-07 19:30:31Z bhm $
 
 ## coef.mvr: Extract the base variable regression coefficients from
 ## an mvr object.
@@ -14,7 +14,7 @@ coef.mvr <- function(object, comps = object$ncomp, intercept = FALSE,
             dB <- dim(B)
             dB[1] <- dB[1] + 1
             dnB <- dimnames(B)
-            dnB[[1]] <- c("(Intercept)", dnB[[1]]) 
+            dnB[[1]] <- c("(Intercept)", dnB[[1]])
             BInt <- array(dim = dB, dimnames = dnB)
             BInt[-1,,] <- B
             for (i in seq(along = comps))
@@ -36,7 +36,7 @@ coef.mvr <- function(object, comps = object$ncomp, intercept = FALSE,
 
 ## fitted.default is in stats.
 
-## loadings is in stats, but unfortunately doesn't work for prcomp objects.
+## loadings is in stats, but unfortunately doesn't work for prcomp objects).
 
 ## scores: Return the scores (also works for prcomp/princomp objects):
 scores <- function(object, ...) UseMethod("scores")
@@ -52,14 +52,74 @@ loading.weights <- function(object) object$loading.weights
 ## Yloadings: Return the Yloadings
 Yloadings <- function(object) object$Yloadings
 
-## model.matrix.mvr: Extract the model matrix from an `mvr' object.
-## Modelled after model.matrix.lm.
-model.matrix.mvr <- function(object, ...) 
+## model.frame.mvr: Extract or generate the model frame from a `mvr' object.
+## It is simply a slightly modified `model.frame.lm'.
+model.frame.mvr <- function(formula, ...)
 {
-    if (n_match <- match("x", names(object), 0)) 
+    dots <- list(...)
+    nargs <- dots[match(c("data", "na.action", "subset"), names(dots), 0)]
+    if (length(nargs) || is.null(formula$model)) {
+        fcall <- formula$call
+        fcall$method <- "model.frame"
+        fcall[[1]] <- as.name("mvr")
+        fcall[names(nargs)] <- nargs
+        env <- environment(formula$terms)
+        if (is.null(env)) env <- parent.frame()
+        eval(fcall, env, parent.frame())
+    }
+    else formula$model
+}
+
+## model.matrix.mvr: Extract the model matrix from an `mvr' object.
+## It is a modified version of model.matrix.lm.
+model.matrix.mvr <- function(object, ...)
+{
+    if (n_match <- match("x", names(object), 0))
         object[[n_match]]
     else {
         data <- model.frame(object, ...)
-        NextMethod("model.matrix", data = data)
+        mm <- NextMethod("model.matrix", data = data)
+        ## model.matrix.default prepends the term name to the colnames of
+        ## matrices.  If there is only one predictor term, and the
+        ## corresponding matrix has colnames, remove the prepended term name:
+        mt <- terms(object)
+        if (length(attr(mt, "term.labels")) == 1 &&
+            !is.null(colnames(data[[attr(mt, "term.labels")]])))
+            colnames(mm) <- sub(attr(mt, "term.labels"), "", colnames(mm))
+        return(mm)
     }
 }
+
+## The following "extraction" functions are mostly used in plot and summary
+## functions.
+
+## The names of the response variables:
+respnames <- function(object)
+    dimnames(fitted(object))[[2]]
+
+## The names of the prediction variables:
+prednames <- function(object, intercept = FALSE) {
+    if (identical(TRUE, intercept))
+        c("(Intercept)", rownames(loadings(object)))
+    else
+        rownames(loadings(object))
+}
+
+## The names of the components:
+## Note: The components must be selected prior to the format statement
+compnames <- function(object, comps = 1:object$ncomp, explvar = FALSE) {
+    labs <- colnames(scores(object))[comps]
+    if (identical(TRUE, explvar) && !is.null(evar <- explvar(object)[comps]))
+        labs <- paste(labs, " (", format(evar, digits = 2, trim = TRUE),
+                      " %)", sep = "")
+    return(labs)
+}
+
+## The explained X variance:
+explvar <- function(object)
+    switch(class(object)[1],
+           mvr = 100 * object$Xvar / object$Xtotvar,
+           princomp =,
+           prcomp = 100 * object$sdev^2 / sum(object$sdev^2)
+           )
+
