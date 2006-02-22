@@ -1,4 +1,4 @@
-%% $Id: predplot.Rd 42 2005-05-19 21:26:38Z bhm $
+%% $Id: predplot.Rd 60 2006-02-12 21:36:18Z bhm $
 \encoding{latin1}
 \name{predplot}
 \alias{predplot}
@@ -15,9 +15,10 @@ predplot(object, \dots)
 \method{predplot}{default}(object, \dots)
 \method{predplot}{mvr}(object, ncomp = object$ncomp, which, newdata, nCols, 
          nRows, xlab = "measured", ylab = "predicted",
-         font.main = 1, cex.main = 1.1, \dots)
+         \dots, font.main = 1, cex.main = 1.1)
 predplotXy(x, y, line = FALSE, main = "Prediction plot",
-           xlab = "measured response", ylab = "predicted response", \dots)
+           xlab = "measured response", ylab = "predicted response",
+           line.col = par("col"), line.lty = NULL, line.lwd = NULL, \dots)
 }
 \arguments{
   \item{object}{a fitted model.}
@@ -33,10 +34,6 @@ predplotXy(x, y, line = FALSE, main = "Prediction plot",
   \item{nCols, nRows}{integer.  The number of coloumns and rows the
     plots will be laid out in.  If not specified, \code{plot.mvr} tries
     to be intelligent.}
-  \item{x}{numeric vector.  The observed response values.}
-  \item{y}{numeric vector.  The predicted response values.}
-  \item{line}{logical.  Whether a target line should be shown.}
-  \item{main}{character.  Main title of plot.}
   \item{xlab,ylab}{titles for \eqn{x} and \eqn{y} axes.  Typically
     character strings, but can be expressions or lists.  See
     \code{\link{title}} for details.}
@@ -44,6 +41,13 @@ predplotXy(x, y, line = FALSE, main = "Prediction plot",
     for details.}
   \item{cex.main}{numeric.  The magnification to be used for main titles
     relative to the current size.}
+  \item{x}{numeric vector.  The observed response values.}
+  \item{y}{numeric vector.  The predicted response values.}
+  \item{line}{logical.  Whether a target line should be drawn.}
+  \item{main}{character.  Main title of plot.}
+  \item{line.col, line.lty, line.lwd}{character or numeric.  The
+    \code{col}, \code{lty} and \code{lwd} parametres for the target
+    line.  See \code{\link{par}} for details.}
   \item{\dots}{further arguments sent to underlying plot functions.}
 }
 \details{
@@ -52,19 +56,25 @@ predplotXy(x, y, line = FALSE, main = "Prediction plot",
   currently implemented.  The default method is very simple, and doesn't
   handle multiple responses or new data.
 
-  The \code{mvr} method, \code{predplot.mvr} handles multiple responses,
+  The \code{mvr} method, handles multiple responses,
   model sizes and types of predictions by making one plot for each
   combination.  It can also be called through the plot method for
   \code{mvr}, by specifying \code{plottype = "prediction"} (the
   default).
 
   \code{predplotXy} is an internal function and is not meant for
-  interactive use.
+  interactive use.  It is called by the \code{predplot} methods, and its
+  arguments, e.g, \code{line}, can be given in the \code{predplot} call.
 }
 \value{
   The functions invisibly returns a matrix with the (last) plotted data.
 }
 \author{Ron Wehrens and Bjørn-Helge Mevik}
+\note{
+  The \code{font.main} and \code{cex.main} must be (completely) named.
+  This is to avoid that any argument \code{cex} or \code{font} matches
+  them.
+}
 \seealso{\code{\link{mvr}}, \code{\link{plot.mvr}}}
 \examples{
 data(NIR)

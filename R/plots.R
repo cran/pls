@@ -1,7 +1,7 @@
 ### Plots for mvr objects.  Some of them also work for other
 ### objects, but that is not a priority.
 ###
-### $Id: plots.R 48 2005-10-07 12:52:59Z bhm $
+### $Id: plots.R 60 2006-02-12 21:36:18Z bhm $
 
 ###
 ### Plot method for mvr objects
@@ -29,19 +29,22 @@ plot.mvr <- function(x, plottype = c("prediction", "validation",
 ### Scoreplot
 ###
 
-scoreplot <- function(object, comps = 1:2, labels, identify = FALSE,
-                      type = "p", xlab, ylab, ...) {
+scoreplot <- function(object, ...) UseMethod("scoreplot")
+
+scoreplot.default <- function(object, comps = 1:2, labels, identify = FALSE,
+                              type = "p", xlab, ylab, ...) {
+    ## Check arguments
     nComps <- length(comps)
     if (nComps == 0) stop("At least one component must be selected.")
+    ## Get the scores
     if (is.matrix(object)) {
         ## Assume this is already a score matrix
         S <- object[,comps, drop = FALSE]
-        varlab <- colnames(S)
     } else {
+        ## Try to get the scores
         S <- scores(object)[,comps, drop = FALSE]
         if (is.null(S))
-            stop("`", deparse(substitute(object)), "' has no scores")
-        varlab <- compnames(object, comps, explvar = TRUE)
+            stop("`", deparse(substitute(object)), "' has no scores.")
     }
     if (!missing(labels)) {
         ## Set up point labels
@@ -54,6 +57,7 @@ scoreplot <- function(object, comps = 1:2, labels, identify = FALSE,
         labels <- as.character(labels)
         type <- "n"
     }
+    varlab <- compnames(object, comps, explvar = TRUE)
     if (nComps <= 2) {
         if (nComps == 1) {
             ## One component versus index
@@ -90,22 +94,25 @@ plot.scores <- function(x, ...) scoreplot(x, ...)
 ### Loadingplot
 ###
 
-loadingplot <- function(object, comps = 1:2, scatter = FALSE, labels,
-                        identify = FALSE, type, lty, lwd = NULL, pch,
-                        cex = NULL, col, legendpos, xlab, ylab, ...)
+loadingplot <- function(object, ...) UseMethod("loadingplot")
+
+loadingplot.default <- function(object, comps = 1:2, scatter = FALSE, labels,
+                                identify = FALSE, type, lty, lwd = NULL, pch,
+                                cex = NULL, col, legendpos, xlab, ylab, ...)
 {
+    ## Check arguments
     nComps <- length(comps)
     if (nComps == 0) stop("At least one component must be selected.")
-    if (!missing(type) && sum(nchar(type)) != 1) stop("invalid plot type")
+    if (!missing(type) && sum(nchar(type)) != 1) stop("Invalid plot type.")
+    ## Get the loadings
     if (is.matrix(object)) {
         ## Assume this is already a loading matrix
         L <- object[,comps, drop = FALSE]
-        varlab <- colnames(L)
     } else {
+        ## Try to get the loadings:
         L <- loadings(object)[,comps, drop = FALSE]
         if (is.null(L))
-            stop("`", deparse(substitute(object)), "' has no loadings")
-        varlab <- compnames(object, comps, explvar = TRUE)
+            stop("`", deparse(substitute(object)), "' has no loadings.")
     }
     if (!missing(labels)) {
         ## Set up point/tick mark labels
@@ -117,6 +124,7 @@ loadingplot <- function(object, comps = 1:2, scatter = FALSE, labels,
         }
         labels <- as.character(labels)
     }
+    varlab <- compnames(object, comps, explvar = TRUE)
     if (scatter) {
         ## Scatter plots
         if (missing(type)) type <- "p"
@@ -273,7 +281,7 @@ predplot.default <- function(object, ...) {
 ## Method for mvr objects:
 predplot.mvr <- function(object, ncomp = object$ncomp, which, newdata,
                          nCols, nRows, xlab = "measured", ylab = "predicted",
-                         font.main = 1, cex.main = 1.1, ...)
+                         ..., font.main = 1, cex.main = 1.1)
 {
     ## Select type(s) of prediction
     if (missing(which)) {
@@ -380,10 +388,11 @@ predplot.mvr <- function(object, ncomp = object$ncomp, which, newdata,
 ## The workhorse function:
 predplotXy <- function(x, y, line = FALSE, main = "Prediction plot",
                        xlab = "measured response",
-                       ylab = "predicted response", ...)
+                       ylab = "predicted response", line.col = par("col"),
+                       line.lty = NULL, line.lwd = NULL, ...)
 {
     plot(y ~ x, main = main, xlab = xlab, ylab = ylab, ...)
-    if (line) abline(0,1)
+    if (line) abline(0, 1, col = line.col, lty = line.lty, lwd = line.lwd)
     invisible(cbind(measured = x, predicted = as.vector(y)))
 }
 

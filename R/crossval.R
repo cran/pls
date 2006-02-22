@@ -1,5 +1,5 @@
 ### crossval.R: Genereral cross-validation function.
-### $Id: crossval.R 4 2005-03-29 14:45:43Z  $
+### $Id: crossval.R 61 2006-02-15 14:45:23Z bhm $
 
 crossval <- function(object, segments = 10,
                      segment.type = c("random", "consecutive", "interleaved"),
@@ -51,6 +51,10 @@ crossval <- function(object, segments = 10,
     }
 
     ncomp <- object$ncomp
+    if (ncomp > n - max(sapply(segments, length)) - 1)
+        stop("`ncomp' too large for cross-validation.",
+             "\nPlease refit with `ncomp' less than ",
+             n - max(sapply(segments, length)))
     cvPred <- array(dim = c(n, npred, ncomp))
     adj <- numeric(ncomp)
 
@@ -92,6 +96,6 @@ crossval <- function(object, segments = 10,
     ## Return the original object, with a component `validation' added
     object$validation <- list(method = "CV", pred = cvPred,
                               MSEP0 = MSEP0, MSEP = MSEP, adj = adj / n^2,
-                              R2 = R2, segments = segments)
+                              R2 = R2, segments = segments, ncomp = ncomp)
     return(object)
 }

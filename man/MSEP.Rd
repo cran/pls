@@ -1,8 +1,10 @@
-%% $Id: MSEP.Rd 38 2005-05-15 13:50:17Z bhm $
+%% $Id: MSEP.Rd 64 2006-02-18 14:38:37Z bhm $
 \encoding{latin1}
 \name{MSEP}
 \alias{MSEP}
+\alias{MSEP.mvr}
 \alias{RMSEP}
+\alias{RMSEP.mvr}
 \alias{R2}
 \title{MSEP, RMSEP and R2 of PLSR and PCR models}
 \description{
@@ -12,9 +14,13 @@
   estimates are implemented.
 }
 \usage{
-MSEP(object, estimate, newdata, comps = 1:object$ncomp,
+MSEP(object, ...)
+\method{MSEP}{mvr}(object, estimate, newdata, comps = 1:object$ncomp,
      cumulative = TRUE, intercept = cumulative, se = FALSE, \dots)
-RMSEP(\dots)
+
+RMSEP(object, ...)
+\method{RMSEP}{mvr}(object, ...)
+
 R2(object, estimate, newdata, comps = 1:object$ncomp,
    cumulative = TRUE, intercept = cumulative, se = FALSE, \dots)
 }
