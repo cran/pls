@@ -1,4 +1,4 @@
-%% $Id: predict.mvr.Rd 37 2005-05-15 13:39:40Z bhm $
+%% $Id: predict.mvr.Rd 54 2005-11-21 14:32:53Z bhm $
 \encoding{latin1}
 \name{predict.mvr}
 \alias{predict.mvr}
@@ -9,7 +9,8 @@
 }
 \usage{
 \method{predict}{mvr}(object, newdata, comps = 1:object$ncomp,
-        type = c("response", "scores"), cumulative = TRUE, \dots)
+        type = c("response", "scores"), cumulative = TRUE,
+        na.action = na.pass, \dots)
 }
 \arguments{
   \item{object}{an \code{mvr} object.  The fitted model}
@@ -20,6 +21,9 @@
   \item{type}{character.  Whether to predict scores or response values}
   \item{cumulative}{logical.  How the elements of \code{comps} are
     interpreted.  Ignored if \code{type} is \code{"scores"}.  See below}
+  \item{na.action}{function determining what should be done with missing
+    values in \code{newdata}.  The default is to predict \code{NA}.  See
+    \code{\link{na.omit}} for alternatives.}
   \item{\dots}{further arguments.  Currently not used}
 }
 \details{
@@ -36,7 +40,7 @@
 
   It is also possible to supply a matrix instead of a data frame as
   \code{newdata}, which is then assumed to be the \eqn{X} data matrix.
-  Note that the usual checks for the size and type of the data are then
+  Note that the usual checks for the type of the data are then
   omitted.  Also note that this is
   \emph{only} possible with \code{predict}; it will not work in
   functions like \code{\link{predplot}}, \code{\link{RMSEP}} or

@@ -1,5 +1,5 @@
 ### extract.R:  Extraction functions
-### $Id: extract.R 49 2005-10-07 19:30:31Z bhm $
+### $Id: extract.R 57 2006-02-09 14:25:54Z bhm $
 
 ## coef.mvr: Extract the base variable regression coefficients from
 ## an mvr object.
@@ -34,14 +34,67 @@ coef.mvr <- function(object, comps = object$ncomp, intercept = FALSE,
     return(B)
 }
 
-## fitted.default is in stats.
+## fitted.mvr: Extract the fitted values.  It is needed because the case
+## na.action == "na.exclude" must be treated differently from what is done
+## in fitted.default.
+fitted.mvr <- function(object, ...) {
+    if (inherits(object$na.action, "exclude")) {
+        naExcludeMvr(object$na.action, object$fitted.values)
+    } else {
+        object$fitted.values
+    }
+}
 
-## loadings is in stats, but unfortunately doesn't work for prcomp objects).
+## residuals.mvr: Extract the residuals.  It is needed because the case
+## na.action == "na.exclude" must be treated differently from what is done
+## in residuals.default.
+residuals.mvr <- function(object, ...) {
+    if (inherits(object$na.action, "exclude")) {
+        naExcludeMvr(object$na.action, object$residuals)
+    } else {
+        object$residuals
+    }
+}
+
+## naExcludeMvr: Perform the equivalent of naresid.exclude and
+## napredict.exclude on three-dimensional arrays where the first dimension
+## corresponds to the observations.
+## Almost everything here is lifted verbatim from naresid.exclude (R 2.2.0)
+naExcludeMvr <- function(omit, x, ...) {
+    if (length(omit) == 0 || !is.numeric(omit))
+        stop("invalid argument 'omit'")
+    if (length(x) == 0)
+        return(x)
+    n <- nrow(x)
+    keep <- rep.int(NA, n + length(omit))
+    keep[-omit] <- 1:n
+    x <- x[keep,,, drop = FALSE]        # This is where the real difference is!
+    temp <- rownames(x)
+    if (length(temp)) {
+        temp[omit] <- names(omit)
+        rownames(x) <- temp
+    }
+    return(x)
+}
+
+## loadings is in stats, but doesn't work for prcomp objects, and is not
+## generic, so we build our own:
+loadings <- function(object, ...) UseMethod("loadings")
+loadings.default <- function(object, ...) {
+    L <- if (inherits(object, "prcomp")) object$rotation else object$loadings
+    if (!inherits(L, "loadings")) class(L) <- "loadings"
+    attr(L, "explvar") <- explvar(object)
+    L
+}
 
 ## scores: Return the scores (also works for prcomp/princomp objects):
 scores <- function(object, ...) UseMethod("scores")
-scores.default <- function(object, ...) object$scores
-scores.prcomp <- function(object, ...) object$x
+scores.default <- function(object, ...) {
+    S <- if (inherits(object, "prcomp")) object$x else object$scores
+    if (!inherits(S, "scores")) class(S) <- "scores"
+    attr(S, "explvar") <- explvar(object)
+    S
+}
 
 ## Yscores: Return the Yscores
 Yscores <- function(object) object$Yscores
@@ -100,26 +153,33 @@ respnames <- function(object)
 ## The names of the prediction variables:
 prednames <- function(object, intercept = FALSE) {
     if (identical(TRUE, intercept))
-        c("(Intercept)", rownames(loadings(object)))
+        c("(Intercept)", rownames(object$loadings))
     else
-        rownames(loadings(object))
+        rownames(object$loadings)
 }
 
 ## The names of the components:
 ## Note: The components must be selected prior to the format statement
-compnames <- function(object, comps = 1:object$ncomp, explvar = FALSE) {
-    labs <- colnames(scores(object))[comps]
-    if (identical(TRUE, explvar) && !is.null(evar <- explvar(object)[comps]))
+compnames <- function(object, comps, explvar = FALSE, ...) {
+    M <- if(is.matrix(object)) object else scores(object)
+    labs <- colnames(M)
+    if (missing(comps))
+        comps <- seq(along = labs)
+    else
+        labs <- labs[comps]
+    if (identical(TRUE, explvar) && !is.null(evar <- explvar(M)[comps]))
         labs <- paste(labs, " (", format(evar, digits = 2, trim = TRUE),
                       " %)", sep = "")
     return(labs)
 }
+
 
 ## The explained X variance:
 explvar <- function(object)
     switch(class(object)[1],
            mvr = 100 * object$Xvar / object$Xtotvar,
            princomp =,
-           prcomp = 100 * object$sdev^2 / sum(object$sdev^2)
+           prcomp = 100 * object$sdev^2 / sum(object$sdev^2),
+           scores =,
+           loadings = attr(object, "explvar")
            )
-

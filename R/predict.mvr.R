@@ -1,17 +1,20 @@
 ### predict.mvr.R: A predict method
-### $Id: predict.mvr.R 46 2005-07-18 09:37:43Z bhm $
+### $Id: predict.mvr.R 54 2005-11-21 14:32:53Z bhm $
 
 predict.mvr <- function(object, newdata, comps = 1:object$ncomp,
                         type = c("response", "scores"), cumulative = TRUE,
-                        ...) {
+                        na.action = na.pass, ...) {
     if (missing(newdata) || is.null(newdata))
         newX <- model.matrix(object)
-    else if (is.matrix(newdata))
+    else if (is.matrix(newdata)) {
+        ## For matrices, simply check dimension:
+        if (ncol(newdata) != length(object$Xmeans))
+            stop("'newdata' does not have the correct number of columns")
         newX <- newdata
-    else {
+    } else {
         Terms <- delete.response(terms(object))
-        m <- model.frame(Terms, newdata)
-        if (!is.null(cl <- attr(Terms, "dataClasses"))) 
+        m <- model.frame(Terms, newdata, na.action = na.action)
+        if (!is.null(cl <- attr(Terms, "dataClasses")))
             .checkMFClasses(cl, m)
         newX <- model.matrix(Terms, m)
     }

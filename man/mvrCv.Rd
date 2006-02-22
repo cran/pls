@@ -1,4 +1,4 @@
-%% $Id: mvrCv.Rd 46 2005-07-18 09:37:43Z bhm $
+%% $Id: mvrCv.Rd 61 2006-02-15 14:45:23Z bhm $
 \encoding{latin1}
 \name{mvrCv}
 \alias{mvrCv}
@@ -28,7 +28,8 @@ mvrCv(X, Y, ncomp,
   \item{segment.type}{the type of segments to use.  Ignored if
     \code{segments} is a list.}
   \item{length.seg}{Positive integer.  The length of the segments to
-    use.  If specified, it overrides \code{segments}.}
+    use.  If specified, it overrides \code{segments} unless
+    \code{segments} is a list.}
   \item{trace}{logical; if \code{TRUE}, the segment number is printed
     for each segment.}
   \item{\dots}{additional arguments, sent to the underlying fit function.}
@@ -39,13 +40,16 @@ mvrCv(X, Y, ncomp,
   argument \code{validation} set to \code{"CV"} or \code{"LOO"}.  All
   arguments to \code{mvrCv} can be specified in the generic function call.
 
-  If \code{length.seg} is specified, segments of the requested length
-  are used.  Otherwise:
-  If \code{segments} is a number, it specifies the number of segments to
-  use, and \code{segment.type} is used to select the type of segments.
-  If \code{segments} is a list, the elements of the list should be
+  If \code{segments} is a list, the arguments \code{segment.type} and
+  \code{length.seg} are ignored.  The elements of the list should be
   integer vectors specifying the indices of the segments.  See
   \code{\link{cvsegments}} for details.
+
+  Otherwise, segments of type \code{segment.type} are generated.  How
+  many segments to generate is selected by specifying the number of
+  segments in \code{segments}, or giving the segment length in
+  \code{length.seg}.  If both are specified, \code{segments} is
+  ignored.
 
   \code{X} and \code{Y} do not need to be centered.
 
@@ -57,6 +61,13 @@ mvrCv(X, Y, ncomp,
   standard deviation), for instance with
   \code{msc} or other preprocessing.  For such models, use the more
   general (but slower) function \code{\link{crossval}}.
+
+  Also note that if needed, the function will silently(!) reduce
+  \code{ncomp} to the maximal number of components that can be
+  cross-validated, which is \eqn{n - l -  1}, where \eqn{n} is the
+  number of observations and \eqn{l} is the length of the longest
+  segment.  The (possibly reduced) number of components is returned as
+  the component \code{ncomp}.
 }
 \value{
   A list with the following components:
@@ -71,6 +82,7 @@ mvrCv(X, Y, ncomp,
   \item{R2}{a matrix of R2 values for models with 1, \ldots,
     \code{ncomp} components.  Each row corresponds to one response variable.}
   \item{segments}{the list of segments used in the cross-validation.}
+  \item{ncomp}{the actual number of components used.}
 }
 \references{
   Mevik, B.-H., Cederkvist, H. R. (2004) Mean Squared Error of

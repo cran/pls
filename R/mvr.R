@@ -1,6 +1,6 @@
 ### mvr.R: plsr/pcr modelling functions
 ###
-### $Id: mvr.R 46 2005-07-18 09:37:43Z bhm $
+### $Id: mvr.R 66 2006-02-22 11:34:01Z bhm $
 
 ## The top level user function.  Implements a formula interface and calls the
 ## correct fit function to do the work.
@@ -44,13 +44,15 @@ mvr <- function(formula, ncomp, data, subset, na.action,
     ## Set or check the number of components:
     if (missing(ncomp)) {
         ncomp <- min(nrow(X) - 1, ncol(X))
+        ncompWarn <- FALSE              # Don't warn about changed `ncomp'
     } else {
         if (ncomp < 1 || ncomp > min(nrow(X) - 1, ncol(X)))
             stop("Invalid number of components, ncomp")
+        ncompWarn <- TRUE
     }
 
     ## Handle any fixed scaling before the the validation
-    sdscale <- isTRUE(scale)            # Signals scaling by sd
+    sdscale <- identical(TRUE, scale)   # Signals scaling by sd
     if (is.numeric(scale))
         if (length(scale) == ncol(X))
             X <- sweep(X, 2, scale, "/")
@@ -71,6 +73,12 @@ mvr <- function(formula, ncomp, data, subset, na.action,
                val <- NULL
            }
            )
+    ## Check and possibly adjust ncomp:
+    if (identical(TRUE, ncomp > val$ncomp)) {
+        ncomp <- val$ncomp
+        if (ncompWarn) warning("`ncomp' reduced to ", ncomp,
+                               " due to cross-validation")
+    }
 
     ## Select fit function:
     fitFunc <- switch(method,
@@ -91,6 +99,7 @@ mvr <- function(formula, ncomp, data, subset, na.action,
 
     ## Build and return the object:
     class(z) <- "mvr"
+    z$na.action <- attr(mf, "na.action")
     z$ncomp <- ncomp
     z$method <- method
     if (is.numeric(scale)) z$scale <- scale
