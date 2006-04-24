@@ -1,4 +1,4 @@
-%% $Id: kernelpls.fit.Rd 22 2005-04-02 11:44:04Z bhm $
+%% $Id: kernelpls.fit.Rd 70 2006-04-23 17:40:50Z bhm $
 \encoding{latin1}
 \name{kernelpls.fit}
 \alias{kernelpls.fit}
@@ -37,6 +37,7 @@
     predicted in \code{Y}.}
   \item{scores}{a matrix of scores.}
   \item{loadings}{a matrix of loadings.}
+  \item{loading.weights}{a matrix of loading weights.}
   \item{Yscores}{a matrix of Y-scores.}
   \item{Yloadings}{a matrix of Y-loadings.}
   \item{projection}{the projection matrix used to convert X to scores.}
