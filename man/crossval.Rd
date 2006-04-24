@@ -1,4 +1,4 @@
-%% $Id: crossval.Rd 61 2006-02-15 14:45:23Z bhm $
+%% $Id: crossval.Rd 69 2006-04-07 11:55:51Z bhm $
 \encoding{latin1}
 \name{crossval}
 \alias{crossval}
@@ -32,6 +32,9 @@ crossval(object, segments = 10,
   segment.  When recalculation is not needed, the result of
   \code{crossval(mvr(\dots))} is identical to \code{mvr(\dots,
     validation = "CV")}, but slower.
+
+  Note that to use \code{crossval}, the data \emph{must} be specified
+  with a \code{data} argument when fitting \code{object}.
 
   If \code{segments} is a list, the arguments \code{segment.type} and
   \code{length.seg} are ignored.  The elements of the list should be

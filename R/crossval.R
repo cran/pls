@@ -1,5 +1,5 @@
 ### crossval.R: Genereral cross-validation function.
-### $Id: crossval.R 61 2006-02-15 14:45:23Z bhm $
+### $Id: crossval.R 69 2006-04-07 11:55:51Z bhm $
 
 crossval <- function(object, segments = 10,
                      segment.type = c("random", "consecutive", "interleaved"),
@@ -9,6 +9,7 @@ crossval <- function(object, segments = 10,
     ## Get data frame
     fitCall <- object$call
     data <- eval(fitCall$data, parent.frame())
+    if (is.null(data)) stop("`object' must be fit with a `data' argument.")
 
     if (!is.null(fitCall$subset)) {
         ## Handle "subset" argument
