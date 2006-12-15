@@ -1,4 +1,4 @@
-%% $Id: validationplot.Rd 42 2005-05-19 21:26:38Z bhm $
+%% $Id: validationplot.Rd 99 2006-10-04 10:54:35Z bhm $
 \encoding{latin1}
 \name{validationplot}
 \alias{validationplot}
@@ -10,7 +10,7 @@
 }
 \usage{
 validationplot(object, val.type = c("RMSEP", "MSEP", "R2"), estimate,
-               newdata, comps, intercept, \dots)
+               newdata, ncomp, comps, intercept, \dots)
 \method{plot}{mvrVal}(x, nCols, nRows, type = "l", lty = 1:nEst, lwd = NULL,
            pch = 1:nEst, cex = NULL, col = 1:nEst, legendpos,
            xlab = "number of components", ylab = x$type, \dots)
@@ -21,7 +21,7 @@ validationplot(object, val.type = c("RMSEP", "MSEP", "R2"), estimate,
   \item{estimate}{character.  Which estimates of the statistic to
     calculate.  See \code{\link{RMSEP}}.}
   \item{newdata}{data frame.  Optional new data used to calculate statistic.}
-  \item{comps}{integer vector.  The model sizes to compute the statistic
+  \item{ncomp, comps}{integer vector.  The model sizes to compute the statistic
     for.  See \code{\link{RMSEP}}.}
   \item{intercept}{logical.  Whether estimates for a model with zero
     components should be calculated as well.}
@@ -83,8 +83,8 @@ validationplot(object, val.type = c("RMSEP", "MSEP", "R2"), estimate,
   \code{\link{MSEP}}, \code{\link{R2}}, \code{\link{matplot}},
   \code{\link{legend}}}
 \examples{
-data(sensory)
-mod <- plsr(Panel ~ Quality, data = sensory, validation = "LOO")
+data(oliveoil)
+mod <- plsr(sensory ~ chemical, data = oliveoil, validation = "LOO")
 \dontrun{
 ## These three are equivalent:
 validationplot(mod, estimate = "all")

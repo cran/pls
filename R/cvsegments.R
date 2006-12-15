@@ -1,6 +1,6 @@
 ### cvsegments.R: A utility function to generate segments for k-fold
 ### cross-validation.
-### $Id: cvsegments.R 4 2005-03-29 14:45:43Z  $
+### $Id: cvsegments.R 75 2006-07-17 21:05:34Z bhm $
 
 cvsegments <- function(N, k, length.seg = ceiling(N / k),
                        type = c("random", "consecutive", "interleaved")) {
@@ -8,6 +8,9 @@ cvsegments <- function(N, k, length.seg = ceiling(N / k),
     if (!missing(length.seg)) k <- ceiling(N / length.seg)
     incomplete <- k * length.seg - N    # Number of incomplete segments
     complete <- k - incomplete          # Number of complete segments
+
+    ## Check arguments:
+    if (N < k) stop("More segments than observations requested")
 
     ## The idea is to generate a k times length.seg matrix with indices, and
     ## use each row as a segment.  If k*length.seg > N, the last element of

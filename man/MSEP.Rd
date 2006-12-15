@@ -1,4 +1,4 @@
-%% $Id: MSEP.Rd 64 2006-02-18 14:38:37Z bhm $
+%% $Id: MSEP.Rd 99 2006-10-04 10:54:35Z bhm $
 \encoding{latin1}
 \name{MSEP}
 \alias{MSEP}
@@ -15,14 +15,14 @@
 }
 \usage{
 MSEP(object, ...)
-\method{MSEP}{mvr}(object, estimate, newdata, comps = 1:object$ncomp,
-     cumulative = TRUE, intercept = cumulative, se = FALSE, \dots)
+\method{MSEP}{mvr}(object, estimate, newdata, ncomp = 1:object$ncomp, comps,
+     intercept = cumulative, se = FALSE, \dots)
 
 RMSEP(object, ...)
 \method{RMSEP}{mvr}(object, ...)
 
-R2(object, estimate, newdata, comps = 1:object$ncomp,
-   cumulative = TRUE, intercept = cumulative, se = FALSE, \dots)
+R2(object, estimate, newdata, ncomp = 1:object$ncomp, comps,
+   intercept = cumulative, se = FALSE, \dots)
 }
 \arguments{
   \item{object}{an \code{mvr} object}
@@ -31,9 +31,8 @@ R2(object, estimate, newdata, comps = 1:object$ncomp,
       "test")}.  \code{"adjCV"} is only available for (R)MSEP.  See
     below for how the estimators are chosen.}
   \item{newdata}{a data frame with test set data.}
-  \item{comps}{a vector of positive integers.  The components or number
+  \item{ncomp, comps}{a vector of positive integers.  The components or number
     of components to use.  See below.}
-  \item{cumulative}{logical.   See below.}
   \item{intercept}{logical.  Whether estimates for a model with zero
     components should be returned as well.}
   \item{se}{logical.  Whether estimated standard errors of the estimates
@@ -65,9 +64,9 @@ R2(object, estimate, newdata, comps = 1:object$ncomp,
   possible estimates are calculated.  Otherwise, the specified estimates
   are calculated.
 
-  Several model sizes can also be specified.  If \code{cumulative} is
-  \code{TRUE} (default), \code{length(comps)} models are used, with
-  \code{comps[1]} components, \ldots, \code{comps[length(comps)]}
+  Several model sizes can also be specified.  If \code{comps} is missing
+  (or is \code{NULL}), \code{length(ncomp)} models are used, with
+  \code{ncomp[1]} components, \ldots, \code{ncomp[length(ncomp)]}
   components.  Otherwise, a single model with the components
   \code{comps[1]}, \ldots, \code{comps[length(comps)]} is used.
 
@@ -95,8 +94,8 @@ R2(object, estimate, newdata, comps = 1:object$ncomp,
 \seealso{\code{\link{mvr}}, \code{\link{crossval}}, \code{\link{mvrCv}},
   \code{\link{validationplot}}, \code{\link{plot.mvrVal}}}
 \examples{
-data(sensory)
-mod <- plsr(Panel ~ Quality, ncomp = 4, data = sensory, validation = "LOO")
+data(oliveoil)
+mod <- plsr(sensory ~ chemical, ncomp = 4, data = oliveoil, validation = "LOO")
 RMSEP(mod)
 \dontrun{plot(R2(mod))}
 }

@@ -1,4 +1,4 @@
-%% $Id: svdpc.fit.Rd 48 2005-10-07 12:52:59Z bhm $
+%% $Id: svdpc.fit.Rd 89 2006-09-20 15:41:09Z bhm $
 \encoding{latin1}
 \name{svdpc.fit}
 \alias{svdpc.fit}
@@ -31,6 +31,7 @@
     predicted in \code{Y}.}
   \item{scores}{a matrix of scores.}
   \item{loadings}{a matrix of loadings.}
+  \item{Yloadings}{a matrix of Y-loadings.}
   \item{projection}{the projection matrix used to convert X to scores.}
   \item{Xmeans}{a vector of means of the X variables.}
   \item{Ymeans}{a vector of means of the Y variables.}

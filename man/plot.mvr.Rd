@@ -1,4 +1,4 @@
-%% $Id: plot.mvr.Rd 44 2005-07-17 20:49:17Z bhm $
+%% $Id: plot.mvr.Rd 99 2006-10-04 10:54:35Z bhm $
 \encoding{latin1}
 \name{plot.mvr}
 \alias{plot.mvr}
@@ -28,13 +28,13 @@
   \code{plot.mvr} returns whatever the underlying plot function returns.
 }
 \author{Ron Wehrens and Bjørn-Helge Mevik}
-\seealso{\code{\link{mvr}},\code{\link{predplot.mvr}},
+\seealso{\code{\link{mvr}}, \code{\link{predplot.mvr}},
   \code{\link{validationplot}}, \code{\link{coefplot}},
   \code{\link{scoreplot}}, \code{\link{loadingplot}},
   \code{\link{biplot.mvr}}, \code{\link{corrplot}}}
 \examples{
-data(NIR)
-nir.pcr <- pcr(y ~ X, ncomp = 9, data = NIR, validation = "CV")
+data(yarn)
+nir.pcr <- pcr(density ~ NIR, ncomp = 9, data = yarn, validation = "CV")
 \dontrun{
 plot(nir.pcr, ncomp = 5) # Plot of cross-validated predictions
 plot(nir.pcr, "scores") # Score plot

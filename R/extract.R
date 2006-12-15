@@ -1,14 +1,14 @@
 ### extract.R:  Extraction functions
-### $Id: extract.R 57 2006-02-09 14:25:54Z bhm $
+### $Id: extract.R 99 2006-10-04 10:54:35Z bhm $
 
 ## coef.mvr: Extract the base variable regression coefficients from
 ## an mvr object.
-coef.mvr <- function(object, comps = object$ncomp, intercept = FALSE,
-                       cumulative = TRUE, ...)
+coef.mvr <- function(object, ncomp = object$ncomp, comps, intercept = FALSE,
+                     ...)
 {
-    if (cumulative) {
+    if (missing(comps) || is.null(comps)) {
         ## Cumulative coefficients:
-        B <- object$coefficients[,,comps, drop=FALSE]
+        B <- object$coefficients[,,ncomp, drop=FALSE]
         if (intercept == TRUE) {      # Intercept has only meaning for
                                       # cumulative coefficients
             dB <- dim(B)
@@ -17,7 +17,7 @@ coef.mvr <- function(object, comps = object$ncomp, intercept = FALSE,
             dnB[[1]] <- c("(Intercept)", dnB[[1]])
             BInt <- array(dim = dB, dimnames = dnB)
             BInt[-1,,] <- B
-            for (i in seq(along = comps))
+            for (i in seq(along = ncomp))
                 BInt[1,,i] <- object$Ymeans - object$Xmeans %*% B[,,i]
             B <- BInt
         }
@@ -132,6 +132,7 @@ model.matrix.mvr <- function(object, ...)
     else {
         data <- model.frame(object, ...)
         mm <- NextMethod("model.matrix", data = data)
+	mm <- delete.intercept(mm) # Deletes any intercept coloumn
         ## model.matrix.default prepends the term name to the colnames of
         ## matrices.  If there is only one predictor term, and the
         ## corresponding matrix has colnames, remove the prepended term name:
@@ -141,6 +142,28 @@ model.matrix.mvr <- function(object, ...)
             colnames(mm) <- sub(attr(mt, "term.labels"), "", colnames(mm))
         return(mm)
     }
+}
+
+## delete.intercept: utilitiy function that deletes the response coloumn from
+## a model matrix, and adjusts the "assign" attribute:
+delete.intercept <- function(mm) {
+    ## Save the attributes prior to removing the intercept coloumn:
+    saveattr <- attributes(mm)
+    ## Find the intercept coloumn:
+    intercept <- which(saveattr$assign == 0)
+    ## Return if there was no intercept coloumn:
+    if (!length(intercept)) return(mm)
+    ## Remove the intercept coloumn:
+    mm <- mm[,-intercept, drop=FALSE]
+    ## Update the attributes with the new dimensions:
+    saveattr$dim <- dim(mm)
+    saveattr$dimnames <- dimnames(mm)
+    ## Remove the assignment of the intercept from the attributes:
+    saveattr$assign <- saveattr$assign[-intercept]
+    ## Restore the (modified) attributes:
+    attributes(mm) <- saveattr
+    ## Return the model matrix:
+    mm
 }
 
 ## The following "extraction" functions are mostly used in plot and summary

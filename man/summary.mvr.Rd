@@ -1,4 +1,4 @@
-%% $Id: summary.mvr.Rd 37 2005-05-15 13:39:40Z bhm $
+%% $Id: summary.mvr.Rd 92 2006-09-20 17:44:25Z bhm $
 \encoding{latin1}
 \name{summary.mvr}
 \alias{summary.mvr}
@@ -34,8 +34,8 @@
 \seealso{\code{\link{mvr}}, \code{\link{pcr}},
   \code{\link{plsr}}, \code{\link{RMSEP}}, \code{\link{MSEP}}}
 \examples{
-data(NIR)
-nir.mvr <- mvr(y ~ X, ncomp = 8, validation = "LOO", data = NIR)
+data(yarn)
+nir.mvr <- mvr(density ~ NIR, ncomp = 8, validation = "LOO", data = yarn)
 nir.mvr
 summary(nir.mvr)
 RMSEP(nir.mvr)

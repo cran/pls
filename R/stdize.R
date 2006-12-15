@@ -1,6 +1,6 @@
 ### stdize.R: Standardization by centering and scaling
 ###
-###	$Id: stdize.R 46 2005-07-18 09:37:43Z bhm $
+###	$Id: stdize.R 89 2006-09-20 15:41:09Z bhm $
 
 ## This is a somewhat modified version of scale.default
 stdize <- function(x, center = TRUE, scale = TRUE) {
@@ -19,7 +19,7 @@ stdize <- function(x, center = TRUE, scale = TRUE) {
             scale <- sqrt(colSums(sweep(x, 2, colMeans(x))^2) / (nrow(x) - 1))
             x <- sweep(x, 2, scale, "/")
         }
-    } else if (is.numeric(scale) && length(scale) == nc) 
+    } else if (is.numeric(scale) && length(scale) == nc)
         x <- sweep(x, 2, scale, "/")
     else stop("invalid 'scale'")
     if (is.numeric(center)) attr(x, "stdized:center") <- center
