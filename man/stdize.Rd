@@ -1,4 +1,4 @@
-%% $Id: stdize.Rd 46 2005-07-18 09:37:43Z bhm $
+%% $Id: stdize.Rd 99 2006-10-04 10:54:35Z bhm $
 \encoding{latin1}
 \name{stdize}
 \alias{stdize}
@@ -26,7 +26,7 @@ stdize(x, center = TRUE, scale = TRUE)
   \item{\dots}{other arguments.  Currently ignored.}
 }
 \details{
-  \code{makepredictcall.stdized} is an internal utility function; it is noe
+  \code{makepredictcall.stdized} is an internal utility function; it is not
   meant for interactive use.  See \code{\link{makepredictcall}} for details.
 
   If \code{center} is \code{TRUE}, \code{x} is centered by subtracting
@@ -54,14 +54,14 @@ stdize(x, center = TRUE, scale = TRUE)
 \seealso{\code{\link{mvr}}, \code{\link{pcr}}, \code{\link{plsr}},
   \code{\link{msc}}, \code{\link[base]{scale}}}
 \examples{
-data(NIR)
+data(yarn)
 ## Direct standardization:
-Ztrain <- stdize(NIR$X[NIR$train,])
-Ztest <- predict(Ztrain, NIR$X[!NIR$train,])
+Ztrain <- stdize(yarn$NIR[yarn$train,])
+Ztest <- predict(Ztrain, yarn$NIR[!yarn$train,])
 
 ## Used in formula:
-mod <- plsr(y ~ stdize(X), ncomp = 6, data = NIR[NIR$train,])
-pred <- predict(mod, newdata = NIR[!NIR$train,]) # Automatically standardized
+mod <- plsr(density ~ stdize(NIR), ncomp = 6, data = yarn[yarn$train,])
+pred <- predict(mod, newdata = yarn[!yarn$train,]) # Automatically standardized
 }
 \keyword{regression}
 \keyword{multivariate}

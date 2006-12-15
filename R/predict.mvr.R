@@ -1,8 +1,8 @@
 ### predict.mvr.R: A predict method
-### $Id: predict.mvr.R 54 2005-11-21 14:32:53Z bhm $
+### $Id: predict.mvr.R 102 2006-12-14 14:20:28Z bhm $
 
-predict.mvr <- function(object, newdata, comps = 1:object$ncomp,
-                        type = c("response", "scores"), cumulative = TRUE,
+predict.mvr <- function(object, newdata, ncomp = 1:object$ncomp, comps,
+                        type = c("response", "scores"),
                         na.action = na.pass, ...) {
     if (missing(newdata) || is.null(newdata))
         newX <- model.matrix(object)
@@ -16,41 +16,45 @@ predict.mvr <- function(object, newdata, comps = 1:object$ncomp,
         m <- model.frame(Terms, newdata, na.action = na.action)
         if (!is.null(cl <- attr(Terms, "dataClasses")))
             .checkMFClasses(cl, m)
-        newX <- model.matrix(Terms, m)
+        newX <- delete.intercept(model.matrix(Terms, m))
     }
+
+    nobs <- dim(newX)[1]
+
     ## Perform any scaling:
-    if (!is.null(object$scale)) newX <- sweep(newX, 2, object$scale, "/")
+    if (!is.null(object$scale)) newX <- newX / rep(object$scale, each = nobs)
     type <- match.arg(type)
     if (type == "response") {
-        if (cumulative) {
-            ## Predict with models containing comps[1] components,
-            ## comps[2] components, etc.
-            if (missing(newdata)) return(fitted(object)[,,comps, drop=FALSE])
-            B <- coef(object, comps = comps, intercept = TRUE)
+        if (missing(comps) || is.null(comps)) {
+            ## Predict with models containing ncomp[1] components,
+            ## ncomp[2] components, etc.
+            if (missing(newdata)) return(fitted(object)[,,ncomp, drop=FALSE])
+            B <- coef(object, ncomp = ncomp, intercept = TRUE)
             dPred <- dim(B)
             dPred[1] <- dim(newX)[1]
             dnPred <- dimnames(B)
             dnPred[1] <- dimnames(newX)[1]
             pred <- array(dim = dPred, dimnames = dnPred)
-            for (i in seq(along = comps))
-                pred[,,i] <- sweep(newX %*% B[-1,,i], 2, B[1,,i], "+")
+            for (i in seq(along = ncomp))
+                pred[,,i] <- newX %*% B[-1,,i] + rep(B[1,,i], each = nobs)
             return(pred)
         } else {
             ## Predict with a model containing the components `comps'
-            B <- rowSums(coef(object, comps = comps, cumulative = FALSE),
-                         dims = 2)
+            B <- rowSums(coef(object, comps = comps), dims = 2)
             B0 <- object$Ymeans - object$Xmeans %*% B
-            return(sweep(newX %*% B, 2, B0, "+"))
+            return(newX %*% B + rep(B0, each = nobs))
         }
     } else {
         ## Return predicted scores (for scores, `cumulative' has no meaning)
+        ## When predicting scores, we allow ncomp as an alias for comps:
+        if (missing(comps) || is.null(comps)) comps <- ncomp
         if (missing(newdata)) {
             TT <- object$scores[,comps]
         } else {
             if (is.null(object$projection))
                 stop("`object' has no `projection' component.  Maybe it was fitted with `stripped = TRUE'.")
-            maxComp <- max(comps)
-            TT <- sweep(newX, 2, object$Xmeans) %*% object$projection[,comps]
+            TT <- (newX - rep(object$Xmeans, each = nobs)) %*%
+                object$projection[,comps]
         }
         return(TT)
     }

@@ -1,7 +1,7 @@
 ### Plots for mvr objects.  Some of them also work for other
 ### objects, but that is not a priority.
 ###
-### $Id: plots.R 68 2006-04-07 11:39:51Z bhm $
+### $Id: plots.R 100 2006-12-14 11:57:58Z bhm $
 
 ###
 ### Plot method for mvr objects
@@ -98,7 +98,8 @@ loadingplot <- function(object, ...) UseMethod("loadingplot")
 
 loadingplot.default <- function(object, comps = 1:2, scatter = FALSE, labels,
                                 identify = FALSE, type, lty, lwd = NULL, pch,
-                                cex = NULL, col, legendpos, xlab, ylab, ...)
+                                cex = NULL, col, legendpos, xlab, ylab,
+                                pretty.xlabels = TRUE, xlim, ...)
 {
     ## Check arguments
     nComps <- length(comps)
@@ -114,21 +115,21 @@ loadingplot.default <- function(object, comps = 1:2, scatter = FALSE, labels,
         if (is.null(L))
             stop("`", deparse(substitute(object)), "' has no loadings.")
     }
-    if (!missing(labels)) {
-        ## Set up point/tick mark labels
-        if (length(labels) == 1) {
-            labels <- switch(match.arg(labels, c("names", "numbers")),
-                             names = rownames(L),
-                             numbers = 1:nrow(L)
-                             )
-        }
-        labels <- as.character(labels)
-    }
     varlab <- compnames(object, comps, explvar = TRUE)
     if (scatter) {
         ## Scatter plots
         if (missing(type)) type <- "p"
-        if (!missing(labels)) type <- "n"
+        if (!missing(labels)) {
+            ## Set up point/tick mark labels
+            if (length(labels) == 1) {
+                labels <- switch(match.arg(labels, c("names", "numbers")),
+                                 names = rownames(L),
+                                 numbers = 1:nrow(L)
+                                 )
+            }
+            labels <- as.character(labels)
+            type <- "n"
+        }
         if (missing(lty)) lty <- NULL
         if (missing(pch)) pch <- NULL
         if (missing(col)) col <- par("col") # `NULL' means `no colour'
@@ -167,12 +168,48 @@ loadingplot.default <- function(object, comps = 1:2, scatter = FALSE, labels,
         if (missing(col)) col <- 1:nComps
         if (missing(xlab)) xlab <- "variable"
         if (missing(ylab)) ylab <- "loading value"
-        xaxt <- if (missing(labels)) "s" else "n"
-        matplot(L, xlab = xlab, ylab = ylab, type = type,
+        xnum <- 1:nrow(L)
+        if (missing(labels)) {
+            xaxt <- par("xaxt")
+        } else {
+            xaxt <- "n"
+            if (length(labels) == 1) {
+                xnam <- rownames(L)
+                switch(match.arg(labels, c("names", "numbers")),
+                       names = {        # Simply use the names as is
+                           labels <- xnam
+                       },
+                       numbers = {      # Try to use them as numbers
+                           if (length(grep("^[0-9.]+[^0-9]*$", xnam)) ==
+                               length(xnam)) {
+                               ## Labels are on "num+text" format
+                               labels <- sub("[^0-9]*$", "", xnam)
+                               if (isTRUE(pretty.xlabels)) {
+                                   xnum <- as.numeric(labels)
+                                   xaxt <- par("xaxt")
+                               }
+                           } else {
+                               stop("Could not convert variable names to numbers")
+                           }
+                       }
+                       )
+            } else {
+                labels <- as.character(labels)
+            }
+        }
+        if (missing(xlim)) xlim <- xnum[c(1, length(xnum))] # Needed for reverted scales
+        matplot(xnum, L, xlab = xlab, ylab = ylab, type = type,
                 lty = lty, lwd = lwd, pch = pch, cex = cex, col = col,
-                xaxt = xaxt, ...)
-        if (!missing(labels))
-            axis(1, at = seq(along = labels), labels = labels, ...)
+                xaxt = xaxt, xlim = xlim, ...)
+        if (!missing(labels) && xaxt == "n") {
+            if (isTRUE(pretty.xlabels)) {
+                ticks <- axTicks(1)
+                ticks <- ticks[ticks >= 1 & ticks <= length(labels)]
+            } else {
+                ticks <- 1:length(labels)
+            }
+            axis(1, ticks, labels[ticks], ...)
+        }
         if (!missing(legendpos)) {
             ## Are we plotting lines?
             dolines <- type %in% c("l", "b", "c", "o", "s", "S", "h")
@@ -351,7 +388,7 @@ predplot.mvr <- function(object, ncomp = object$ncomp, which, newdata,
         if (missing(newdata)) stop("Missing `newdata'.")
         test.measured <- as.matrix(model.response(model.frame(formula(object),
                                                               data = newdata)))
-        test.predicted <- predict(object, comps = ncomp, newdata = newdata)
+        test.predicted <- predict(object, ncomp = ncomp, newdata = newdata)
     }
 
     ## Do the plots
@@ -407,17 +444,20 @@ predplotXy <- function(x, y, line = FALSE, main = "Prediction plot",
 ### Coefficient plot
 ###
 
-coefplot <- function(object, ncomp = object$ncomp, separate = FALSE,
-                     cumulative = TRUE, intercept = FALSE,
-                     nCols, nRows, varnames = FALSE, type = "l",
-                     lty = 1:nLines, lwd = NULL,
+coefplot <- function(object, ncomp = object$ncomp, comps, intercept = FALSE,
+                     separate = FALSE, nCols, nRows, labels,
+                     type = "l", lty = 1:nLines, lwd = NULL,
                      pch = 1:nLines, cex = NULL, col = 1:nLines, legendpos,
-                     xlab = "variable", ylab = "regression coefficient", ...)
+                     xlab = "variable", ylab = "regression coefficient",
+                     pretty.xlabels = TRUE, xlim, ...)
 {
+    ## This simplifies code below:
+    if (missing(comps)) comps <- NULL
+
     ## Help variables
-    nSize <- if (separate) length(ncomp) else 1
+    nLines <- if (is.null(comps)) length(ncomp) else length(comps)
+    nSize <- if (separate) nLines else 1
     nResp <- dim(object$fitted.values)[2]
-    nLines <- length(ncomp)
 
     ## Set plot parametres as needed:
     dims <- c(nSize, nResp)
@@ -445,16 +485,41 @@ coefplot <- function(object, ncomp = object$ncomp, separate = FALSE,
     ## Are we plotting points?
     dopoints <- type %in% c("p", "b", "o")
 
-    coefs <- coef(object, comps = ncomp, intercept = intercept,
-                  cumulative = cumulative)
+    ## Get the coefficients:
+    coefs <- coef(object, ncomp = ncomp, comps = comps, intercept = intercept)
     complabs <- dimnames(coefs)[[3]]
-    if (varnames) {
-        varlabs <- prednames(object, intercept = intercept)
-        xaxt <- "n"
-    } else {
-        xaxt <- "s"
-    }
 
+    ## Set up the x labels:
+    xnum <- 1:dim(coefs)[1]
+    if (missing(labels)) {
+        xaxt <- par("xaxt")
+    } else {
+        xaxt <- "n"
+        if (length(labels) == 1) {
+            xnam <- prednames(object, intercept = intercept)
+            switch(match.arg(labels, c("names", "numbers")),
+                   names = {            # Simply use the names as is
+                       labels <- xnam
+                   },
+                   numbers = {          # Try to use them as numbers
+                       if (length(grep("^[0-9.]+[^0-9]*$", xnam)) ==
+                           length(xnam)) {
+                           ## Labels are on "num+text" format
+                           labels <- sub("[^0-9]*$", "", xnam)
+                           if (isTRUE(pretty.xlabels)) {
+                               xnum <- as.numeric(labels)
+                               xaxt <- par("xaxt")
+                           }
+                       } else {
+                           stop("Could not convert variable names to numbers")
+                       }
+                   }
+                   )
+        } else {
+            labels <- as.character(labels)
+        }
+    }
+    if (missing(xlim)) xlim <- xnum[c(1, length(xnum))] # Needed for reverted scales
     ## Do the plots
     plotNo <- 0
     for (resp in 1:nResp) {
@@ -470,15 +535,16 @@ coefplot <- function(object, ncomp = object$ncomp, separate = FALSE,
             }
 
             if (separate) {
-                plot(coefs[,resp,size],
+                plot(xnum, coefs[,resp,size],
                      main = paste(respname, complabs[size], sep = ", "),
                      xlab = xlab, ylab = ylab, type = type,
                      lty = lty, lwd = lwd, pch = pch, cex = cex,
-                     col = col, xaxt = xaxt, ...)
+                     col = col, xaxt = xaxt, xlim = xlim, ...)
             } else {
-                matplot(coefs[,resp,], main = respname, xlab = xlab,
+                matplot(xnum, coefs[,resp,], main = respname, xlab = xlab,
                         ylab = ylab, type = type, lty = lty, lwd = lwd,
-                        pch = pch, cex = cex, col = col, xaxt = xaxt, ...)
+                        pch = pch, cex = cex, col = col, xaxt = xaxt,
+                        xlim = xlim, ...)
                 if (!missing(legendpos)) {
                     do.call("legend", c(list(legendpos, complabs, col = col),
                                         if(dolines) list(lty = lty, lwd = lwd),
@@ -487,8 +553,14 @@ coefplot <- function(object, ncomp = object$ncomp, separate = FALSE,
                                                           pt.lwd = lwd)))
                 }
             }
-            if (varnames) {
-                axis(1, at = seq(along = varlabs), labels = varlabs, ...)
+            if (!missing(labels) && xaxt == "n") {
+                if (isTRUE(pretty.xlabels)) {
+                    ticks <- axTicks(1)
+                    ticks <- ticks[ticks >= 1 & ticks <= length(labels)]
+                } else {
+                    ticks <- 1:length(labels)
+                }
+                axis(1, ticks, labels[ticks], ...)
             }
             abline(h = 0, col = "gray")
         }
@@ -501,7 +573,7 @@ coefplot <- function(object, ncomp = object$ncomp, separate = FALSE,
 ###
 
 validationplot <- function(object, val.type = c("RMSEP", "MSEP", "R2"),
-                           estimate, newdata, comps, intercept, ...)
+                           estimate, newdata, ncomp, comps, intercept, ...)
 {
     cl <- match.call(expand.dots = FALSE)
     cl[[1]] <- as.name(match.arg(val.type))

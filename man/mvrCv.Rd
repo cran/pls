@@ -1,4 +1,4 @@
-%% $Id: mvrCv.Rd 61 2006-02-15 14:45:23Z bhm $
+%% $Id: mvrCv.Rd 92 2006-09-20 17:44:25Z bhm $
 \encoding{latin1}
 \name{mvrCv}
 \alias{mvrCv}
@@ -8,7 +8,7 @@
 }
 \usage{
 mvrCv(X, Y, ncomp,
-      method = c("kernelpls", "simpls", "oscorespls", "svdpc"), scale = FALSE,
+      method = pls.options()$mvralg, scale = FALSE,
       segments = 10, segment.type = c("random", "consecutive", "interleaved"),
       length.seg, trace = FALSE, \dots)
 }
@@ -71,7 +71,7 @@ mvrCv(X, Y, ncomp,
 }
 \value{
   A list with the following components:
-  \item{method}{euqals \code{"CV"} for cross-validation.}
+  \item{method}{equals \code{"CV"} for cross-validation.}
   \item{pred}{an array with the cross-validated predictions.}
   \item{MSEP0}{a vector of MSEP values (one for each response variable)
     for a model with zero components, i.e., only the intercept.}
@@ -103,9 +103,9 @@ mvrCv(X, Y, ncomp,
   \code{\link{MSEP}}
 }
 \examples{
-data(NIR)
-NIR.pcr <- pcr(y ~ X, 6, data = NIR, validation = "CV", segments = 10)
-\dontrun{plot(MSEP(NIR.pcr))}
+data(yarn)
+yarn.pcr <- pcr(density ~ NIR, 6, data = yarn, validation = "CV", segments = 10)
+\dontrun{plot(MSEP(yarn.pcr))}
 }
 \keyword{regression}
 \keyword{multivariate}

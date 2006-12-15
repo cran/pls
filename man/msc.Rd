@@ -1,4 +1,4 @@
-%% $Id: msc.Rd 46 2005-07-18 09:37:43Z bhm $
+%% $Id: msc.Rd 99 2006-10-04 10:54:35Z bhm $
 \encoding{latin1}
 \name{msc}
 \alias{msc}
@@ -24,7 +24,7 @@ msc(X, reference = NULL)
   \item{\dots}{other arguments.  Currently ignored.}
 }
 \details{
-  \code{makepredictcall.msc} is an internal utility function; it is noe
+  \code{makepredictcall.msc} is an internal utility function; it is not
   meant for interactive use.  See \code{\link{makepredictcall}} for details.
 }
 \value{
@@ -42,14 +42,14 @@ msc(X, reference = NULL)
 \seealso{\code{\link{mvr}}, \code{\link{pcr}}, \code{\link{plsr}},
   \code{\link{stdize}}}
 \examples{
-data(NIR)
+data(yarn)
 ## Direct correction:
-Ztrain <- msc(NIR$X[NIR$train,])
-Ztest <- predict(Ztrain, NIR$X[!NIR$train,])
+Ztrain <- msc(yarn$NIR[yarn$train,])
+Ztest <- predict(Ztrain, yarn$NIR[!yarn$train,])
 
 ## Used in formula:
-mod <- plsr(y ~ msc(X), ncomp = 6, data = NIR[NIR$train,])
-pred <- predict(mod, newdata = NIR[!NIR$train,]) # Automatically scatter correction
+mod <- plsr(density ~ msc(NIR), ncomp = 6, data = yarn[yarn$train,])
+pred <- predict(mod, newdata = yarn[!yarn$train,]) # Automatically scatter corrected
 }
 \keyword{regression}
 \keyword{multivariate}

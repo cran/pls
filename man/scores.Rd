@@ -1,4 +1,4 @@
-%% $Id: scores.Rd 57 2006-02-09 14:25:54Z bhm $
+%% $Id: scores.Rd 92 2006-09-20 17:44:25Z bhm $
 \encoding{latin1}
 \name{scores}
 \alias{scores}
@@ -52,8 +52,8 @@ Yloadings(object)
 }
 \seealso{\code{\link{mvr}}, \code{\link{coef.mvr}}}
 \examples{
-data(NIR)
-plsmod <- plsr(y ~ X, 6, data = NIR)
+data(yarn)
+plsmod <- plsr(density ~ NIR, 6, data = yarn)
 scores(plsmod)
 loadings(plsmod)[,1:4]
 }

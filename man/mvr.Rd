@@ -1,4 +1,4 @@
-%% $Id: mvr.Rd 61 2006-02-15 14:45:23Z bhm $
+%% $Id: mvr.Rd 92 2006-09-20 17:44:25Z bhm $
 \encoding{latin1}
 \name{mvr}
 \alias{mvr}
@@ -14,11 +14,11 @@
 %% FIXME: Maybe use a \synopsis section, and show typical uses in \usage:
 \usage{
 mvr(formula, ncomp, data, subset, na.action,
-    method = c("kernelpls", "simpls", "oscorespls", "svdpc", "model.frame"),
+    method = pls.options()$mvralg,
     scale = FALSE, validation = c("none", "CV", "LOO"),
     model = TRUE, x = FALSE, y = FALSE, \dots)
-plsr(\dots, method = c("kernelpls", "simpls", "oscorespls", "model.frame"))
-pcr(\dots, method = c("svdpc", "model.frame"))
+plsr(\dots, method = pls.options()$plsralg)
+pcr(\dots, method = pls.options()$pcralg)
 }
 \arguments{
   \item{formula}{a model formula.  Most of the \code{lm} formula
@@ -50,12 +50,14 @@ pcr(\dots, method = c("svdpc", "model.frame"))
   \code{ncomp} number of components.  Multi-response models are fully
   supported.
 
-  Three PLSR algorithms are available: the kernel algorithm, SIMPLS and
-  the classical orthogonal scores algorithm.  One PCR algorithm is
-  available: using the singular value decomposition.  The type of
-  regression is specified with the \code{method} argument.  \code{pcr}
-  and \code{plsr}
-  are wrappers for \code{mvr}, with different values for \code{method}.
+  The type of model to fit is specified with the \code{method}
+  argument. Three PLSR algorithms are available: the kernel algorithm
+  (\code{"kernelpls"}), SIMPLS (\code{"simpls"}) and the classical
+  orthogonal scores algorithm (\code{"oscorespls"}).  One PCR algorithm
+  is available: using the singular value decomposition (\code{"svdpc"}).
+  If \code{method} is \code{"model.frame"}, the model frame is returned.
+  The functions \code{pcr} and \code{plsr} are wrappers for \code{mvr},
+  with different values for \code{method}.
 
   The \code{formula} argument should be a symbolic formula of the form
   \code{response ~ terms}, where \code{response} is the name of the
@@ -135,22 +137,20 @@ pcr(\dots, method = c("svdpc", "model.frame"))
   \code{\link{RMSEP}},
   \code{\link{plot.mvr}}}
 \examples{
-data(NIR)
+data(yarn)
 ## Default methods:
-NIR.pcr <- pcr(y ~ X, 6, data = NIR, validation = "CV")
-NIR.pls <- plsr(y ~ X, 6, data = NIR, validation = "CV")
+yarn.pcr <- pcr(density ~ NIR, 6, data = yarn, validation = "CV")
+yarn.pls <- plsr(density ~ NIR, 6, data = yarn, validation = "CV")
 
 ## Alternative methods:
-NIR.oscorespls <- mvr(y ~ X, 6, data = NIR, validation = "CV",
+yarn.oscorespls <- mvr(density ~ NIR, 6, data = yarn, validation = "CV",
                       method = "oscorespls")
-NIR.simpls <- mvr(y ~ X, 6, data = NIR, validation = "CV",
+yarn.simpls <- mvr(density ~ NIR, 6, data = yarn, validation = "CV",
                   method = "simpls")
 
-data(sensory)
-Pn <- scale(sensory$Panel)
-Ql <- scale(sensory$Quality)
-sens.pcr <- pcr(Ql ~ Pn, ncomp = 4)
-sens.pls <- plsr(Ql ~ Pn, ncomp = 4)
+data(oliveoil)
+sens.pcr <- pcr(sensory ~ chemical, ncomp = 4, scale = TRUE, data = oliveoil)
+sens.pls <- plsr(sensory ~ chemical, ncomp = 4, scale = TRUE, data = oliveoil)
 }
 \keyword{regression}
 \keyword{multivariate}

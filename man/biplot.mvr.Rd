@@ -1,4 +1,4 @@
-%% $Id: biplot.mvr.Rd 37 2005-05-15 13:39:40Z bhm $
+%% $Id: biplot.mvr.Rd 92 2006-09-20 17:44:25Z bhm $
 \encoding{latin1}
 \name{biplot.mvr}
 \alias{biplot.mvr}
@@ -35,8 +35,8 @@
 \author{Ron Wehrens and Bjørn-Helge Mevik}
 \seealso{\code{\link{mvr}}, \code{\link{plot.mvr}}, \code{\link{biplot.default}}}
 \examples{
-data(sensory)
-mod <- plsr(Panel ~ Quality, data = sensory)
+data(oliveoil)
+mod <- plsr(sensory ~ chemical, data = oliveoil)
 \dontrun{
 ## These are equivalent
 biplot(mod)
