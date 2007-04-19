@@ -1,7 +1,7 @@
 ### Plots for mvr objects.  Some of them also work for other
 ### objects, but that is not a priority.
 ###
-### $Id: plots.R 100 2006-12-14 11:57:58Z bhm $
+### $Id: plots.R 109 2007-04-19 12:15:08Z bhm $
 
 ###
 ### Plot method for mvr objects
@@ -180,7 +180,7 @@ loadingplot.default <- function(object, comps = 1:2, scatter = FALSE, labels,
                            labels <- xnam
                        },
                        numbers = {      # Try to use them as numbers
-                           if (length(grep("^[0-9.]+[^0-9]*$", xnam)) ==
+                           if (length(grep("^[-0-9.]+[^0-9]*$", xnam)) ==
                                length(xnam)) {
                                ## Labels are on "num+text" format
                                labels <- sub("[^0-9]*$", "", xnam)
@@ -328,7 +328,7 @@ predplot.mvr <- function(object, ncomp = object$ncomp, which, newdata,
 {
     ## Select type(s) of prediction
     if (missing(which)) {
-        ## Pick the «best» alternative.
+        ## Pick the `best' alternative.
         if (!missing(newdata)) {
             which <- "test"
         } else {
@@ -502,7 +502,7 @@ coefplot <- function(object, ncomp = object$ncomp, comps, intercept = FALSE,
                        labels <- xnam
                    },
                    numbers = {          # Try to use them as numbers
-                       if (length(grep("^[0-9.]+[^0-9]*$", xnam)) ==
+                       if (length(grep("^[-0-9.]+[^0-9]*$", xnam)) ==
                            length(xnam)) {
                            ## Labels are on "num+text" format
                            labels <- sub("[^0-9]*$", "", xnam)

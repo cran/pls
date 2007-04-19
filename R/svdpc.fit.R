@@ -1,5 +1,5 @@
 ### svdpc.fit.R: SVD PC fit algorithm
-### $Id: svdpc.fit.R 89 2006-09-20 15:41:09Z bhm $
+### $Id: svdpc.fit.R 108 2007-03-19 17:46:06Z bhm $
 
 svdpc.fit <- function(X, Y, ncomp, stripped = FALSE, ...)
 {
@@ -28,7 +28,7 @@ svdpc.fit <- function(X, Y, ncomp, stripped = FALSE, ...)
 
     huhn <- La.svd(X)
     D <- huhn$d[1:ncomp]
-    TT <- huhn$u[,1:ncomp, drop=FALSE] %*% diag(D)
+    TT <- huhn$u[,1:ncomp, drop=FALSE] %*% diag(D, nrow = ncomp)
     P <- t(huhn$vt[1:ncomp,, drop=FALSE])
     tQ <- crossprod(TT, Y) / D^2
 

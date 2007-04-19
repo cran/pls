@@ -1,9 +1,9 @@
 ### oscorespls.fit.R: The multiresponse orthogonal scores algorithm
 ###
-### $Id: oscorespls.fit.R 89 2006-09-20 15:41:09Z bhm $
+### $Id: oscorespls.fit.R 109 2007-04-19 12:15:08Z bhm $
 ###
 ### Implements an adapted version of the `orthogonal scores' algorithm as
-###   described in Martens and Næs, pp. 121--122 and 157--158.
+###   described in Martens and Naes, pp. 121--122 and 157--158.
 
 oscorespls.fit <- function(X, Y, ncomp, stripped = FALSE,
                            tol = .Machine$double.eps^0.5, ...)
@@ -101,20 +101,25 @@ oscorespls.fit <- function(X, Y, ncomp, stripped = FALSE,
     }
 
     ## Calculate rotation matrix:
-    PW <- crossprod(P, W)
-    ## It is known that P^tW is right bi-diagonal (one response) or upper
-    ## triangular (multiple responses), with all diagonal elements equal to 1.
-    if (nresp == 1) {
-        ## For single-response models, direct calculation of (P^tW)^-1 is
-        ## simple, and faster than using backsolve.
-        PWinv <- diag(ncomp)
-        bidiag <- - PW[row(PW) == col(PW)-1]
-        for (a in 1:(ncomp - 1))
-            PWinv[a,(a+1):ncomp] <- cumprod(bidiag[a:(ncomp-1)])
+    if (ncomp == 1) {
+        ## For 1 component, R == W:
+        R <- W
     } else {
-        PWinv <- backsolve(PW, diag(ncomp))
-    }
+        PW <- crossprod(P, W)
+        ## It is known that P^tW is right bi-diagonal (one response) or upper
+        ## triangular (multiple responses), with all diagonal elements equal to 1.
+        if (nresp == 1) {
+            ## For single-response models, direct calculation of (P^tW)^-1 is
+            ## simple, and faster than using backsolve.
+            PWinv <- diag(ncomp)
+            bidiag <- - PW[row(PW) == col(PW)-1]
+            for (a in 1:(ncomp - 1))
+                PWinv[a,(a+1):ncomp] <- cumprod(bidiag[a:(ncomp-1)])
+        } else {
+            PWinv <- backsolve(PW, diag(ncomp))
+        }
     R <- W %*% PWinv
+    }
 
     ## Calculate regression coefficients:
     for (a in 1:ncomp) {
