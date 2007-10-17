@@ -1,11 +1,11 @@
 ### mvrCv.R: The basic cross-validation function
-### $Id: mvrCv.R 89 2006-09-20 15:41:09Z bhm $
+### $Id: mvrCv.R 142 2007-10-01 13:10:25Z bhm $
 
 mvrCv <- function(X, Y, ncomp,
                   method = pls.options()$mvralg,
                   scale = FALSE, segments = 10,
                   segment.type = c("random", "consecutive", "interleaved"),
-                  length.seg, trace = FALSE, ...)
+                  length.seg, jackknife = FALSE, trace = FALSE, ...)
 {
     ## Initialise:
     Y <- as.matrix(Y)
@@ -17,6 +17,7 @@ mvrCv <- function(X, Y, ncomp,
     ## dimnames(X) <- dimnames(Y) <- NULL
 
     nobj <- dim(X)[1]
+    npred <- dim(X)[2]
     nresp <- dim(Y)[2]
 
     ## Check the `scale' parameter:
@@ -40,16 +41,19 @@ mvrCv <- function(X, Y, ncomp,
     ncomp <- min(ncomp, nobj - max(sapply(segments, length)) - 1)
 
     ## Select fit function:
-    method <- match.arg(method,c("kernelpls", "simpls", "oscorespls", "svdpc"))
+    method <- match.arg(method,c("kernelpls", "widekernelpls", "simpls", "oscorespls", "svdpc"))
     fitFunc <- switch(method,
-                      simpls = simpls.fit,
                       kernelpls = kernelpls.fit,
+                      widekernelpls = widekernelpls.fit,
+                      simpls = simpls.fit,
                       oscorespls = oscorespls.fit,
                       svdpc = svdpc.fit)
 
     ## Variables to save CV results in:
-    adj <- numeric(ncomp)
+    adj <- matrix(0, nrow = nresp, ncol = ncomp)
     cvPred <- pred <- array(0, dim = c(nobj, nresp, ncomp))
+    if (jackknife)
+        cvCoef <- array(dim = c(npred, nresp, ncomp, length(segments)))
 
     if (trace) cat("Segment: ")
     for (n.seg in 1:length(segments)) {
@@ -64,11 +68,16 @@ mvrCv <- function(X, Y, ncomp,
             sdtrain <-
                 sqrt(colSums((Xtrain - rep(colMeans(Xtrain), each = ntrain))^2) /
                      (ntrain - 1))
+            if (any(abs(sdtrain) < .Machine$double.eps^0.5))
+                warning("Scaling with (near) zero standard deviation")
             Xtrain <- Xtrain / rep(sdtrain, each = ntrain)
         }
 
         ## Fit the model:
         fit <- fitFunc(Xtrain, Y[-seg,], ncomp, stripped = TRUE, ...)
+
+        ## Optionally collect coefficients:
+        if (jackknife) cvCoef[,,,n.seg] <- fit$coefficients
 
         ## Set up test data:
         Xtest <- X
@@ -86,25 +95,24 @@ mvrCv <- function(X, Y, ncomp,
     }
     if (trace) cat("\n")
 
-    ## Calculate MSEP:
-    MSEP0 <- apply(Y, 2, var) * nobj / (nobj - 1) # FIXME: Only correct for loocv!
-    MSEP <- colMeans((cvPred - c(Y))^2)
-
-    ## Calculate R2:
-    R2 <- matrix(nrow = nresp, ncol = ncomp)
-    for (i in 1:nresp) R2[i,] <- cor(cvPred[,i,], Y[,i])^2
+    ## Calculate validation statistics:
+    PRESS0 <- apply(Y, 2, var) * nobj^2 / (nobj - 1) # FIXME: Only correct for loocv!
+    PRESS <- colSums((cvPred - c(Y))^2)
 
     ## Add dimnames:
     objnames <- dnX[[1]]
     if (is.null(objnames)) objnames <- dnY[[1]]
     respnames <- dnY[[2]]
     nCompnames <- paste(1:ncomp, "comps")
-    names(MSEP0) <- respnames
-    dimnames(adj) <- dimnames(MSEP) <- dimnames(R2) <-
+    names(PRESS0) <- respnames
+    dimnames(adj) <- dimnames(PRESS) <-
         list(respnames, nCompnames)
     dimnames(cvPred) <- list(objnames, respnames, nCompnames)
+    if (jackknife)
+        dimnames(cvCoef) <- list(dnX[[2]], respnames, nCompnames,
+                                 paste("Seg", seq.int(along = segments)))
 
-    list(method = "CV", pred = cvPred,
-         MSEP0 = MSEP0, MSEP = MSEP, adj = adj / nobj^2,
-         R2 = R2, segments = segments, ncomp = ncomp)
+    list(method = "CV", pred = cvPred, coefficients = if (jackknife) cvCoef,
+         PRESS0 = PRESS0, PRESS = PRESS, adj = adj / nobj^2,
+         segments = segments, ncomp = ncomp)
 }

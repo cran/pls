@@ -1,5 +1,5 @@
 ### simpls.fit.R: SimPLS fit algorithm.
-### $Id: simpls.fit.R 89 2006-09-20 15:41:09Z bhm $
+### $Id: simpls.fit.R 133 2007-08-24 09:21:56Z bhm $
 ###
 ### Implements an adapted version of the SIMPLS algorithm described in
 ###   de Jong, S. (1993) SIMPLS: an alternative approach to partial least
@@ -16,7 +16,7 @@ simpls.fit <- function(X, Y, ncomp, stripped = FALSE, ...)
     }
     ## Remove dimnames during calculation (doesn't seem to matter; in fact,
     ## as far as it has any effect, it hurts a tiny bit in most situations).
-    ## dimnames(X) <- dimnames(Y) <- NULL
+    dimnames(X) <- dimnames(Y) <- NULL
 
     nobj <- dim(X)[1] # n in paper
     npred <- dim(X)[2] # p in paper

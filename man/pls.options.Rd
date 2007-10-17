@@ -1,4 +1,4 @@
-%% $Id: pls.options.Rd 89 2006-09-20 15:41:09Z bhm $
+%% $Id: pls.options.Rd 145 2007-10-12 08:56:32Z bhm $
 \encoding{latin1}
 \name{pls.options}
 \alias{pls.options}
@@ -63,7 +63,7 @@ pls.options(\dots)
 \author{Bjørn-Helge Mevik and Ron Wehrens}
 \note{
   The function is a slight modification of the function
-  \code{\link[sm]{sm.options}} from the package sm.
+  \code{\link[sm]{sm.options}} from the package \pkg{sm}.
 }
 \examples{
 ## Return current options:

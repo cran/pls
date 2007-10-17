@@ -1,9 +1,9 @@
 ### crossval.R: Genereral cross-validation function.
-### $Id: crossval.R 69 2006-04-07 11:55:51Z bhm $
+### $Id: crossval.R 142 2007-10-01 13:10:25Z bhm $
 
 crossval <- function(object, segments = 10,
                      segment.type = c("random", "consecutive", "interleaved"),
-                     length.seg, trace = 15, ...)
+                     length.seg, jackknife = FALSE, trace = 15, ...)
 {
     if(!inherits(object, "mvr")) stop("`object' not an mvr object.")
     ## Get data frame
@@ -34,9 +34,10 @@ crossval <- function(object, segments = 10,
 
     ## Get response:
     Y <- as.matrix(model.response(mf))
-    npred <- dim(Y)[2]
+    nresp <- dim(Y)[2]
+    npred <- length(object$Xmeans)
     ## Calculate effective number of observations
-    n <- nrow(data)
+    nobj <- nrow(data)
 
     ## Set up segments
     if (is.list(segments)) {
@@ -44,26 +45,30 @@ crossval <- function(object, segments = 10,
             attr(segments, "type") <- "user supplied"
     } else {
         if (missing(length.seg)) {
-            segments <- cvsegments(n, k = segments, type = segment.type)
+            segments <- cvsegments(nobj, k = segments, type = segment.type)
         } else {
-            segments <- cvsegments(n, length.seg = length.seg,
+            segments <- cvsegments(nobj, length.seg = length.seg,
                                    type = segment.type)
         }
     }
 
     ncomp <- object$ncomp
-    if (ncomp > n - max(sapply(segments, length)) - 1)
+    if (ncomp > nobj - max(sapply(segments, length)) - 1)
         stop("`ncomp' too large for cross-validation.",
              "\nPlease refit with `ncomp' less than ",
-             n - max(sapply(segments, length)))
-    cvPred <- array(dim = c(n, npred, ncomp))
-    adj <- numeric(ncomp)
+             nobj - max(sapply(segments, length)))
+    cvPred <- array(dim = c(nobj, nresp, ncomp))
+    adj <- matrix(0, nrow = nresp, ncol = ncomp)
+    if (jackknife <- isTRUE(jackknife))
+        cvCoef <- array(dim = c(npred, nresp, ncomp, length(segments)))
 
     ## Run cv, using update and predict
     for (n.seg in 1:length(segments)) {
         if (n.seg == 1) trace.time <- proc.time()[3] # Can't use system.time!
         seg <- segments[[n.seg]]
         fit <- update(object, data = data[-seg,])
+        ## Optionally collect coefficients:
+        if (jackknife) cvCoef[,,,n.seg] <- fit$coefficients
         pred <- predict(fit, newdata = data)
         ## Update the adjMSEP adjustment:
         adj <- adj + length(seg) * colSums((pred - c(Y))^2)
@@ -80,23 +85,24 @@ crossval <- function(object, segments = 10,
     }
     if (trace) cat("\n")
 
-    ## Calculate MSEP
-    MSEP0 <- apply(Y, 2, var) * n / (n - 1) # FIXME: Only correct for loocv!
-    MSEP <- colMeans((cvPred - c(Y))^2)
-
-    ## Calculate R2:
-    R2 <- matrix(nrow = npred, ncol = ncomp)
-    for (i in 1:npred) R2[i,] <- cor(cvPred[,i,], Y[,i])^2
+    ## Calculate validation statistics:
+    PRESS0 <- apply(Y, 2, var) * nobj^2 / (nobj - 1) # FIXME: Only correct for loocv!
+    PRESS <- colSums((cvPred - c(Y))^2)
 
     ## Add dimnames:
     objnames <- rownames(data)
     if (is.null(objnames)) objnames <- rownames(Y)
     dimnames(cvPred) <- c(list(objnames), dimnames(fitted(object))[-1])
-    dimnames(MSEP) <- dimnames(R2) <- dimnames(adj)
+    dimnames(PRESS) <- dimnames(adj)
+    if (jackknife)
+        dimnames(cvCoef) <- c(dimnames(coef(object)),
+                              list(paste("Seg", seq.int(along = segments))))
 
     ## Return the original object, with a component `validation' added
     object$validation <- list(method = "CV", pred = cvPred,
-                              MSEP0 = MSEP0, MSEP = MSEP, adj = adj / n^2,
-                              R2 = R2, segments = segments, ncomp = ncomp)
+                              coefficients = if (jackknife) cvCoef,
+                              PRESS0 = PRESS0, PRESS = PRESS,
+                              adj = adj / nobj^2,
+                              segments = segments, ncomp = ncomp)
     return(object)
 }

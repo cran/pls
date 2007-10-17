@@ -1,11 +1,11 @@
 ### mvr_wrappers.R: plsr, pls and pcr wrappers for mvr
-### $Id: mvr_wrappers.R 89 2006-09-20 15:41:09Z bhm $
+### $Id: mvr_wrappers.R 132 2007-08-24 09:21:05Z bhm $
 
 plsr <- function(..., method = pls.options()$plsralg)
 {
     cl <- match.call()
-    cl$method <- match.arg(method, c("kernelpls", "simpls", "oscorespls",
-                                     "model.frame"))
+    cl$method <- match.arg(method, c("kernelpls", "widekernelpls", "simpls",
+                                     "oscorespls", "model.frame"))
     cl[[1]] <- as.name("mvr")
     res <- eval(cl, parent.frame())
     res$call <- match.call()            # Fix call component
