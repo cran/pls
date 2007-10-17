@@ -1,4 +1,4 @@
-%% $Id: coef.mvr.Rd 99 2006-10-04 10:54:35Z bhm $
+%% $Id: coef.mvr.Rd 115 2007-06-22 17:51:03Z bhm $
 \encoding{latin1}
 \name{coef.mvr}
 \alias{coef.mvr}
@@ -47,8 +47,9 @@ explvar(object)
   \code{\link{fitted}} and \code{\link{residuals}}, respectively.)
   
   \code{coef.mvr} is used to extract the regression coefficients of a
-  model, i.e. the \eqn{B} in \eqn{y = XB}.  An array of dimension
-  \code{c(nxvar, nyvar, length(ncomp))}  or \code{c(nxvar, nyvar,
+  model, i.e. the \eqn{B} in \eqn{y = XB} (for the \eqn{Q} in \eqn{y = TQ}
+  where \eqn{T} is the scores, see \code{\link{Yloadings}}).  An array of
+  dimension \code{c(nxvar, nyvar, length(ncomp))} or \code{c(nxvar, nyvar,
     length(comps))} is returned.
 
   If \code{comps} is missing (or is \code{NULL}),

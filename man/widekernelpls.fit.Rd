@@ -1,12 +1,11 @@
-%% $Id: oscorespls.fit.Rd 132 2007-08-24 09:21:05Z bhm $
+%% $Id: widekernelpls.fit.Rd 145 2007-10-12 08:56:32Z bhm $
 \encoding{latin1}
-\name{oscorespls.fit}
-\alias{oscorespls.fit}
-\title{Orthogonal scores PLSR}
-\description{Fits a PLSR model with the orthogonal scores algorithm
-(aka the NIPALS algorithm).}
-\usage{oscorespls.fit(X, Y, ncomp, stripped = FALSE,
-               tol = .Machine$double.eps^0.5, \dots)}
+\name{widekernelpls.fit}
+\alias{widekernelpls.fit}
+\title{Wide Kernel PLS (Rännar et al.)}
+\description{Fits a PLSR model with the wide kernel algorithm.}
+\usage{widekernelpls.fit(X, Y, ncomp, stripped = FALSE,
+                  tol = .Machine$double.eps^0.5, maxit = 100, \dots)}
 \arguments{
   \item{X}{a matrix of observations.  \code{NA}s and \code{Inf}s are not
     allowed.} 
@@ -19,15 +18,20 @@
     cross-validation or simulations when only the coefficients are
     needed.  Defaults to \code{FALSE}.}
   \item{tol}{numeric.  The tolerance used for determining convergence in
-    multi-response models.}
+    the algorithm.}
+  \item{maxit}{positive integer.  The maximal number of iterations used
+    in the internal Eigenvector calculation.}
   \item{\dots}{other arguments.  Currently ignored.}
 }
 \details{This function should not be called directly, but through
   the generic functions \code{plsr} or \code{mvr} with the argument
-  \code{method="oscorespls"}.  It implements the orthogonal scores
-  algorithm, as described in \cite{Martens and Næs (1989)}.  This is one
-  of the two \dQuote{classical}
-  PLSR algorithms, the other being the orthogonal loadings algorithm.}
+  \code{method="widekernelpls"}.  The wide kernel PLS algorithm is
+  efficient when the number of variables is (much) larger
+  than the number of observations.  For very wide \code{X}, for instance
+  12x18000, it can be twice as fast as \code{\link{kernelpls.fit}} and
+  \code{\link{simpls.fit}}.  For other matrices, however, it can be much
+  slower.  The results are equal to the results of the NIPALS algorithm.
+}
 \value{A list containing the following components is returned:
   \item{coefficients}{an array of regression coefficients for 1, \ldots,
     \code{ncomp} components.  The dimensions of \code{coefficients} are
@@ -55,18 +59,34 @@
   If \code{stripped} is \code{TRUE}, only the components
   \code{coefficients}, \code{Xmeans} and \code{Ymeans} are returned.
 }
-\references{
-  Martens, H., Næs, T. (1989) \emph{Multivariate calibration.}
-  Chichester: Wiley.
+\note{
+  The current implementation has not undergone extensive testing yet,
+  and should perhaps be regarded as experimental.  Specifically, the
+  internal Eigenvector calculation does not always converge in extreme
+  cases where the Eigenvalue is close to zero.  However, when it does
+  converge, it always converges to the same results as
+  \code{\link{kernelpls.fit}}, up to numerical inacurracies.
+
+  The algorithm also has a bit of overhead, so when the number of
+  observations is moderately high, \code{\link{kernelpls.fit}} can be
+  faster even if the number of predictors is much higher.  The relative
+  speed of the algorithms can also depend greatly on which BLAS and/or
+  LAPACK library \R is linked against.
 }
-\author{Ron Wehrens and Bjørn-Helge Mevik}
+\references{
+  Rännar, S., Lindgren, F., Geladi, P. and Wold, S. (1994) A PLS
+  Kernel Algorithm for Data Sets with Many Variables and Fewer
+  Objects.  Part 1: Theory and Algorithm.
+  \emph{Journal of Chemometrics}, \bold{8}, 111--125.
+}
+\author{Bjørn-Helge Mevik}
 \seealso{
   \code{\link{mvr}}
   \code{\link{plsr}}
   \code{\link{pcr}}
   \code{\link{kernelpls.fit}}
-  \code{\link{widekernelpls.fit}}
   \code{\link{simpls.fit}}
+  \code{\link{oscorespls.fit}}
 }
 \keyword{regression}
 \keyword{multivariate}

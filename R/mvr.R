@@ -1,6 +1,6 @@
 ### mvr.R: plsr/pcr modelling functions
 ###
-### $Id: mvr.R 89 2006-09-20 15:41:09Z bhm $
+### $Id: mvr.R 135 2007-09-06 08:50:04Z bhm $
 ###
 ### The top level user function.  Implements a formula interface and calls the
 ### correct fit function to do the work.
@@ -20,8 +20,8 @@ mvr <- function(formula, ncomp, data, subset, na.action,
     mf <- mf[c(1, m)]                # Retain only the named arguments
     mf[[1]] <- as.name("model.frame")
     mf <- eval(mf, parent.frame())
-    method <- match.arg(method, c("kernelpls", "simpls", "oscorespls",
-                                  "svdpc", "model.frame"))
+    method <- match.arg(method, c("kernelpls", "widekernelpls", "simpls",
+                                  "oscorespls", "svdpc", "model.frame"))
     if (method == "model.frame") return(mf)
     ## Get the terms
     mt <- attr(mf, "terms")        # This is to include the `predvars'
@@ -88,8 +88,9 @@ mvr <- function(formula, ncomp, data, subset, na.action,
 
     ## Select fit function:
     fitFunc <- switch(method,
-                      simpls = simpls.fit,
                       kernelpls = kernelpls.fit,
+                      widekernelpls = widekernelpls.fit,
+                      simpls = simpls.fit,
                       oscorespls = oscorespls.fit,
                       svdpc = svdpc.fit)
 
@@ -98,6 +99,8 @@ mvr <- function(formula, ncomp, data, subset, na.action,
         ## This is faster than sd(X), but cannot handle missing values:
         scale <- sqrt(colSums((X - rep(colMeans(X), each = nobj))^2) /
                       (nobj - 1))
+        if (any(abs(scale) < .Machine$double.eps^0.5))
+            warning("Scaling with (near) zero standard deviation")
         X <- X / rep(scale, each = nobj)
     }
 

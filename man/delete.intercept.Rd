@@ -1,4 +1,4 @@
-%% $Id: delete.intercept.Rd 89 2006-09-20 15:41:09Z bhm $
+%% $Id: delete.intercept.Rd 146 2007-10-15 12:19:11Z bhm $
 \encoding{latin1}
 \name{delete.intercept}
 \alias{delete.intercept}
@@ -19,4 +19,4 @@ delete.intercept(mm)
 }
 \author{Bjørn-Helge Mevik and Ron Wehrens}
 \seealso{\code{\link{mvr}}, \code{\link{model.matrix.mvr}}}
-\keyword{regression}
+\keyword{internal}

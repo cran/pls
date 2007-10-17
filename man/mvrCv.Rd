@@ -1,4 +1,4 @@
-%% $Id: mvrCv.Rd 92 2006-09-20 17:44:25Z bhm $
+%% $Id: mvrCv.Rd 142 2007-10-01 13:10:25Z bhm $
 \encoding{latin1}
 \name{mvrCv}
 \alias{mvrCv}
@@ -10,7 +10,7 @@
 mvrCv(X, Y, ncomp,
       method = pls.options()$mvralg, scale = FALSE,
       segments = 10, segment.type = c("random", "consecutive", "interleaved"),
-      length.seg, trace = FALSE, \dots)
+      length.seg, jackknife = FALSE, trace = FALSE, \dots)
 }
 \arguments{
   \item{X}{a matrix of observations.  \code{NA}s and \code{Inf}s are not
@@ -30,6 +30,8 @@ mvrCv(X, Y, ncomp,
   \item{length.seg}{Positive integer.  The length of the segments to
     use.  If specified, it overrides \code{segments} unless
     \code{segments} is a list.}
+  \item{jackknife}{logical.  Whether jackknifing of regression
+    coefficients should be performed.}
   \item{trace}{logical; if \code{TRUE}, the segment number is printed
     for each segment.}
   \item{\dots}{additional arguments, sent to the underlying fit function.}
@@ -51,10 +53,11 @@ mvrCv(X, Y, ncomp,
   \code{length.seg}.  If both are specified, \code{segments} is
   ignored.
 
-  \code{X} and \code{Y} do not need to be centered.
+  If \code{jackknife} is \code{TRUE}, jackknifed regression coefficients
+  are returned, which can be used for for variance estimation
+  (\code{\link{var.jack}}) or hypothesis testing (\code{\link{jack.test}}).
 
-  The R2 component returned is calculated as the squared correlation
-  between the cross-validated predictions and the responses.
+  \code{X} and \code{Y} do not need to be centered.
   
   Note that this function cannot be used in situations where \eqn{X}
   needs to be recalculated for each segment (except for scaling by the
@@ -73,14 +76,16 @@ mvrCv(X, Y, ncomp,
   A list with the following components:
   \item{method}{equals \code{"CV"} for cross-validation.}
   \item{pred}{an array with the cross-validated predictions.}
-  \item{MSEP0}{a vector of MSEP values (one for each response variable)
+  \item{coefficients}{(only if \code{jackknife} is \code{TRUE}) an array
+    with the jackknifed regression coefficients.  The dimensions
+    correspond to the predictors, responses, number of components, and
+    segments, respectively.}
+  \item{PRESS0}{a vector of PRESS values (one for each response variable)
     for a model with zero components, i.e., only the intercept.}
-  \item{MSEP}{a matrix of MSEP values for models with 1, \ldots,
+  \item{PRESS}{a matrix of PRESS values for models with 1, \ldots,
     \code{ncomp} components.  Each row corresponds to one response variable.}
   \item{adj}{a matrix of adjustment values for calculating bias
     corrected MSEP.  \code{MSEP} uses this.}
-  \item{R2}{a matrix of R2 values for models with 1, \ldots,
-    \code{ncomp} components.  Each row corresponds to one response variable.}
   \item{segments}{the list of segments used in the cross-validation.}
   \item{ncomp}{the actual number of components used.}
 }
@@ -92,15 +97,21 @@ mvrCv(X, Y, ncomp,
 }
 \author{Ron Wehrens and Bjørn-Helge Mevik}
 \note{
-  The \code{MSEP0} is always cross-validated using leave-one-out
+  The \code{PRESS0} is always cross-validated using leave-one-out
   cross-validation.  This usually makes little difference in practice,
   but should be fixed for correctness.
+
+  The current implementation of the jackknife stores all
+  jackknife-replicates of the regression coefficients, which can be very
+  costly for large matrices.  This might change in a future version.
 }
 \seealso{
   \code{\link{mvr}}
   \code{\link{crossval}}
   \code{\link{cvsegments}}
   \code{\link{MSEP}}
+  \code{\link{var.jack}}
+  \code{\link{jack.test}}
 }
 \examples{
 data(yarn)

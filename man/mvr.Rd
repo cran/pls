@@ -1,4 +1,4 @@
-%% $Id: mvr.Rd 92 2006-09-20 17:44:25Z bhm $
+%% $Id: mvr.Rd 132 2007-08-24 09:21:05Z bhm $
 \encoding{latin1}
 \name{mvr}
 \alias{mvr}
@@ -51,8 +51,9 @@ pcr(\dots, method = pls.options()$pcralg)
   supported.
 
   The type of model to fit is specified with the \code{method}
-  argument. Three PLSR algorithms are available: the kernel algorithm
-  (\code{"kernelpls"}), SIMPLS (\code{"simpls"}) and the classical
+  argument. Four PLSR algorithms are available: the kernel algorithm
+  (\code{"kernelpls"}), the wide kernel algorithm (\code{"widekernelpls"}),
+  SIMPLS (\code{"simpls"}) and the classical
   orthogonal scores algorithm (\code{"oscorespls"}).  One PCR algorithm
   is available: using the singular value decomposition (\code{"svdpc"}).
   If \code{method} is \code{"model.frame"}, the model frame is returned.
@@ -122,6 +123,7 @@ pcr(\dots, method = pls.options()$pcralg)
 \author{Ron Wehrens and Bjørn-Helge Mevik}
 \seealso{
   \code{\link{kernelpls.fit}},
+  \code{\link{widekernelpls.fit}},
   \code{\link{simpls.fit}},
   \code{\link{oscorespls.fit}},
   \code{\link{svdpc.fit}},

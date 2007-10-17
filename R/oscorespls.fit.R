@@ -1,6 +1,6 @@
 ### oscorespls.fit.R: The multiresponse orthogonal scores algorithm
 ###
-### $Id: oscorespls.fit.R 109 2007-04-19 12:15:08Z bhm $
+### $Id: oscorespls.fit.R 133 2007-08-24 09:21:56Z bhm $
 ###
 ### Implements an adapted version of the `orthogonal scores' algorithm as
 ###   described in Martens and Naes, pp. 121--122 and 157--158.
@@ -17,7 +17,7 @@ oscorespls.fit <- function(X, Y, ncomp, stripped = FALSE,
     }
     ## Remove dimnames for performance (doesn't seem to matter; in fact,
     ## as far as it has any effect, it hurts a tiny bit in most situations.
-    ## dimnames(X) <- dimnames(Y) <- NULL
+    dimnames(X) <- dimnames(Y) <- NULL
 
     nobj <- dim(X)[1]
     npred <- dim(X)[2]
