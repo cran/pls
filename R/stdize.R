@@ -1,6 +1,6 @@
 ### stdize.R: Standardization by centering and scaling
 ###
-###	$Id: stdize.R 89 2006-09-20 15:41:09Z bhm $
+###	$Id: stdize.R 86 2006-09-20 12:20:39Z bhm $
 
 ## This is a somewhat modified version of scale.default
 stdize <- function(x, center = TRUE, scale = TRUE) {

@@ -1,4 +1,4 @@
-%% $Id: stdize.Rd 99 2006-10-04 10:54:35Z bhm $
+%% $Id: stdize.Rd 98 2006-10-03 21:21:48Z bhm $
 \encoding{latin1}
 \name{stdize}
 \alias{stdize}

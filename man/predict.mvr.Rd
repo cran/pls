@@ -1,4 +1,4 @@
-%% $Id: predict.mvr.Rd 99 2006-10-04 10:54:35Z bhm $
+%% $Id: predict.mvr.Rd 96 2006-09-30 12:02:01Z bhm $
 \encoding{latin1}
 \name{predict.mvr}
 \alias{predict.mvr}

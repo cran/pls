@@ -1,4 +1,4 @@
-%% $Id: msc.Rd 99 2006-10-04 10:54:35Z bhm $
+%% $Id: msc.Rd 98 2006-10-03 21:21:48Z bhm $
 \encoding{latin1}
 \name{msc}
 \alias{msc}

@@ -1,4 +1,4 @@
-%% $Id: svdpc.fit.Rd 89 2006-09-20 15:41:09Z bhm $
+%% $Id: svdpc.fit.Rd 87 2006-09-20 14:33:37Z bhm $
 \encoding{latin1}
 \name{svdpc.fit}
 \alias{svdpc.fit}

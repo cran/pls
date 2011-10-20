@@ -1,4 +1,4 @@
-%% $Id: yarn.Rd 91 2006-09-20 17:25:02Z bhm $
+%% $Id: yarn.Rd 164 2007-11-14 11:52:46Z bhm $
 \encoding{latin1}
 \name{yarn}
 \alias{yarn}
@@ -9,7 +9,7 @@
   268 wavelengths, and 21 corresponding densities.  A test set of 7
   samples is also provided.  Many thanks to Erik Swierenga.
 }
-\usage{data(yarn)}
+\usage{yarn}
 \format{A data frame with components
   \describe{
     \item{NIR}{Numeric matrix of NIR measurements}

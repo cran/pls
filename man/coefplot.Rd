@@ -1,4 +1,4 @@
-%% $Id: coefplot.Rd 148 2007-10-16 20:33:38Z bhm $
+%% $Id: coefplot.Rd 168 2007-11-23 11:17:59Z bhm $
 \encoding{latin1}
 \name{coefplot}
 \alias{coefplot}
@@ -8,11 +8,10 @@
 }
 \usage{
 coefplot(object, ncomp = object$ncomp, comps, intercept = FALSE,
-         separate = FALSE, nCols, nRows, labels, type = "l",
-         lty = 1:nLines, lwd = NULL, pch = 1:nLines, cex = NULL,
-         col = 1:nLines, legendpos, xlab = "variable",
-         ylab = "regression coefficient", main, pretty.xlabels = TRUE,
-         xlim, \dots)
+         separate = FALSE, se.whiskers = FALSE, nCols, nRows, labels,
+         type = "l", lty, lwd = NULL, pch, cex = NULL, col, legendpos,
+         xlab = "variable", ylab = "regression coefficient", main,
+         pretty.xlabels = TRUE, xlim, ylim, \dots)
 }
 \arguments{
   \item{object}{an \code{mvr} object.  The fitted model.}
@@ -20,6 +19,11 @@ coefplot(object, ncomp = object$ncomp, comps, intercept = FALSE,
     plot.  See \code{\link{coef.mvr}} for details.}
   \item{separate}{logical.  If \code{TRUE}, coefficients for different model
     sizes are blotted in separate plots.}
+  \item{se.whiskers}{logical.  If \code{TRUE}, whiskers at plus/minus
+    1 estimated standard error are added to the plot.  This is only available if
+    the model was cross-validated with \code{jackknife = TRUE}.  Also, in the
+    current implementation, \code{intercept} must be \code{FALSE}, and
+    \code{separate} must be \code{TRUE} if \code{length(ncomp) > 1}.}
   \item{intercept}{logical.  Whether coefficients for the intercept should
     be plotted.  Ignored if \code{comps} is specified.  Defaults to
     \code{FALSE}.  See \code{\link{coef.mvr}} for details.}
@@ -56,8 +60,8 @@ coefplot(object, ncomp = object$ncomp, comps, intercept = FALSE,
   \item{main}{optional main title for the plot.  See Details.}
   \item{pretty.xlabels}{logical.  If \code{TRUE}, \code{coefplot}
     tries to plot the \eqn{x} labels more nicely.  See Details.}
-  \item{xlim}{optional vector of length two, with the \eqn{x} limits of
-    the plot.}
+  \item{xlim,ylim}{optional vector of length two, with the \eqn{x} or
+    \eqn{y} limits of the plot.}
   \item{\dots}{Further arguments sent to the underlying plot functions.}
 }
 \details{
@@ -96,6 +100,12 @@ coefplot(object, ncomp = object$ncomp, comps, intercept = FALSE,
   \code{"numbers"}, it also uses the numerical values of the labels for
   horisontal spacing.  If one has excluded parts of the spectral
   region, one might therefore want to use \code{pretty.xlabels = FALSE}.
+
+  When \code{separate} is \code{TRUE}, the arguments \code{lty},
+  \code{col}, and \code{pch} default to their \code{par()} setting.
+  Otherwise, the default for all of them is \code{1:nLines}, where
+  \code{nLines} is the number of model sizes specified, i.e., the length
+  of \code{ncomp} or \code{comps}.
 
   The function can also be called through the \code{mvr} plot method by
   specifying \code{plottype = "coefficients"}.

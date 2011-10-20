@@ -1,6 +1,6 @@
 ### pls.options.R:  Package specific options mechanism.
 ###
-### $Id: pls.options.R 89 2006-09-20 15:41:09Z bhm $
+### $Id: pls.options.R 177 2009-07-17 20:08:09Z bhm $
 ###
 ### Implements a slightly modified version of the sm.options() as found in
 ### sm 2.1-0.
@@ -11,6 +11,10 @@
 
 
 pls.options <- function(...) {
+    ## Use modified version, if exists.  (Needed due to Namespace.)
+    if (exists(".pls.Options", where = .GlobalEnv)) {
+        .pls.Options <- get(".pls.Options", pos = .GlobalEnv)
+    }
     if (nargs() == 0) return(.pls.Options)
     current <- .pls.Options
     temp <- list(...)

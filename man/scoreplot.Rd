@@ -1,4 +1,4 @@
-%% $Id: scoreplot.Rd 101 2006-12-14 13:05:14Z bhm $
+%% $Id: scoreplot.Rd 156 2007-10-29 13:08:41Z bhm $
 \encoding{latin1}
 \name{scoreplot}
 \alias{scoreplot}
@@ -155,6 +155,10 @@ corrplot(object, comps = 1:2, labels, radii = c(sqrt(1/2), 1),
   listed in the argument list simply because they are not handled
   specifically in the function (unlike in \code{loadingplot}), but
   passed directly to the underlying plot functions by \code{\dots}.
+
+  Tip: If the labels specified with \code{labels} are too long, they get
+  clipped at the border of the plot region.  This can be avoided by
+  supplying the graphical parameter \code{xpd = TRUE} in the plot call.
 
   The handling of \code{labels} and \code{pretty.xlabels} in
   \code{coefplot} is experimental.

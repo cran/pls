@@ -1,5 +1,5 @@
 ### extract.R:  Extraction functions
-### $Id: extract.R 99 2006-10-04 10:54:35Z bhm $
+### $Id: extract.R 185 2009-11-15 16:04:46Z bhm $
 
 ## coef.mvr: Extract the base variable regression coefficients from
 ## an mvr object.
@@ -82,7 +82,8 @@ naExcludeMvr <- function(omit, x, ...) {
 loadings <- function(object, ...) UseMethod("loadings")
 loadings.default <- function(object, ...) {
     L <- if (inherits(object, "prcomp")) object$rotation else object$loadings
-    if (!inherits(L, "loadings")) class(L) <- "loadings"
+    if (!(inherits(L, "loadings") || inherits(L, "list")))
+        class(L) <- "loadings"
     attr(L, "explvar") <- explvar(object)
     L
 }
@@ -91,7 +92,8 @@ loadings.default <- function(object, ...) {
 scores <- function(object, ...) UseMethod("scores")
 scores.default <- function(object, ...) {
     S <- if (inherits(object, "prcomp")) object$x else object$scores
-    if (!inherits(S, "scores")) class(S) <- "scores"
+    if (!(inherits(S, "scores") || inherits(S, "list")))
+        class(S) <- "scores"
     attr(S, "explvar") <- explvar(object)
     S
 }

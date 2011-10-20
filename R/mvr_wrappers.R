@@ -1,5 +1,5 @@
 ### mvr_wrappers.R: plsr, pls and pcr wrappers for mvr
-### $Id: mvr_wrappers.R 132 2007-08-24 09:21:05Z bhm $
+### $Id: mvr_wrappers.R 167 2007-11-21 14:32:14Z bhm $
 
 plsr <- function(..., method = pls.options()$plsralg)
 {
@@ -8,7 +8,9 @@ plsr <- function(..., method = pls.options()$plsralg)
                                      "oscorespls", "model.frame"))
     cl[[1]] <- as.name("mvr")
     res <- eval(cl, parent.frame())
-    res$call <- match.call()            # Fix call component
+    ## Fix call component
+    if (cl$method != "model.frame") res$call[[1]] <- as.name("plsr")
+    if (missing(method)) res$call$method <- NULL
     res
 }
 
@@ -18,6 +20,8 @@ pcr <- function(..., method = pls.options()$pcralg)
     cl$method <- match.arg(method, c("svdpc", "model.frame"))
     cl[[1]] <- as.name("mvr")
     res <- eval(cl, parent.frame())
-    res$call <- match.call()            # Fix call component
+    ## Fix call component
+    if (cl$method != "model.frame") res$call[[1]] <- as.name("pcr")
+    if (missing(method)) res$call$method <- NULL
     res
 }

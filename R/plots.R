@@ -1,7 +1,7 @@
 ### Plots for mvr objects.  Some of them also work for other
 ### objects, but that is not a priority.
 ###
-### $Id: plots.R 148 2007-10-16 20:33:38Z bhm $
+### $Id: plots.R 168 2007-11-23 11:17:59Z bhm $
 
 ###
 ### Plot method for mvr objects
@@ -451,12 +451,24 @@ predplot.mvr <- function(object, ncomp = object$ncomp, which, newdata,
 }
 
 ## The workhorse function:
-predplotXy <- function(x, y, line = FALSE, main = "Prediction plot",
-                       xlab = "measured response",
+predplotXy <- function(x, y, line = FALSE, labels, type = "p",
+                       main = "Prediction plot", xlab = "measured response",
                        ylab = "predicted response", line.col = par("col"),
                        line.lty = NULL, line.lwd = NULL, ...)
 {
-    plot(y ~ x, main = main, xlab = xlab, ylab = ylab, ...)
+    if (!missing(labels)) {
+        ## Set up point labels
+        if (length(labels) == 1) {
+            labels <- switch(match.arg(labels, c("names", "numbers")),
+                             names = names(y),
+                             numbers = as.character(1:length(y))
+                             )
+        }
+        ## Override plot type:
+        type <- "n"
+    }
+    plot(y ~ x, type = type, main = main, xlab = xlab, ylab = ylab, ...)
+    if (!missing(labels)) text(x, y, labels, ...)
     if (line) abline(0, 1, col = line.col, lty = line.lty, lwd = line.lwd)
     invisible(cbind(measured = x, predicted = as.vector(y)))
 }
@@ -467,11 +479,12 @@ predplotXy <- function(x, y, line = FALSE, main = "Prediction plot",
 ###
 
 coefplot <- function(object, ncomp = object$ncomp, comps, intercept = FALSE,
-                     separate = FALSE, nCols, nRows, labels,
-                     type = "l", lty = 1:nLines, lwd = NULL,
-                     pch = 1:nLines, cex = NULL, col = 1:nLines, legendpos,
+                     separate = FALSE, se.whiskers = FALSE,
+                     nCols, nRows, labels,
+                     type = "l", lty, lwd = NULL,
+                     pch, cex = NULL, col, legendpos,
                      xlab = "variable", ylab = "regression coefficient",
-                     main, pretty.xlabels = TRUE, xlim, ...)
+                     main, pretty.xlabels = TRUE, xlim, ylim, ...)
 {
     ## This simplifies code below:
     if (missing(comps)) comps <- NULL
@@ -490,8 +503,8 @@ coefplot <- function(object, ncomp = object$ncomp, comps, intercept = FALSE,
         mXlab <- xlab
         mYlab <- ylab
         xlab <- ylab <- ""
-        if(missing(nCols)) nCols <- min(c(3, dims[1]))
-        if(missing(nRows))
+        if (missing(nCols)) nCols <- min(c(3, dims[1]))
+        if (missing(nRows))
             nRows <- min(c(3, ceiling(prod(dims[1:2], na.rm = TRUE) / nCols)))
         opar <- par(no.readonly = TRUE)
         on.exit(par(opar))
@@ -502,6 +515,9 @@ coefplot <- function(object, ncomp = object$ncomp, comps, intercept = FALSE,
     } else {
         nCols <- nRows <- 1
     }
+    if (missing(col)) col <- if (separate) par("col") else 1:nLines
+    if (missing(pch)) pch <- if (separate) par("pch") else 1:nLines
+    if (missing(lty)) lty <- if (separate) par("lty") else 1:nLines
     if (length(lty) > nLines) lty <- lty[1:nLines] # otherwise legend chokes
     if (length(type) != 1 || is.na(nchar(type, "c")) || nchar(type, "c") != 1)
         stop("Invalid plot type.")
@@ -513,6 +529,26 @@ coefplot <- function(object, ncomp = object$ncomp, comps, intercept = FALSE,
     ## Get the coefficients:
     coefs <- coef(object, ncomp = ncomp, comps = comps, intercept = intercept)
     complabs <- dimnames(coefs)[[3]]
+
+    ## Optionally, get the standard errors:
+    if (isTRUE(se.whiskers)) {
+        if (isTRUE(intercept)) stop(sQuote("se.whiskers"),
+                                    " not supported when ",
+                                    sQuote("intercept"), " is TRUE")
+        if (!is.null(comps))
+            stop(sQuote("se.whiskers"), " not supported when ",
+                 sQuote("comps"), " is specified")
+        if (dim(coefs)[3] > 1 && !isTRUE(separate))
+            stop(sQuote("se.whiskers"), " not supported when ",
+                 sQuote("separate"), " is FALSE and length(ncomp) > 1")
+        SEs <- sqrt(var.jack(object, ncomp = ncomp))
+        npred <- dim(SEs)[1]
+        if (!hasArg("ylim")) {
+            ## Calculate new ylims:
+            miny <- apply(coefs - SEs, 2:3, min)
+            maxy <- apply(coefs + SEs, 2:3, max)
+        }
+    }
 
     ## Set up the x labels:
     xnum <- 1:dim(coefs)[1]
@@ -560,15 +596,43 @@ coefplot <- function(object, ncomp = object$ncomp, comps, intercept = FALSE,
                 lmain <- respname
             }
             if (separate) {
+                if (missing(ylim)) {
+                    if (isTRUE(se.whiskers)) {
+                        ylims <- c(miny[resp,size], maxy[resp,size])
+                    } else {
+                        ylims <- range(coefs[,resp,size])
+                    }
+                } else {
+                    ylims <- ylim
+                }
                 plot(xnum, coefs[,resp,size],
                      main = lmain, xlab = xlab, ylab = ylab, type = type,
                      lty = lty, lwd = lwd, pch = pch, cex = cex,
-                     col = col, xaxt = xaxt, xlim = xlim, ...)
+                     col = col, xaxt = xaxt, xlim = xlim, ylim = ylims, ...)
+                if (isTRUE(se.whiskers)) {
+                    arrows(1:npred, (coefs - SEs)[,resp,size],
+                           1:npred, (coefs + SEs)[,resp,size], length = 0.05,
+                           angle = 90, code = 3, col = 2)
+                }
             } else {
+                if (missing(ylim)) {
+                    if (isTRUE(se.whiskers)) {
+                        ylims <- c(miny[resp,], maxy[resp,])
+                    } else {
+                        ylims <- range(coefs[,resp,])
+                    }
+                } else {
+                    ylims <- ylim
+                }
                 matplot(xnum, coefs[,resp,], main = lmain, xlab = xlab,
                         ylab = ylab, type = type, lty = lty, lwd = lwd,
                         pch = pch, cex = cex, col = col, xaxt = xaxt,
-                        xlim = xlim, ...)
+                        xlim = xlim, ylim = ylims, ...)
+                if (isTRUE(se.whiskers)) {
+                    arrows(1:npred, (coefs - SEs)[,resp,],
+                           1:npred, (coefs + SEs)[,resp,], length = 0.05,
+                           angle = 90, code = 3, col = 2)
+                }
                 if (!missing(legendpos)) {
                     do.call("legend", c(list(legendpos, complabs, col = col),
                                         if(dolines) list(lty = lty, lwd = lwd),

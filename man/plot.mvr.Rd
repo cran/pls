@@ -1,4 +1,4 @@
-%% $Id: plot.mvr.Rd 99 2006-10-04 10:54:35Z bhm $
+%% $Id: plot.mvr.Rd 98 2006-10-03 21:21:48Z bhm $
 \encoding{latin1}
 \name{plot.mvr}
 \alias{plot.mvr}
