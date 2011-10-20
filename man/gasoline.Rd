@@ -1,4 +1,4 @@
-%% $Id: gasoline.Rd 91 2006-09-20 17:25:02Z bhm $
+%% $Id: gasoline.Rd 164 2007-11-14 11:52:46Z bhm $
 \encoding{latin1}
 \name{gasoline}
 \alias{gasoline}
@@ -10,7 +10,7 @@
   from 900 nm to 1700 nm in 2 nm intervals, giving 401 wavelengths.
   Many thanks to John H. Kalivas.
 }
-\usage{data(gasoline)}
+\usage{gasoline}
 \format{
   A data frame with 60 observations on the following 2 variables.
   \describe{

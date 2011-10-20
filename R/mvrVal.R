@@ -1,7 +1,7 @@
 ### mvrVal.R: Functions for calculating validation statistics, such
 ### as MSEP, RMSEP and R2, for mvr objects.
 ###
-### $Id: mvrVal.R 117 2007-06-26 12:57:53Z bhm $
+### $Id: mvrVal.R 178 2009-07-20 16:33:43Z bhm $
 
 ## Calculate the validation statistics needed for (R)MSEP and R^2.
 ## Note that it accepts any values for `estimate', but only calculates
@@ -97,7 +97,8 @@ mvrValstats <- function(object, estimate,
 
 
 ## R2: Return R^2
-R2 <- function(object, estimate, newdata, ncomp = 1:object$ncomp, comps,
+R2 <- function(object, ...) UseMethod("R2")
+R2.mvr <- function(object, estimate, newdata, ncomp = 1:object$ncomp, comps,
                intercept = cumulative, se = FALSE, ...) {
     ## Makes the code slightly simpler:  FIXME: maybe remove
     cumulative <- missing(comps) || is.null(comps)

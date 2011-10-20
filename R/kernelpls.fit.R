@@ -1,5 +1,5 @@
 ### kernelpls.fit.R: Kernel PLS fit algorithm for tall data.
-### $Id: kernelpls.fit.R 89 2006-09-20 15:41:09Z bhm $
+### $Id: kernelpls.fit.R 86 2006-09-20 12:20:39Z bhm $
 ###
 ### Implements an adapted version of the `algorithm 1' described in
 ###   Dayal, B. S. and MacGregor, J. F. (1997) Improved PLS algorithms.

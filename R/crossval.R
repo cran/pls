@@ -1,5 +1,5 @@
 ### crossval.R: Genereral cross-validation function.
-### $Id: crossval.R 142 2007-10-01 13:10:25Z bhm $
+### $Id: crossval.R 154 2007-10-18 14:18:33Z bhm $
 
 crossval <- function(object, segments = 10,
                      segment.type = c("random", "consecutive", "interleaved"),
@@ -93,6 +93,7 @@ crossval <- function(object, segments = 10,
     objnames <- rownames(data)
     if (is.null(objnames)) objnames <- rownames(Y)
     dimnames(cvPred) <- c(list(objnames), dimnames(fitted(object))[-1])
+    if (is.null(names(PRESS0))) names(PRESS0) <- dimnames(object$Yloadings)[[1]]
     dimnames(PRESS) <- dimnames(adj)
     if (jackknife)
         dimnames(cvCoef) <- c(dimnames(coef(object)),

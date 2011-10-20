@@ -1,4 +1,4 @@
-%% $Id: mvr.Rd 132 2007-08-24 09:21:05Z bhm $
+%% $Id: mvr.Rd 162 2007-11-06 13:44:27Z bhm $
 \encoding{latin1}
 \name{mvr}
 \alias{mvr}
@@ -28,7 +28,12 @@ pcr(\dots, method = pls.options()$pcralg)
   \item{subset}{an optional vector specifying a subset of observations
     to be used in the fitting process.}
   \item{na.action}{a function which indicates what should happen when
-    the data contain missing values.}
+    the data contain missing values.  The default is set by
+    the \code{na.action} setting of \code{\link{options}}, and is
+    \code{\link{na.fail}} if that is unset.  The \sQuote{factory-fresh}
+    default is \code{\link{na.omit}}.  Another possible value is
+    \code{NULL}, no action.  Value \code{\link{na.exclude}} can be
+    useful.  See \code{\link{na.omit}} for other alternatives.}
   \item{method}{the multivariate regression method to be used.  If
     \code{"model.frame"}, the model frame is returned.}
   \item{scale}{numeric vector, or logical.  If numeric vector, \eqn{X}

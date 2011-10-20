@@ -1,4 +1,4 @@
-%% $Id: oliveoil.Rd 92 2006-09-20 17:44:25Z bhm $
+%% $Id: oliveoil.Rd 164 2007-11-14 11:52:46Z bhm $
 \encoding{latin1}
 \name{oliveoil}
 \alias{oliveoil}
@@ -10,7 +10,7 @@
   samples.  The first five oils are Greek, the next five are Italian and
   the last six are Spanish.
 }
-\usage{data(oliveoil)}
+\usage{oliveoil}
 \format{A data frame with 16 observations on the following 2 variables.
   \describe{
     \item{\code{sensory}}{a matrix with 6 columns.  Scores for
