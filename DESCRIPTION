@@ -1,18 +1,20 @@
 Package: pls
-Version: 2.2-0
-Date: 2011-10-20
-Title: Partial Least Squares Regression (PLSR) and Principal Component
-        Regression (PCR)
-Author: Bjørn-Helge Mevik and Ron Wehrens
+Version: 2.3-0
+Date: 2011-11-27
+Title: Partial Least Squares and Principal Component regression
+Author: Bjørn-Helge Mevik, Ron Wehrens and Kristian Hovde Liland
 Maintainer: Bjørn-Helge Mevik <pls@mevik.net>
 Encoding: latin1
 LazyLoad: yes
 LazyData: yes
 ZipData: yes
-Description: Multivariate regression by partial least squares
-        regression (PLSR) and principal component regression (PCR).
+Description: Multivariate regression methods
+	Partial Least Squares Regression (PLSR), Principal Component
+	Regression (PCR) and Canonical Powered Partial Least Squares (CPPLS)
 License: GPL-2
 URL: http://mevik.net/work/software/pls.html
-Packaged: 2011-10-20 18:17:59 UTC; bhm
+Depends: R (>= 2.10)
+Suggests: MASS
+Packaged: 2011-11-27 15:01:32 UTC; bhm
 Repository: CRAN
-Date/Publication: 2011-10-20 20:26:20
+Date/Publication: 2011-11-28 12:00:06

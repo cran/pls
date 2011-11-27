@@ -1,4 +1,18 @@
-$Id: CHANGES 189 2011-10-20 18:14:43Z bhm $
+$Id: CHANGES 204 2011-11-27 14:58:28Z bhm $
+
+Changes in 2.3-0
+================
+
+New features:
+-------------
+- New analysis method CPPLS implmemented
+
+Bug fixes:
+----------
+- The wide kernel PLS method would fail with 1 component
+- predict() would fail if newdata was a matrix without coloumn names.
+  Discovered by Egon Willighagen.
+
 
 Changes in 2.2-0
 ================

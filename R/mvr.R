@@ -1,12 +1,12 @@
 ### mvr.R: plsr/pcr modelling functions
 ###
-### $Id: mvr.R 135 2007-09-06 08:50:04Z bhm $
+### $Id: mvr.R 203 2011-11-27 14:16:11Z bhm $
 ###
 ### The top level user function.  Implements a formula interface and calls the
 ### correct fit function to do the work.
 ### The function borrows heavily from lm().
 
-mvr <- function(formula, ncomp, data, subset, na.action,
+mvr <- function(formula, ncomp, Y.add, data, subset, na.action,
                 method = pls.options()$mvralg,
                 scale = FALSE, validation = c("none", "CV", "LOO"),
                 model = TRUE, x = FALSE, y = FALSE, ...)
@@ -16,12 +16,17 @@ mvr <- function(formula, ncomp, data, subset, na.action,
 
     ## Get the model frame
     mf <- match.call(expand.dots = FALSE)
+    if (!missing(Y.add)) {
+        ## Temporarily add Y.add to the formula
+        Y.addname <- as.character(substitute(Y.add))
+        mf$formula <- update(formula, paste("~ . +", Y.addname))
+    }
     m <- match(c("formula", "data", "subset", "na.action"), names(mf), 0)
     mf <- mf[c(1, m)]                # Retain only the named arguments
     mf[[1]] <- as.name("model.frame")
     mf <- eval(mf, parent.frame())
     method <- match.arg(method, c("kernelpls", "widekernelpls", "simpls",
-                                  "oscorespls", "svdpc", "model.frame"))
+                                  "oscorespls", "cppls", "svdpc", "model.frame"))
     if (method == "model.frame") return(mf)
     ## Get the terms
     mt <- attr(mf, "terms")        # This is to include the `predvars'
@@ -34,6 +39,14 @@ mvr <- function(formula, ncomp, data, subset, na.action,
     } else {
         Y <- as.matrix(Y)
         colnames(Y) <- deparse(formula[[2]])
+    }
+    if (missing(Y.add)) {
+        Y.add <- NULL
+    } else {
+        Y.add <- mf[,Y.addname]
+        ## Remove Y.add from the formula again
+        mt <- drop.terms(mt, which(attr(mt, "term.labels") == Y.addname),
+                         keep.response = TRUE)
     }
     X <- delete.intercept(model.matrix(mt, mf))
 
@@ -67,12 +80,12 @@ mvr <- function(formula, ncomp, data, subset, na.action,
     ## Optionally, perform validation:
     switch(match.arg(validation),
            CV = {
-               val <- mvrCv(X, Y, ncomp, method = method, scale = sdscale, ...)
+               val <- mvrCv(X, Y, ncomp, Y.add = Y.add, method = method, scale = sdscale, ...)
            },
            LOO = {
                segments <- as.list(1:nobj)
                attr(segments, "type") <- "leave-one-out"
-               val <- mvrCv(X, Y, ncomp, method = method, scale = sdscale,
+               val <- mvrCv(X, Y, ncomp, Y.add = Y.add, method = method, scale = sdscale,
                             segments = segments, ...)
            },
            none = {
@@ -92,6 +105,7 @@ mvr <- function(formula, ncomp, data, subset, na.action,
                       widekernelpls = widekernelpls.fit,
                       simpls = simpls.fit,
                       oscorespls = oscorespls.fit,
+                      cppls = cppls.fit,
                       svdpc = svdpc.fit)
 
     ## Perform any scaling by sd:
@@ -105,7 +119,7 @@ mvr <- function(formula, ncomp, data, subset, na.action,
     }
 
     ## Fit the model:
-    z <- fitFunc(X, Y, ncomp, ...)
+    z <- fitFunc(X, Y, ncomp, Y.add = Y.add, ...)
 
     ## Build and return the object:
     class(z) <- "mvr"

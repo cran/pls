@@ -1,32 +1,36 @@
 ### summaries.R: print and summary methods.
-### $Id: summaries.R 132 2007-08-24 09:21:05Z bhm $
+### $Id: summaries.R 203 2011-11-27 14:16:11Z bhm $
 
 ## Print method for mvr objects:
 print.mvr <- function(x, ...) {
     switch(x$method,
            kernelpls = {
-               regr = "Partial least squares"
+               ana = "Partial least squares regression"
                alg = "kernel"
            },
            widekernelpls = {
-               regr = "Partial least squares"
+               ana = "Partial least squares regression"
                alg = "wide kernel"
            },
            simpls = {
-               regr = "Partial least squares"
+               ana = "Partial least squares regression"
                alg = "simpls"
            },
            oscorespls = {
-               regr = "Partial least squares"
+               ana = "Partial least squares regression"
                alg = "orthogonal scores"
            },
+           cppls = {
+               ana = "Canonical powered partial least squares"
+               alg = "cppls"
+           },
            svdpc = {
-               regr = "Principal component"
+               ana = "Principal component regression"
                alg = "singular value decomposition"
            },
            stop("Unknown fit method.")
            )
-    cat(regr, "regression, fitted with the", alg, "algorithm.")
+    cat(ana, ", fitted with the", alg, "algorithm.")
     if (!is.null(x$validation))
         cat("\nCross-validated using", length(x$validation$segments),
             attr(x$validation$segments, "type"), "segments.")

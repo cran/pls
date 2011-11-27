@@ -1,5 +1,5 @@
 ### widekernelpls.fit.R: Kernel PLS fit algorithm for wide data.
-### $Id: widekernelpls.fit.R 138 2007-09-28 15:24:29Z bhm $
+### $Id: widekernelpls.fit.R 197 2011-11-15 08:55:40Z bhm $
 ###
 ### Implements an adapted version of the algorithm described in
 ###  Rannar, S., Lindgren, F., Geladi, P. and Wold, S. (1994) A PLS
@@ -86,7 +86,7 @@ widekernelpls.fit <- function(X, Y, ncomp, stripped = FALSE,
     W <- crossprod(X, U)
     W <- W / rep(sqrt(colSums(W * W)), each = npred)
 
-    TTtTinv <- TT %*% diag(1 / colSums(TT * TT))
+    TTtTinv <- TT %*% diag(1 / colSums(TT * TT), ncol = ncol(TT))
     P <- crossprod(X, TTtTinv)
     Q <- crossprod(Y, TTtTinv)
 

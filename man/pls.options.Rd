@@ -1,4 +1,4 @@
-%% $Id: pls.options.Rd 145 2007-10-12 08:56:32Z bhm $
+%% $Id: pls.options.Rd 192 2011-11-11 18:34:46Z bhm $
 \encoding{latin1}
 \name{pls.options}
 \alias{pls.options}
@@ -49,6 +49,15 @@ pls.options(\dots)
       value should be one of the allowed methods.  Defaults to
       \code{"kernelpls"}.  Can be overridden with the argument
       \code{method} in \code{plsr}.}
+    \item{cpplsalg}{The fit method to use in \code{\link{cppls}}.  The
+      value should be one of the allowed methods.  Defaults to
+      \code{"cppls"}.  Can be overridden with the argument
+      \code{method} in \code{cppls}.}
+    \item{w.tol}{The tolerance used for removing values close to 0
+	  in the vectors of loading weights in \code{\link{cppls}}.  Defaults to
+      .Machine$double.eps.}
+    \item{X.tol}{The tolerance used for removing predictor variables
+      with L1 norms close to 0 in \code{\link{cppls}}.  Defaults to 10^-12.}
   }
 }
 \section{Side Effects}{
