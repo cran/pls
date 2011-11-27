@@ -1,29 +1,34 @@
-%% $Id: mvr.Rd 162 2007-11-06 13:44:27Z bhm $
+%% $Id: mvr.Rd 203 2011-11-27 14:16:11Z bhm $
 \encoding{latin1}
 \name{mvr}
 \alias{mvr}
 \alias{pcr}
 \alias{plsr}
+\alias{cppls}
 \title{Partial Least Squares and Principal Component Regression}
 \description{
-  Functions to perform partial least squares regression (PLSR) or
+  Functions to perform partial least squares regression (PLSR),
+  canonical powered partial least squares (CPPLS) or
   principal component regression (PCR), with a formula interface.
   Cross-validation can be used.  Prediction, model extraction, plot,
   print and summary methods exist.
 }
 %% FIXME: Maybe use a \synopsis section, and show typical uses in \usage:
 \usage{
-mvr(formula, ncomp, data, subset, na.action,
+mvr(formula, ncomp, Y.add, data, subset, na.action,
     method = pls.options()$mvralg,
     scale = FALSE, validation = c("none", "CV", "LOO"),
     model = TRUE, x = FALSE, y = FALSE, \dots)
 plsr(\dots, method = pls.options()$plsralg)
+cppls(\dots, Y.add, weights, method = pls.options()$cpplsalg)
 pcr(\dots, method = pls.options()$pcralg)
 }
 \arguments{
   \item{formula}{a model formula.  Most of the \code{lm} formula
     constructs are supported.  See below.}
   \item{ncomp}{the number of components to include in the model (see below).}
+  \item{Y.add}{a vector or matrix of additional responses containing
+    relevant information about the observations.  Only used for \code{cppls}.}
   \item{data}{an optional data frame with the data to fit the model from.}
   \item{subset}{an optional vector specifying a subset of observations
     to be used in the fitting process.}
@@ -47,23 +52,26 @@ pcr(\dots, method = pls.options()$pcralg)
   \item{model}{a logical.  If \code{TRUE}, the model frame is returned.}
   \item{x}{a logical.  If \code{TRUE}, the model matrix is returned.}
   \item{y}{a logical.  If \code{TRUE}, the response is returned.}
+  \item{weights}{a vector of individual weights for the observations.
+    Only used for \code{cppls}.  (Optional)}
   \item{\dots}{additional arguments, passed to the underlying fit
     functions, and \code{mvrCv}.}
 }
 \details{
-  The functions fit PLSR or PCR models with 1, \eqn{\ldots},
+  The functions fit PLSR, CPPLS or PCR models with 1, \eqn{\ldots},
   \code{ncomp} number of components.  Multi-response models are fully
   supported.
 
   The type of model to fit is specified with the \code{method}
   argument. Four PLSR algorithms are available: the kernel algorithm
   (\code{"kernelpls"}), the wide kernel algorithm (\code{"widekernelpls"}),
-  SIMPLS (\code{"simpls"}) and the classical
-  orthogonal scores algorithm (\code{"oscorespls"}).  One PCR algorithm
+  SIMPLS (\code{"simpls"}) and the classical orthogonal scores algorithm
+  (\code{"oscorespls"}). One CPPLS algorithm is available (\code{"cppls"})
+  providing several extensions to PLS. One PCR algorithm
   is available: using the singular value decomposition (\code{"svdpc"}).
   If \code{method} is \code{"model.frame"}, the model frame is returned.
-  The functions \code{pcr} and \code{plsr} are wrappers for \code{mvr},
-  with different values for \code{method}.
+  The functions \code{pcr}, \code{plsr} and \code{cppls}
+  are wrappers for \code{mvr}, with different values for \code{method}.
 
   The \code{formula} argument should be a symbolic formula of the form
   \code{response ~ terms}, where \code{response} is the name of the
@@ -131,6 +139,7 @@ pcr(\dots, method = pls.options()$pcralg)
   \code{\link{widekernelpls.fit}},
   \code{\link{simpls.fit}},
   \code{\link{oscorespls.fit}},
+  \code{\link{cppls.fit}},
   \code{\link{svdpc.fit}},
   \code{\link{mvrCv}},
   \code{\link{crossval}},
@@ -148,6 +157,7 @@ data(yarn)
 ## Default methods:
 yarn.pcr <- pcr(density ~ NIR, 6, data = yarn, validation = "CV")
 yarn.pls <- plsr(density ~ NIR, 6, data = yarn, validation = "CV")
+yarn.cppls <- cppls(density ~ NIR, 6, data = yarn, validation = "CV")
 
 ## Alternative methods:
 yarn.oscorespls <- mvr(density ~ NIR, 6, data = yarn, validation = "CV",
@@ -158,6 +168,10 @@ yarn.simpls <- mvr(density ~ NIR, 6, data = yarn, validation = "CV",
 data(oliveoil)
 sens.pcr <- pcr(sensory ~ chemical, ncomp = 4, scale = TRUE, data = oliveoil)
 sens.pls <- plsr(sensory ~ chemical, ncomp = 4, scale = TRUE, data = oliveoil)
+
+## Classification
+# A classification example utilizing additional response information
+# (Y.add) is found in the cppls.fit manual ('See also' above).
 }
 \keyword{regression}
 \keyword{multivariate}

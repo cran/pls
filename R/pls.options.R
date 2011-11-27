@@ -1,13 +1,14 @@
 ### pls.options.R:  Package specific options mechanism.
 ###
-### $Id: pls.options.R 177 2009-07-17 20:08:09Z bhm $
+### $Id: pls.options.R 203 2011-11-27 14:16:11Z bhm $
 ###
 ### Implements a slightly modified version of the sm.options() as found in
 ### sm 2.1-0.
 
 ## The list of initial options:
 .pls.Options <-
-    list(mvralg = "kernelpls", plsralg = "kernelpls", pcralg = "svdpc")
+    list(mvralg = "kernelpls", plsralg = "kernelpls", cpplsalg = "cppls", pcralg = "svdpc",
+		 w.tol = .Machine$double.eps, X.tol = 10^-12)
 
 
 pls.options <- function(...) {

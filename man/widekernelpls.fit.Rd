@@ -1,4 +1,4 @@
-%% $Id: widekernelpls.fit.Rd 145 2007-10-12 08:56:32Z bhm $
+%% $Id: widekernelpls.fit.Rd 203 2011-11-27 14:16:11Z bhm $
 \encoding{latin1}
 \name{widekernelpls.fit}
 \alias{widekernelpls.fit}
@@ -83,6 +83,7 @@
 \seealso{
   \code{\link{mvr}}
   \code{\link{plsr}}
+  \code{\link{cppls}}
   \code{\link{pcr}}
   \code{\link{kernelpls.fit}}
   \code{\link{simpls.fit}}

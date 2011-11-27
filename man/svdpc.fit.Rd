@@ -1,4 +1,4 @@
-%% $Id: svdpc.fit.Rd 87 2006-09-20 14:33:37Z bhm $
+%% $Id: svdpc.fit.Rd 203 2011-11-27 14:16:11Z bhm $
 \encoding{latin1}
 \name{svdpc.fit}
 \alias{svdpc.fit}
@@ -57,6 +57,7 @@
   \code{\link{mvr}}
   \code{\link{plsr}}
   \code{\link{pcr}}
+  \code{\link{cppls}}
 }
 \keyword{regression}
 \keyword{multivariate}
