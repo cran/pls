@@ -1,4 +1,4 @@
-%% $Id: mvrCv.Rd 203 2011-11-27 14:16:11Z bhm $
+%% $Id: mvrCv.Rd 227 2012-12-26 12:41:14Z bhm $
 \encoding{latin1}
 \name{mvrCv}
 \alias{mvrCv}
@@ -76,6 +76,12 @@ mvrCv(X, Y, ncomp, Y.add = NULL, weights = NULL,
   number of observations and \eqn{l} is the length of the longest
   segment.  The (possibly reduced) number of components is returned as
   the component \code{ncomp}.
+
+  By default, the cross-validation will be performed serially.  However,
+  it can be done in parallel using functionality in the
+  \code{\link{parallel}} package by setting the option \code{parallel} in
+  \code{\link{pls.options}}.  See \code{\link{pls.options}} for the
+  different ways to specify the parallelism.
 }
 \value{
   A list with the following components:
