@@ -1,4 +1,4 @@
-%% $Id: pls.options.Rd 192 2011-11-11 18:34:46Z bhm $
+%% $Id: pls.options.Rd 237 2013-08-05 18:01:18Z bhm $
 \encoding{latin1}
 \name{pls.options}
 \alias{pls.options}
@@ -21,19 +21,13 @@ pls.options(\dots)
   If called with a character vector as the single argument, a list with
   the arguments named in the vector are returned.
 
-  If called with a non-empty list as the single arguments, the list
+  If called with a non-empty list as the single argument, the list
   elements should be named, and are treated as named arguments to the
   function.
 
   Otherwise, \code{pls.options} should be called with one or more named
   arguments \var{name = value}.  For each argument, the option named
   \var{name} will be given the value \var{value}.
-
-  The options are saved in a variable \code{.pls.Options} in the global
-  environment, and remain in effect until the end of the session.  If
-  the environment is saved upon exit, they will be remembered in the
-  next session.  The `factory defaults' can be restored by removing
-  \code{.pls.Options} from the global environment.
 
   The recognised options are:
   \describe{
@@ -53,17 +47,35 @@ pls.options(\dots)
       value should be one of the allowed methods.  Defaults to
       \code{"cppls"}.  Can be overridden with the argument
       \code{method} in \code{cppls}.}
+    \item{parallel}{Specification of how the cross-validation (CV) in
+      \code{\link{mvr}} should be performed.  If the specification is
+      \code{NULL} (default) or \code{1}, the CV is done serially, otherwise
+      it is done in parallel using functionality from the
+      \code{\link{parallel}} package.
+
+      If it is an integer greater than 1, the CV is done in parallel
+      with the specified number of processes, using
+      \code{\link{mclapply}}.  
+
+      If it is a cluster object created by \code{\link{makeCluster}},
+      the CV is done in parallel on that cluster, using
+      \code{\link{parLapply}}.  The user should stop the cluster herself
+      when it is no longer needed, using \code{\link{stopCluster}}.
+
+      Finally, if the specification is an unevaluated call to
+      \code{\link{makeCluster}}, the call is evaluated, and
+      the CV is done in parallel on the resulting cluster, using
+      \code{\link{parLapply}}.  In this case, the cluster will
+      be stopped (with \code{\link{stopCluster}}) after the
+      CV.  Thus, in the final case, the cluster is created and
+      destroyed for each CV, just like when using
+      \code{\link{mclapply}}.}
     \item{w.tol}{The tolerance used for removing values close to 0
 	  in the vectors of loading weights in \code{\link{cppls}}.  Defaults to
       .Machine$double.eps.}
     \item{X.tol}{The tolerance used for removing predictor variables
       with L1 norms close to 0 in \code{\link{cppls}}.  Defaults to 10^-12.}
   }
-}
-\section{Side Effects}{
-  If any named argument (or list element) was provided,
-  \code{pls.options} updates the elements of the option list
-  \code{.pls.Options} in the global environment.
 }
 \value{
   A list with the (possibly changed) options.  If any named argument (or

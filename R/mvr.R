@@ -1,6 +1,6 @@
 ### mvr.R: plsr/pcr modelling functions
 ###
-### $Id: mvr.R 203 2011-11-27 14:16:11Z bhm $
+### $Id: mvr.R 227 2012-12-26 12:41:14Z bhm $
 ###
 ### The top level user function.  Implements a formula interface and calls the
 ### correct fit function to do the work.
@@ -119,7 +119,9 @@ mvr <- function(formula, ncomp, Y.add, data, subset, na.action,
     }
 
     ## Fit the model:
+    start.time <- proc.time()[3]
     z <- fitFunc(X, Y, ncomp, Y.add = Y.add, ...)
+    z$fit.time <- proc.time()[3] - start.time
 
     ## Build and return the object:
     class(z) <- "mvr"
