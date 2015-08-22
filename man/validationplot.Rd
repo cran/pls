@@ -1,4 +1,4 @@
-%% $Id: validationplot.Rd 149 2007-10-17 12:22:40Z bhm $
+%% $Id: validationplot.Rd 242 2015-07-05 12:10:43Z bhm $
 \encoding{latin1}
 \name{validationplot}
 \alias{validationplot}
@@ -11,9 +11,9 @@
 \usage{
 validationplot(object, val.type = c("RMSEP", "MSEP", "R2"), estimate,
                newdata, ncomp, comps, intercept, \dots)
-\method{plot}{mvrVal}(x, nCols, nRows, type = "l", lty = 1:nEst, lwd = NULL,
-           pch = 1:nEst, cex = NULL, col = 1:nEst, legendpos,
-           xlab = "number of components", ylab = x$type, main, \dots)
+\method{plot}{mvrVal}(x, nCols, nRows, type = "l", lty = 1:nEst,
+     lwd = par("lwd"), pch = 1:nEst, cex = 1, col = 1:nEst, legendpos,
+     xlab = "number of components", ylab = x$type, main, \dots)
 }
 \arguments{
   \item{object}{an \code{mvr} object.}

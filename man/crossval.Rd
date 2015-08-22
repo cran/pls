@@ -1,4 +1,4 @@
-%% $Id: crossval.Rd 230 2013-07-15 17:37:14Z bhm $
+%% $Id: crossval.Rd 246 2015-07-29 17:52:09Z bhm $
 \encoding{latin1}
 \name{crossval}
 \alias{crossval}
@@ -114,7 +114,7 @@ yarn.cv <- crossval(yarn.pcr, segments = 10)
 \dontrun{
 ## Parallelised cross-validation, using transient cluster:
 pls.options(parallel = 4) # use mclapply (not available on Windows)
-pls.options(parallel = quote(makeCluster(4, type = "PSOCK"))) # use parLapply
+pls.options(parallel = quote(parallel::makeCluster(4, type = "PSOCK"))) # parLapply
 ## A new cluster is created and stopped for each cross-validation:
 yarn.cv <- crossval(yarn.pcr)
 yarn.loocv <- crossval(yarn.pcr, length.seg = 1)

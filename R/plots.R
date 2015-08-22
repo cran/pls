@@ -1,7 +1,7 @@
 ### Plots for mvr objects.  Some of them also work for other
 ### objects, but that is not a priority.
 ###
-### $Id: plots.R 168 2007-11-23 11:17:59Z bhm $
+### $Id: plots.R 242 2015-07-05 12:10:43Z bhm $
 
 ###
 ### Plot method for mvr objects
@@ -679,10 +679,10 @@ validationplot <- function(object, val.type = c("RMSEP", "MSEP", "R2"),
 }
 
 ## A plot method for mvrVal objects:
-plot.mvrVal <- function(x, nCols, nRows, type = "l", lty = 1:nEst, lwd = NULL,
-                        pch = 1:nEst, cex = NULL, col = 1:nEst, legendpos,
-                        xlab = "number of components", ylab = x$type, main,
-                        ...)
+plot.mvrVal <- function(x, nCols, nRows, type = "l", lty = 1:nEst,
+                        lwd = par("lwd"), pch = 1:nEst, cex = 1, col = 1:nEst,
+                        legendpos, xlab = "number of components",
+                        ylab = x$type, main, ...)
 {
     if (!is.null(x$call$cumulative) && eval(x$call$cumulative) == FALSE)
         stop("`cumulative = FALSE' not supported.")
