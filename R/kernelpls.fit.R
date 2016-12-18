@@ -1,5 +1,5 @@
 ### kernelpls.fit.R: Kernel PLS fit algorithm for tall data.
-### $Id: kernelpls.fit.R 86 2006-09-20 12:20:39Z bhm $
+### $Id: kernelpls.fit.R 259 2016-12-18 13:06:36Z bhm $
 ###
 ### Implements an adapted version of the `algorithm 1' described in
 ###   Dayal, B. S. and MacGregor, J. F. (1997) Improved PLS algorithms.
@@ -71,7 +71,7 @@ kernelpls.fit <- function(X, Y, ncomp, stripped = FALSE, ...)
                                t(R[,1:(a-1), drop=FALSE]))
         } else if (a > 1) {
             for (j in 1:(a - 1))
-                r.a <- r.a - (P[,j] %*% w.a) * R[,j]
+                r.a <- r.a - c(P[,j] %*% w.a) * R[,j]
         }
 
         ## 4.

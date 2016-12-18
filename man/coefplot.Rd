@@ -1,4 +1,4 @@
-%% $Id: coefplot.Rd 168 2007-11-23 11:17:59Z bhm $
+%% $Id: coefplot.Rd 251 2016-08-29 20:21:33Z bhm $
 \encoding{latin1}
 \name{coefplot}
 \alias{coefplot}
@@ -11,7 +11,8 @@ coefplot(object, ncomp = object$ncomp, comps, intercept = FALSE,
          separate = FALSE, se.whiskers = FALSE, nCols, nRows, labels,
          type = "l", lty, lwd = NULL, pch, cex = NULL, col, legendpos,
          xlab = "variable", ylab = "regression coefficient", main,
-         pretty.xlabels = TRUE, xlim, ylim, \dots)
+         pretty.xlabels = TRUE, xlim, ylim,
+         ask = nRows * nCols < nPlots && dev.interactive(), \dots)
 }
 \arguments{
   \item{object}{an \code{mvr} object.  The fitted model.}
@@ -62,6 +63,7 @@ coefplot(object, ncomp = object$ncomp, comps, intercept = FALSE,
     tries to plot the \eqn{x} labels more nicely.  See Details.}
   \item{xlim,ylim}{optional vector of length two, with the \eqn{x} or
     \eqn{y} limits of the plot.}
+  \item{ask}{logical.  Whether to ask the user before each page of a plot.}
   \item{\dots}{Further arguments sent to the underlying plot functions.}
 }
 \details{

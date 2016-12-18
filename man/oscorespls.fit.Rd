@@ -1,4 +1,4 @@
-%% $Id: oscorespls.fit.Rd 132 2007-08-24 09:21:05Z bhm $
+%% $Id: oscorespls.fit.Rd 255 2016-09-18 15:20:01Z bhm $
 \encoding{latin1}
 \name{oscorespls.fit}
 \alias{oscorespls.fit}
@@ -49,7 +49,7 @@
   \item{residuals}{an array of regression residuals.  It has the same
     dimensions as \code{fitted.values}.}
   \item{Xvar}{a vector with the amount of X-variance explained by each
-    number of components.}
+    component.}
   \item{Xtotvar}{Total variance in \code{X}.}
 
   If \code{stripped} is \code{TRUE}, only the components

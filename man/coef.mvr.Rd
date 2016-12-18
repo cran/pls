@@ -1,4 +1,4 @@
-%% $Id: coef.mvr.Rd 115 2007-06-22 17:51:03Z bhm $
+%% $Id: coef.mvr.Rd 255 2016-09-18 15:20:01Z bhm $
 \encoding{latin1}
 \name{coef.mvr}
 \alias{coef.mvr}
@@ -90,7 +90,7 @@ explvar(object)
   with the argument \code{comps}.
 
   \code{explvar} extracts the amount of \eqn{X} variance (in per cent)
-  explained by for each component in the model.  It can also handle
+  explained by each component in the model.  It can also handle
   score and loading matrices returned by \code{\link{scores}} and \code{\link{loadings}}.
 }
 \value{

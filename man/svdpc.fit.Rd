@@ -1,4 +1,4 @@
-%% $Id: svdpc.fit.Rd 203 2011-11-27 14:16:11Z bhm $
+%% $Id: svdpc.fit.Rd 255 2016-09-18 15:20:01Z bhm $
 \encoding{latin1}
 \name{svdpc.fit}
 \alias{svdpc.fit}
@@ -42,7 +42,7 @@
   \item{residuals}{an array of regression residuals.  It has the same
     dimensions as \code{fitted.values}.}
   \item{Xvar}{a vector with the amount of X-variance explained by each
-    number of components.}
+    component.}
   \item{Xtotvar}{Total variance in \code{X}.}
 
   If \code{stripped} is \code{TRUE}, only the components

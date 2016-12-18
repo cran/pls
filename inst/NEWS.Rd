@@ -1,4 +1,4 @@
-%% $Id: NEWS.Rd 249 2015-08-22 10:16:32Z bhm $
+%% $Id: NEWS.Rd 260 2016-12-18 16:26:35Z bhm $
 \name{NEWS}
 \title{News for Package 'pls'}
 \encoding{latin1}
@@ -29,6 +29,21 @@
 %%     }
 %%   }
 %% }
+\section{Changes in pls version 2.6-0}{
+  \subsection{New features}{
+    \itemize{
+      \item Added selectNcom() to automatically select the optimal
+      number of components, optionally plotting the selection.
+      \item Added argument "ask" to the plot functions that can generate
+      multi-page plots, mimicking plot.lm().
+    }
+  }
+  \subsection{Documentation}{
+    \itemize{
+      \item Added description of selectNcomp() in the vignette.
+    }
+  }
+}
 \section{Changes in pls version 2.5-0}{
   \subsection{New features}{
     \itemize{
