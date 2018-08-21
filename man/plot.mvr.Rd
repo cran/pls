@@ -1,5 +1,5 @@
-%% $Id: plot.mvr.Rd 98 2006-10-03 21:21:48Z bhm $
-\encoding{latin1}
+%% $Id$
+\encoding{UTF-8}
 \name{plot.mvr}
 \alias{plot.mvr}
 \title{Plot Method for MVR objects}
@@ -27,7 +27,7 @@
 \value{
   \code{plot.mvr} returns whatever the underlying plot function returns.
 }
-\author{Ron Wehrens and Bjørn-Helge Mevik}
+\author{Ron Wehrens and BjÃ¸rn-Helge Mevik}
 \seealso{\code{\link{mvr}}, \code{\link{predplot.mvr}},
   \code{\link{validationplot}}, \code{\link{coefplot}},
   \code{\link{scoreplot}}, \code{\link{loadingplot}},

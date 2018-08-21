@@ -1,10 +1,9 @@
-%% $Id: kernelpls.fit.Rd 255 2016-09-18 15:20:01Z bhm $
-\encoding{latin1}
+\encoding{UTF-8}
 \name{kernelpls.fit}
 \alias{kernelpls.fit}
 \title{Kernel PLS (Dayal and MacGregor)}
 \description{Fits a PLSR model with the kernel algorithm.}
-\usage{kernelpls.fit(X, Y, ncomp, stripped = FALSE, \dots)}
+\usage{kernelpls.fit(X, Y, ncomp, center = TRUE, stripped = FALSE, \dots)}
 \arguments{
   \item{X}{a matrix of observations.  \code{NA}s and \code{Inf}s are not
     allowed.} 
@@ -12,6 +11,8 @@
     are not allowed.} 
   \item{ncomp}{the number of components to be used in the
     modelling.}
+  \item{center}{logical, determines if the \eqn{X} and \eqn{Y} matrices
+    are mean centered or not. Default is to perform mean centering.}
   \item{stripped}{logical.  If \code{TRUE} the calculations are stripped
     as much as possible for speed; this is meant for use with
     cross-validation or simulations when only the coefficients are
@@ -63,7 +64,7 @@
   Dayal, B. S. and MacGregor, J. F. (1997) Improved PLS algorithms.
   \emph{Journal of Chemometrics}, \bold{11}, 73--85.
 }
-\author{Ron Wehrens and Bjørn-Helge Mevik}
+\author{Ron Wehrens and BjÃ¸rn-Helge Mevik}
 \seealso{
   \code{\link{mvr}}
   \code{\link{plsr}}

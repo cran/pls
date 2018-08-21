@@ -1,7 +1,7 @@
 ### Plots for mvr objects.  Some of them also work for other
 ### objects, but that is not a priority.
 ###
-### $Id: plots.R 251 2016-08-29 20:21:33Z bhm $
+### $Id$
 
 ###
 ### Plot method for mvr objects

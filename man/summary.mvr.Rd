@@ -1,5 +1,5 @@
-%% $Id: summary.mvr.Rd 92 2006-09-20 17:44:25Z bhm $
-\encoding{latin1}
+%% $Id$
+\encoding{UTF-8}
 \name{summary.mvr}
 \alias{summary.mvr}
 \alias{print.mvr}
@@ -30,7 +30,7 @@
 \value{
   \code{print.mvr} and \code{print.mvrVal} return the object invisibly.
 }
-\author{Ron Wehrens and Bjørn-Helge Mevik}
+\author{Ron Wehrens and BjÃ¸rn-Helge Mevik}
 \seealso{\code{\link{mvr}}, \code{\link{pcr}},
   \code{\link{plsr}}, \code{\link{RMSEP}}, \code{\link{MSEP}}}
 \examples{

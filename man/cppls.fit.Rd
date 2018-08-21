@@ -1,11 +1,11 @@
-%% $Id: cppls.fit.Rd 255 2016-09-18 15:20:01Z bhm $
-\encoding{latin1}
+\encoding{UTF-8}
 \name{cppls.fit}
 \alias{cppls.fit}
 \title{CPPLS (Indahl et al.)}
 \description{Fits a PLS model using the CPPLS algorithm.}
-\usage{cppls.fit(X, Y, ncomp, Y.add = NULL, stripped = FALSE, lower = 0.5,
-                 upper = 0.5, trunc.pow = FALSE, weights = NULL, \dots)}
+\usage{cppls.fit(X, Y, ncomp, Y.add = NULL, center = TRUE,
+                 stripped = FALSE, lower = 0.5, upper = 0.5,
+                 trunc.pow = FALSE, weights = NULL, \dots)}
 \arguments{
   \item{X}{a matrix of observations.  \code{NA}s and \code{Inf}s are not
     allowed.} 
@@ -15,6 +15,8 @@
     modelling.}
   \item{Y.add}{a vector or matrix of additional responses containing
     relevant information about the observations.}
+  \item{center}{logical, determines if the \eqn{X} and \eqn{Y} matrices
+    are mean centered or not. Default is to perform mean centering.}
   \item{stripped}{logical.  If \code{TRUE} the calculations are stripped
     as much as possible for speed; this is meant for use with
     cross-validation or simulations when only the coefficients are
@@ -87,7 +89,7 @@
   Liland, K.H and Indahl, U.G (2009) Powered partial least squares
   discriminant analysis, \emph{Journal of Chemometrics}, \bold{23}, 7--18.
 
-  Indahl, U.G., Liland, K.H. and Næs, T. (2009) Canonical partial least
+  Indahl, U.G., Liland, K.H. and NÃ¦s, T. (2009) Canonical partial least
   squares - a unified PLS approach to classification and regression problems.
   \emph{Journal of Chemometrics}, \bold{23}, 495--504.
 }

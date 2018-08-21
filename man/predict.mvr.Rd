@@ -1,5 +1,5 @@
-%% $Id: predict.mvr.Rd 96 2006-09-30 12:02:01Z bhm $
-\encoding{latin1}
+%% $Id$
+\encoding{UTF-8}
 \name{predict.mvr}
 \alias{predict.mvr}
 \title{Predict Method for PLSR and PCR}
@@ -61,7 +61,7 @@
   contains terms like \code{yarn$NIR}.  Do not use such terms; use the
   \code{data} argument instead.  See \code{\link{mvr}} for details.
  }
-\author{Ron Wehrens and Bjørn-Helge Mevik}
+\author{Ron Wehrens and BjÃ¸rn-Helge Mevik}
 \seealso{\code{\link{mvr}}, \code{\link{summary.mvr}},
   \code{\link{coef.mvr}}, \code{\link{plot.mvr}}}
 \examples{

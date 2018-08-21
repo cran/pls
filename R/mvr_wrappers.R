@@ -1,5 +1,5 @@
 ### mvr_wrappers.R: plsr, pls and pcr wrappers for mvr
-### $Id: mvr_wrappers.R 229 2013-07-13 13:15:25Z bhm $
+### $Id$
 
 plsr <- function(..., method = pls.options()$plsralg)
 {

@@ -1,10 +1,9 @@
-%% $Id: widekernelpls.fit.Rd 255 2016-09-18 15:20:01Z bhm $
-\encoding{latin1}
+\encoding{UTF-8}
 \name{widekernelpls.fit}
 \alias{widekernelpls.fit}
-\title{Wide Kernel PLS (Rännar et al.)}
+\title{Wide Kernel PLS (RÃ¤nnar et al.)}
 \description{Fits a PLSR model with the wide kernel algorithm.}
-\usage{widekernelpls.fit(X, Y, ncomp, stripped = FALSE,
+\usage{widekernelpls.fit(X, Y, ncomp, center = TRUE, stripped = FALSE,
                   tol = .Machine$double.eps^0.5, maxit = 100, \dots)}
 \arguments{
   \item{X}{a matrix of observations.  \code{NA}s and \code{Inf}s are not
@@ -13,6 +12,8 @@
     are not allowed.} 
   \item{ncomp}{the number of components to be used in the
     modelling.}
+  \item{center}{logical, determines if the \eqn{X} and \eqn{Y} matrices
+    are mean centered or not. Default is to perform mean centering.}
   \item{stripped}{logical.  If \code{TRUE} the calculations are stripped
     as much as possible for speed; this is meant for use with
     cross-validation or simulations when only the coefficients are
@@ -74,12 +75,12 @@
   LAPACK library \R is linked against.
 }
 \references{
-  Rännar, S., Lindgren, F., Geladi, P. and Wold, S. (1994) A PLS
+  RÃ¤nnar, S., Lindgren, F., Geladi, P. and Wold, S. (1994) A PLS
   Kernel Algorithm for Data Sets with Many Variables and Fewer
   Objects.  Part 1: Theory and Algorithm.
   \emph{Journal of Chemometrics}, \bold{8}, 111--125.
 }
-\author{Bjørn-Helge Mevik}
+\author{BjÃ¸rn-Helge Mevik}
 \seealso{
   \code{\link{mvr}}
   \code{\link{plsr}}

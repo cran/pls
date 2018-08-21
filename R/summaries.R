@@ -1,5 +1,5 @@
 ### summaries.R: print and summary methods.
-### $Id: summaries.R 203 2011-11-27 14:16:11Z bhm $
+### $Id$
 
 ## Print method for mvr objects:
 print.mvr <- function(x, ...) {

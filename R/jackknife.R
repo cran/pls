@@ -1,5 +1,5 @@
 ### jackknife.R: Jackknife variance estimation of regression coefficients.
-### $Id: jackknife.R 142 2007-10-01 13:10:25Z bhm $
+### $Id$
 
 ## var.jack: Calculate jackknife variance (or covariance) estimates
 var.jack <- function(object, ncomp = object$ncomp, covariance = FALSE,

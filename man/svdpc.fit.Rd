@@ -1,10 +1,9 @@
-%% $Id: svdpc.fit.Rd 255 2016-09-18 15:20:01Z bhm $
-\encoding{latin1}
+\encoding{UTF-8}
 \name{svdpc.fit}
 \alias{svdpc.fit}
 \title{Principal Component Regression}
 \description{Fits a PCR model using the singular value decomposition.}
-\usage{svdpc.fit(X, Y, ncomp, stripped = FALSE, \dots)}
+\usage{svdpc.fit(X, Y, ncomp, center = TRUE, stripped = FALSE, \dots)}
 \arguments{
   \item{X}{a matrix of observations.  \code{NA}s and \code{Inf}s are not
     allowed.} 
@@ -12,6 +11,8 @@
     are not allowed.} 
   \item{ncomp}{the number of components to be used in the
     modelling.}
+  \item{center}{logical, determines if the \eqn{X} and \eqn{Y} matrices
+    are mean centered or not. Default is to perform mean centering.}
   \item{stripped}{logical.  If \code{TRUE} the calculations are stripped
     as much as possible for speed; this is meant for use with
     cross-validation or simulations when only the coefficients are
@@ -49,10 +50,10 @@
   \code{coefficients}, \code{Xmeans} and \code{Ymeans} are returned.
 }
 \references{
-  Martens, H., Næs, T. (1989) \emph{Multivariate calibration.}
+  Martens, H., NÃ¦s, T. (1989) \emph{Multivariate calibration.}
   Chichester: Wiley.
 }
-\author{Ron Wehrens and Bjørn-Helge Mevik}
+\author{Ron Wehrens and BjÃ¸rn-Helge Mevik}
 \seealso{
   \code{\link{mvr}}
   \code{\link{plsr}}

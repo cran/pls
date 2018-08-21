@@ -1,6 +1,6 @@
 ### msc.R: Multiplicative scatter/signal correction
 ###
-###	$Id: msc.R 2 2005-03-29 14:31:42Z  $	
+###	$Id$	
 
 msc <- function(X, reference = NULL) {
     if (is.null(reference)) reference <- colMeans(X)

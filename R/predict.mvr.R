@@ -1,5 +1,5 @@
 ### predict.mvr.R: A predict method
-### $Id: predict.mvr.R 196 2011-11-12 15:45:49Z bhm $
+### $Id$
 
 predict.mvr <- function(object, newdata, ncomp = 1:object$ncomp, comps,
                         type = c("response", "scores"),

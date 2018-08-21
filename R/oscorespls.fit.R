@@ -1,12 +1,10 @@
 ### oscorespls.fit.R: The multiresponse orthogonal scores algorithm
 ###
-### $Id: oscorespls.fit.R 133 2007-08-24 09:21:56Z bhm $
-###
 ### Implements an adapted version of the `orthogonal scores' algorithm as
 ###   described in Martens and Naes, pp. 121--122 and 157--158.
 
-oscorespls.fit <- function(X, Y, ncomp, stripped = FALSE,
-                           tol = .Machine$double.eps^0.5, ...)
+oscorespls.fit <- function(X, Y, ncomp, center = TRUE, stripped = FALSE,
+                           tol = .Machine$double.eps^0.5, maxit = 100, ...)
 {
     ## Initialise
     Y <- as.matrix(Y)
@@ -33,10 +31,17 @@ oscorespls.fit <- function(X, Y, ncomp, stripped = FALSE,
     }
 
     ## C1
-    Xmeans <- colMeans(X)
-    X <- X - rep(Xmeans, each = nobj)
-    Ymeans <- colMeans(Y)
-    Y <- Y - rep(Ymeans, each = nobj)
+    if (center) {
+        Xmeans <- colMeans(X)
+        X <- X - rep(Xmeans, each = nobj)
+        Ymeans <- colMeans(Y)
+        Y <- Y - rep(Ymeans, each = nobj)
+    } else {
+        ## Set means to zero. Will ensure that predictions do not take the
+        ## mean into account.
+        Xmeans <- rep_len(0, npred)
+        Ymeans <- rep_len(0, nresp)
+    }
 
     ## Must be done here due to the deflation of X
     if (!stripped) Xtotvar <- sum(X * X)
@@ -50,7 +55,9 @@ oscorespls.fit <- function(X, Y, ncomp, stripped = FALSE,
             u.a <- Y[,which.max(colSums(Y * Y))]
             t.a.old <- 0
         }
+        nit <- 0
         repeat {
+            nit <- nit + 1              # count the iterations
             ## C2.1
             w.a <- crossprod(X, u.a)
             w.a <- w.a / sqrt(c(crossprod(w.a)))
@@ -75,6 +82,10 @@ oscorespls.fit <- function(X, Y, ncomp, stripped = FALSE,
             else {
                 u.a <- Y %*% q.a / c(crossprod(q.a))
                 t.a.old <- t.a          # Save for comparison
+            }
+            if (nit >= maxit) {
+              warning("No convergence in ", maxit, " iterations\n")
+              break
             }
         }
 

@@ -1,5 +1,5 @@
-%% $Id: oliveoil.Rd 164 2007-11-14 11:52:46Z bhm $
-\encoding{latin1}
+%% $Id$
+\encoding{UTF-8}
 \name{oliveoil}
 \alias{oliveoil}
 \docType{data}

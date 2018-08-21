@@ -1,5 +1,5 @@
 ### extract.R:  Extraction functions
-### $Id: extract.R 185 2009-11-15 16:04:46Z bhm $
+### $Id$
 
 ## coef.mvr: Extract the base variable regression coefficients from
 ## an mvr object.

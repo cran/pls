@@ -1,12 +1,11 @@
-%% $Id: oscorespls.fit.Rd 255 2016-09-18 15:20:01Z bhm $
-\encoding{latin1}
+\encoding{UTF-8}
 \name{oscorespls.fit}
 \alias{oscorespls.fit}
 \title{Orthogonal scores PLSR}
 \description{Fits a PLSR model with the orthogonal scores algorithm
 (aka the NIPALS algorithm).}
-\usage{oscorespls.fit(X, Y, ncomp, stripped = FALSE,
-               tol = .Machine$double.eps^0.5, \dots)}
+\usage{oscorespls.fit(X, Y, ncomp, center = TRUE, stripped = FALSE,
+               tol = .Machine$double.eps^0.5, maxit = 100, \dots)}
 \arguments{
   \item{X}{a matrix of observations.  \code{NA}s and \code{Inf}s are not
     allowed.} 
@@ -14,18 +13,22 @@
     are not allowed.} 
   \item{ncomp}{the number of components to be used in the
     modelling.}
+  \item{center}{logical, determines if the \eqn{X} and \eqn{Y} matrices
+    are mean centered or not. Default is to perform mean centering.}
   \item{stripped}{logical.  If \code{TRUE} the calculations are stripped
     as much as possible for speed; this is meant for use with
     cross-validation or simulations when only the coefficients are
     needed.  Defaults to \code{FALSE}.}
   \item{tol}{numeric.  The tolerance used for determining convergence in
     multi-response models.}
+  \item{maxit}{positive integer.  The maximal number of iterations used
+    in the internal Eigenvector calculation.}
   \item{\dots}{other arguments.  Currently ignored.}
 }
 \details{This function should not be called directly, but through
   the generic functions \code{plsr} or \code{mvr} with the argument
   \code{method="oscorespls"}.  It implements the orthogonal scores
-  algorithm, as described in \cite{Martens and Næs (1989)}.  This is one
+  algorithm, as described in \cite{Martens and NÃ¦s (1989)}.  This is one
   of the two \dQuote{classical}
   PLSR algorithms, the other being the orthogonal loadings algorithm.}
 \value{A list containing the following components is returned:
@@ -56,10 +59,10 @@
   \code{coefficients}, \code{Xmeans} and \code{Ymeans} are returned.
 }
 \references{
-  Martens, H., Næs, T. (1989) \emph{Multivariate calibration.}
+  Martens, H., NÃ¦s, T. (1989) \emph{Multivariate calibration.}
   Chichester: Wiley.
 }
-\author{Ron Wehrens and Bjørn-Helge Mevik}
+\author{Ron Wehrens and BjÃ¸rn-Helge Mevik}
 \seealso{
   \code{\link{mvr}}
   \code{\link{plsr}}

@@ -1,5 +1,5 @@
 ### crossval.R: Cross-validation functions.
-### $Id: crossval.R 246 2015-07-29 17:52:09Z bhm $
+### $Id$
 
 
 ## The basic cross-validation function
