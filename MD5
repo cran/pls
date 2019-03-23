@@ -1,4 +1,4 @@
-f3e70bddfff82fa5f6668bb3162e5bc8 *DESCRIPTION
+1798ced7231eb7e5cbfa9c38c2ff3768 *DESCRIPTION
 6c8510597709c0e26f5ee966a43cf88d *NAMESPACE
 dd1dd59acafd870c9bf93e1d422f44ec *R/cppls.fit.R
 0de49c8ee46549a61bbab04fa97d1830 *R/crossval.R
@@ -12,7 +12,7 @@ c005f10f4ac4984967b4d1a66bcbd680 *R/msc.R
 4b8311813ad1218a33f600ed9242af0a *R/mvr_wrappers.R
 cb613b1cc0ff8b63e8fa0e3b1c4752f5 *R/ncomp.R
 c240baee8517f1483033f932e0711fee *R/oscorespls.fit.R
-6f5c95ffc01331110161b7d2e4a44dfd *R/plots.R
+bf6c8f5242085d915b531f0afb72183f *R/plots.R
 361b3472c567159f53245757810b2930 *R/pls.options.R
 b129d6a0ec6bf7bef1aad0f3472be0a9 *R/predict.mvr.R
 4d247fdb0391749117217efcecc885c6 *R/simpls.fit.R
@@ -20,19 +20,19 @@ e244e687cf5c935800f433c3b38820af *R/stdize.R
 1cc9838ccb38b23e12b94bd35f4fd8de *R/summaries.R
 137095b67f7ebb8a7438db57c0d9fd0c *R/svdpc.fit.R
 e8af5ed5427954f0eb7aa6d72eadbad2 *R/widekernelpls.fit.R
-8d67857e9da0405864fb1605dea82463 *build/vignette.rds
+7eb93b1bccdc726648fcfe795c20024a *build/vignette.rds
 adeacdc53581b3e39a306bf63a3f67cd *data/gasoline.RData
 5dc7dfe2d3e834cb1a6e72f7ba0a7284 *data/mayonnaise.RData
 02c5a3997472948f355c1a649f225223 *data/oliveoil.RData
 f24754568608e246656c9837d77c980d *data/yarn.RData
-667264e2fc3a0be99bbeeb189e874918 *inst/NEWS.Rd
+7238529de9e76453968d9f9f5379bc8d *inst/NEWS.Rd
 88339ecb2c2658d89e211b62f9604875 *inst/doc/pls-manual.R
 1332c9ae5d492d559d42e5007561570c *inst/doc/pls-manual.Rnw
-aa14d7b9dbff25c26ecb63e9c609ba72 *inst/doc/pls-manual.pdf
+e9232da9e03a18c8aea45fea903fe1de *inst/doc/pls-manual.pdf
 684c1664bce72c050754cb1aa31a2581 *man/biplot.mvr.Rd
 c0a4e05760de5791f458de1d4497da7a *man/coef.mvr.Rd
 ec7f47011b9680f496a44eb13a481203 *man/coefplot.Rd
-5837db62f562695c07c34201c42d562c *man/cppls.fit.Rd
+d208916e0a877e091a33d9aca34aa5a0 *man/cppls.fit.Rd
 0f18d00c8bd45adf956d605a8b7dc169 *man/crossval.Rd
 820ab4e66c73b89378e58186b0969cc7 *man/cvsegments.Rd
 184c7e5e6ae3f6e9bf6388985ba4c498 *man/delete.intercept.Rd
@@ -41,7 +41,7 @@ ec7f47011b9680f496a44eb13a481203 *man/coefplot.Rd
 4c54bd388ef6d0e4ab345853ed11dfa6 *man/kernelpls.fit.Rd
 ec83efdbe3d8756619f775faa9359b3f *man/mayonnaise.Rd
 d46ec21da8ce62808bb1ad3f87d6bce4 *man/msc.Rd
-404f6126d8a4c9a8b51c6047448ccae1 *man/mvr.Rd
+ecc99f61fd92ba6e6fefc792e8dfff53 *man/mvr.Rd
 01c712c2170a7520178ee0d0db7a612b *man/mvrCv.Rd
 3048b61a6450106a2a97df3ee613f726 *man/mvrVal.Rd
 cb8f1420c4206e0d34f27be04d4fa658 *man/naExcludeMvr.Rd
@@ -51,7 +51,7 @@ e62cfb357d11a99a00569ca6c860c62a *man/oscorespls.fit.Rd
 4314c88dce9c8203e4c2a52111b0af71 *man/pls.options.Rd
 39580d91eb518f2139bfa280f26a8818 *man/predict.mvr.Rd
 5e3b221251d5ef2dc21d64b56128a8de *man/predplot.Rd
-45c977dabc14c96f4aa851516ea3649d *man/scoreplot.Rd
+ca9d96c32d544d47b03f43271b380b46 *man/scoreplot.Rd
 8869382b122a8c6370005a5a84b5c08f *man/scores.Rd
 ad2986c978b256dde48092ca4cd34155 *man/selectNcomp.Rd
 15160162a5f182f313a0d2c25f600b58 *man/simpls.fit.Rd
@@ -88,7 +88,7 @@ b7368af9accae33793f66ade07704a13 *tests/testthat/pred_nocenter.oscorepls.rds
 5509327f0b1d7df55de1c722fdb7ae74 *tests/testthat/pred_nocenter.pcr.rds
 75bdd1576b4e4caf539e15cc4cad5d67 *tests/testthat/pred_nocenter.pls.rds
 855fbd95bbac3f34a4e267c6f5ba923e *tests/testthat/pred_nocenter.pls.widekernel.rds
-32ad4674d988e51d8d480ed31d9ed1fd *tests/testthat/test_basic_pls.R
+68d138d8bc4aeef7c10e3655e89380b1 *tests/testthat/test_basic_pls.R
 4a9f35bf166f91ca2a33db74468c77c9 *tests/testthat/yarn.cppls.rds
 4919eaabcab89e25668d4840f38ec88a *tests/testthat/yarn.oscorespls.rds
 8ebac231d5ca796d0db375f600e932ec *tests/testthat/yarn.pcr.rds
