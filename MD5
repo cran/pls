@@ -1,4 +1,4 @@
-1798ced7231eb7e5cbfa9c38c2ff3768 *DESCRIPTION
+b0bfb205778311b3709535f1d09317f6 *DESCRIPTION
 6c8510597709c0e26f5ee966a43cf88d *NAMESPACE
 dd1dd59acafd870c9bf93e1d422f44ec *R/cppls.fit.R
 0de49c8ee46549a61bbab04fa97d1830 *R/crossval.R
@@ -7,7 +7,7 @@ f0886239c373e91d01a18e617d4ff2cb *R/extract.R
 dd16dd4810868cfb9dd4926abb6cc093 *R/jackknife.R
 929ba198cbe2b8093674632ad2a5cf65 *R/kernelpls.fit.R
 c005f10f4ac4984967b4d1a66bcbd680 *R/msc.R
-17f2079c422d6ddaa4ddcbfef25907a6 *R/mvr.R
+ceb177331e47c7b59124ff9a593ba9d7 *R/mvr.R
 671cea73de8d886993e9f866b171473e *R/mvrVal.R
 4b8311813ad1218a33f600ed9242af0a *R/mvr_wrappers.R
 cb613b1cc0ff8b63e8fa0e3b1c4752f5 *R/ncomp.R
@@ -20,15 +20,15 @@ e244e687cf5c935800f433c3b38820af *R/stdize.R
 1cc9838ccb38b23e12b94bd35f4fd8de *R/summaries.R
 137095b67f7ebb8a7438db57c0d9fd0c *R/svdpc.fit.R
 e8af5ed5427954f0eb7aa6d72eadbad2 *R/widekernelpls.fit.R
-7eb93b1bccdc726648fcfe795c20024a *build/vignette.rds
+634ff6f7b77985618a80ab04d3ea6405 *build/vignette.rds
 adeacdc53581b3e39a306bf63a3f67cd *data/gasoline.RData
 5dc7dfe2d3e834cb1a6e72f7ba0a7284 *data/mayonnaise.RData
 02c5a3997472948f355c1a649f225223 *data/oliveoil.RData
 f24754568608e246656c9837d77c980d *data/yarn.RData
-7238529de9e76453968d9f9f5379bc8d *inst/NEWS.Rd
+ad39677212d52707dc8dbc7ec94d93b7 *inst/NEWS.Rd
 88339ecb2c2658d89e211b62f9604875 *inst/doc/pls-manual.R
 1332c9ae5d492d559d42e5007561570c *inst/doc/pls-manual.Rnw
-e9232da9e03a18c8aea45fea903fe1de *inst/doc/pls-manual.pdf
+3ff15871775eeda59c9f94d564581bcc *inst/doc/pls-manual.pdf
 684c1664bce72c050754cb1aa31a2581 *man/biplot.mvr.Rd
 c0a4e05760de5791f458de1d4497da7a *man/coef.mvr.Rd
 ec7f47011b9680f496a44eb13a481203 *man/coefplot.Rd
@@ -65,7 +65,7 @@ f3d771d4b88fe88978b69827e89dcf93 *man/var.jack.Rd
 85289460c6176c4a5cf5f6c6aad94c90 *tests/RUnit/common/create_refmodels.R
 50eb30c97946f68c24c2f44a5a255b66 *tests/RUnit/common/ref_multiresp.RData
 7e77c524648bb368e292a92e5eed5b44 *tests/RUnit/common/ref_singresp.RData
-26bfeb104e4152565680d75acd3f7449 *tests/RUnit/common/runit.CV.R
+4020f0277ad0c436785594f14027b1b7 *tests/RUnit/common/runit.CV.R
 881edbe906fd620a30591616463f1b6f *tests/RUnit/common/runit.algorithms.R
 364f7b658542bd5109d4ea70f7d28d10 *tests/RUnit/common/runit.jackknife.R
 cb9ab97b25b16cff336bdac89d929679 *tests/RUnit/common/runit.mvrVal.R
