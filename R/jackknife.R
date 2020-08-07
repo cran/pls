@@ -1,9 +1,9 @@
 ### jackknife.R: Jackknife variance estimation of regression coefficients.
-### $Id$
 
 ## var.jack: Calculate jackknife variance (or covariance) estimates
 var.jack <- function(object, ncomp = object$ncomp, covariance = FALSE,
-                     use.mean = TRUE) {
+                     use.mean = TRUE)
+{
     if (!inherits(object, "mvr"))
         stop("Not an 'mvr' object")
     if (is.null(object$validation) || is.null(object$validation$coefficients))
@@ -78,7 +78,7 @@ print.jacktest <- function(x, P.values = TRUE, ...) {
                              Df = x$df,
                              "t value" = x$tvalues[,resp,mod],
                              "Pr(>|t|)" = x$pvalues[,resp,mod])
-            printCoefmat(coefmat, P.values = P.values,
+            printCoefmat(coefmat, P.values = isTRUE(P.values),
                          cs.ind = 1:2, tst.ind = 4, ...)
         }
     }

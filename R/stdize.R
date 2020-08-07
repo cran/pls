@@ -1,12 +1,10 @@
 ### stdize.R: Standardization by centering and scaling
-###
-###	$Id$
 
 ## This is a somewhat modified version of scale.default
 stdize <- function(x, center = TRUE, scale = TRUE) {
     nc <- ncol(x)
     if (is.logical(center)) {
-        if (center) {
+        if (isTRUE(center)) {
             center <- colMeans(x, na.rm = TRUE)
             x <- sweep(x, 2, center)
         }
@@ -14,7 +12,7 @@ stdize <- function(x, center = TRUE, scale = TRUE) {
         x <- sweep(x, 2, center)
     else stop("invalid 'center'")
     if (is.logical(scale)) {
-        if (scale) {
+        if (isTRUE(scale)) {
             ## This is faster than sd(x), but cannot handle missing values:
             scale <- sqrt(colSums(sweep(x, 2, colMeans(x))^2) / (nrow(x) - 1))
             x <- sweep(x, 2, scale, "/")
@@ -23,7 +21,7 @@ stdize <- function(x, center = TRUE, scale = TRUE) {
         x <- sweep(x, 2, scale, "/")
     else stop("invalid 'scale'")
     if (is.numeric(center)) attr(x, "stdized:center") <- center
-    if (is.numeric(scale)) attr(x, "stdized:scale") <- scale
+    if (is.numeric(scale))  attr(x, "stdized:scale")  <- scale
     class(x) <- c("stdized", "matrix")
     return(x)
 }

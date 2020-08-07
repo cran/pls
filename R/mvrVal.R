@@ -1,7 +1,5 @@
 ### mvrVal.R: Functions for calculating validation statistics, such
 ### as MSEP, RMSEP and R2, for mvr objects.
-###
-### $Id$
 
 ## Calculate the validation statistics needed for (R)MSEP and R^2.
 ## Note that it accepts any values for `estimate', but only calculates
@@ -86,7 +84,7 @@ mvrValstats <- function(object, estimate,
 
     if (cumulative) comps <- ncomp
     ## Either remove the intercept or add a "zeroth" component:
-    if (intercept)
+    if (isTRUE(intercept))
         comps <- c(0, comps)
     else
         SSE <- SSE[,,-1, drop=FALSE]
@@ -99,7 +97,8 @@ mvrValstats <- function(object, estimate,
 ## R2: Return R^2
 R2 <- function(object, ...) UseMethod("R2")
 R2.mvr <- function(object, estimate, newdata, ncomp = 1:object$ncomp, comps,
-               intercept = cumulative, se = FALSE, ...) {
+                   intercept = cumulative, se = FALSE, ...)
+{
     ## Makes the code slightly simpler:  FIXME: maybe remove
     cumulative <- missing(comps) || is.null(comps)
 
@@ -118,12 +117,14 @@ R2.mvr <- function(object, estimate, newdata, ncomp = 1:object$ncomp, comps,
         }
     } else {
         estimate <- allEstimates[pmatch(estimate, allEstimates)]
-        if (any(is.na(estimate))) stop("`estimate' should be a subset of ",
-                                       paste(allEstimates, collapse = ", "))
+        if (any(is.na(estimate)))
+            stop("`estimate' should be a subset of ",
+                 paste(allEstimates, collapse = ", "))
         if (any(estimate == "all")) {
             estimate <- allEstimates[-1] # Try all estimates (except "all")
-            if(missing(newdata)) estimate <- setdiff(estimate, "test")
-            if(is.null(object$validation) || !cumulative)
+            if (missing(newdata))
+                estimate <- setdiff(estimate, "test")
+            if (is.null(object$validation) || !cumulative)
                 estimate <- setdiff(estimate, "CV")
         }
     }
@@ -166,12 +167,14 @@ MSEP.mvr <- function(object, estimate, newdata, ncomp = 1:object$ncomp, comps,
         }
     } else {
         estimate <- allEstimates[pmatch(estimate, allEstimates)]
-        if (any(is.na(estimate))) stop("`estimate' should be a subset of ",
-                                       paste(allEstimates, collapse = ", "))
+        if (any(is.na(estimate)))
+            stop("`estimate' should be a subset of ",
+                 paste(allEstimates, collapse = ", "))
         if (any(estimate == "all")) {
             estimate <- allEstimates[-1] # Try all estimates (except "all")
-            if(missing(newdata)) estimate <- setdiff(estimate, "test")
-            if(is.null(object$validation) || !cumulative)
+            if (missing(newdata))
+                estimate <- setdiff(estimate, "test")
+            if (is.null(object$validation) || !cumulative)
                 estimate <- setdiff(estimate, c("CV", "adjCV"))
         }
     }
@@ -195,7 +198,7 @@ MSEP.mvr <- function(object, estimate, newdata, ncomp = 1:object$ncomp, comps,
     if (adjCV) {
         ## Calculate the adjusted CV
         MSEP["adjCV",,] <- MSEP["CV",,]
-        if (intercept) {
+        if (isTRUE(intercept)) {
             MSEP["adjCV",,-1] <- MSEP["adjCV",,-1] + MSEP["train",,-1] -
                 object$validation$adj[,ncomp]
         } else {

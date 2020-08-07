@@ -1,5 +1,4 @@
 ### R code from vignette source 'pls-manual.Rnw'
-### Encoding: UTF-8
 
 ###################################################
 ### code chunk number 1: pls-manual.Rnw:67-69
