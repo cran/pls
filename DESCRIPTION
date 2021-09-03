@@ -1,17 +1,18 @@
 Package: pls
 Title: Partial Least Squares and Principal Component Regression
-Version: 2.7-3
-Date: 2020-08-04
-Authors@R: c(person("Bjørn-Helge", "Mevik", role = c("aut", "cre"),
-                     email = "b-h@mevik.net"),
-              person("Ron", "Wehrens", role = "aut"),
-              person("Kristian Hovde", "Liland", role = "aut"),
-	      person("Paul",  "Hiemstra", role = "ctb"))
-Author: Bjørn-Helge Mevik [aut, cre],
+Version: 2.8-0
+Date: 2021-09-02
+Authors@R: c(person("Kristian Hovde", "Liland", role = c("aut", "cre"),
+                    email = "kristian.liland@nmbu.no"),
+	     person("Bjørn-Helge", "Mevik", role = "aut" ,
+                    email = "b-h@mevik.net"),
+             person("Ron", "Wehrens", role = "aut"),
+             person("Paul",  "Hiemstra", role = "ctb"))
+Author: Kristian Hovde Liland [aut, cre],
+  Bjørn-Helge Mevik [aut],
   Ron Wehrens [aut],
-  Kristian Hovde Liland [aut],
   Paul Hiemstra [ctb]
-Maintainer: Bjørn-Helge Mevik <b-h@mevik.net>
+Maintainer: Kristian Hovde Liland <kristian.liland@nmbu.no>
 Encoding: UTF-8
 LazyData: yes
 Description: Multivariate regression methods
@@ -21,10 +22,10 @@ Depends: R (>= 2.10)
 Imports: grDevices, graphics, methods, stats
 Suggests: MASS, parallel, Rmpi, testthat, RUnit
 License: GPL-2
-URL: https://mevik.net/work/software/pls.html,
-        https://github.com/bhmevik/pls
-BugReports: https://github.com/bhmevik/pls/issues
+URL: https://github.com/khliland/pls
+BugReports: https://github.com/khliland/pls/issues
+RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2020-08-04 20:06:07 UTC; bhm
+Packaged: 2021-09-02 19:43:50 UTC; kristl
 Repository: CRAN
-Date/Publication: 2020-08-07 09:10:05 UTC
+Date/Publication: 2021-09-03 04:50:06 UTC
