@@ -1,4 +1,4 @@
-760e9c7529d34727eccba3cd3a7686ed *DESCRIPTION
+bb275448f731e05c0c0a6fd3d32d7112 *DESCRIPTION
 b624474bf11019087a7a48d051518cf3 *NAMESPACE
 6aff3e51c9a61c9585cc862258cd0107 *R/cppls.fit.R
 edc922226cb4948f467fef6c9b8a7a89 *R/crossval.R
@@ -14,7 +14,7 @@ ecc344acf61931eed342a88b933e122e *R/msc.R
 8d113e44a1aec3787100fa879e9f15c8 *R/mvr_wrappers.R
 c718b92b4aa248d917a682b77bd039fa *R/ncomp.R
 6bb42bb3b0c978e38642106b5ee7c381 *R/oscorespls.fit.R
-714e0598325f9837e9a56b1c15a296fe *R/plots.R
+52e7ac340d509818cf79f509e1e0840e *R/plots.R
 3bf297b567636317737ed0dfdfe6e169 *R/pls-package.R
 3835404968a1084bb927c09acabb5959 *R/pls.options.R
 791f85d02a2d244dd8221f69e0db5e3a *R/predict.mvr.R
@@ -29,10 +29,10 @@ adeacdc53581b3e39a306bf63a3f67cd *data/gasoline.RData
 5dc7dfe2d3e834cb1a6e72f7ba0a7284 *data/mayonnaise.RData
 02c5a3997472948f355c1a649f225223 *data/oliveoil.RData
 f24754568608e246656c9837d77c980d *data/yarn.RData
-d09df1cf9ff469f1b3bc42d96c2a856c *inst/NEWS.Rd
+d285386b0f7ce989c0cb38b3f9054050 *inst/NEWS.Rd
 5146abacc209c3421dbdf95f31085b20 *inst/doc/pls-manual.R
 1332c9ae5d492d559d42e5007561570c *inst/doc/pls-manual.Rnw
-30e8e90496c923414e841b7095af973b *inst/doc/pls-manual.pdf
+d28de272e68f7b0a9abef9e5b426e405 *inst/doc/pls-manual.pdf
 f248b3017ea4007da66e9e6782cb1676 *man/biplot.mvr.Rd
 738e68a8ebfa4348f28e756b6f860b98 *man/coef.mvr.Rd
 bbb9b1889c25b02cb30d3bc591be7483 *man/coefplot.Rd
