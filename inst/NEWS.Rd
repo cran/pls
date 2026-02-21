@@ -29,6 +29,20 @@
 %%     }
 %%   }
 %% }
+\section{Changes in pls version 2.9-0}{
+  \subsection{New features}{
+    \itemize{
+      \item Added nipals() (NIPALS PLS) and nipalspcr() (NIPALS PCR) with robustness against missing data.
+      \item Added cross-validation and test set abilities for scores() and scoreplot()
+      \item Added pkgdown site with documentation and vignette.
+    }
+  }
+  \subsection{User-visible changes}{
+    \itemize{
+      \item Added feedback in summary() regarding number of dropped samples when missingness is present.
+    }
+  }
+}
 \section{Changes in pls version 2.8-5}{
   \subsection{Bug fixes}{
     \itemize{

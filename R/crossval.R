@@ -150,14 +150,16 @@ mvrCv <- function(X, Y, ncomp, Y.add = NULL, weights = NULL,
 
     ## Select fit function:
     method <- match.arg(method,c("kernelpls", "widekernelpls", "simpls",
-                                 "oscorespls", "cppls", "svdpc"))
+                                 "oscorespls", "nipalspls", "cppls", "svdpc", "nipalspc"))
     fitFunc <- switch(method,
                       kernelpls = kernelpls.fit,
                       widekernelpls = widekernelpls.fit,
                       simpls = simpls.fit,
                       oscorespls = oscorespls.fit,
+                      nipalspls = nipals.fit,
                       cppls = cppls.fit,
-                      svdpc = svdpc.fit)
+                      svdpc = svdpc.fit,
+                      nipalspc = nipalspc.fit)
 
     ## Helper function to perform the cross-validatoin for one segment.
     ## Defined inside mvrCv to be able to access local variables:
@@ -169,10 +171,14 @@ mvrCv <- function(X, Y, ncomp, Y.add = NULL, weights = NULL,
         Xtrain <- X[-seg,, drop=FALSE]
         if (scale) {
             ntrain <- nrow(Xtrain)
-            ## This is faster than sd(X), but cannot handle missing values:
-            sdtrain <-
+            if(anyNA(Xtrain)){
+              sdtrain <- apply(Xtrain, 2, sd, na.rm=TRUE)
+            } else {
+              ## This is faster than sd(X), but cannot handle missing values:
+              sdtrain <-
                 sqrt(colSums((Xtrain - rep(colMeans(Xtrain), each = ntrain))^2) /
-                     (ntrain - 1))
+                       (ntrain - 1))
+            }
             if (any(abs(sdtrain) < .Machine$double.eps^0.5))
                 warning("Scaling with (near) zero standard deviation")
             Xtrain <- Xtrain / rep(sdtrain, each = ntrain)
@@ -193,8 +199,11 @@ mvrCv <- function(X, Y, ncomp, Y.add = NULL, weights = NULL,
         Ymeansrep <- rep(fit$Ymeans, each = nobj)
         for (a in 1:ncomp)
             pred[,,a] <- Xtest %*% fit$coefficients[,,a] + Ymeansrep
-
-        return(list(adj = length(seg) * colSums((pred - c(Y))^2),
+        if(method %in% c("nipalspls", "nipalspc"))
+          adj <- length(seg) * colSums((pred - c(Y))^2, na.rm=TRUE)
+        else
+          adj <- length(seg) * colSums((pred - c(Y))^2)
+        return(list(adj = adj,
                     cvPred = pred[seg,,, drop=FALSE],
                     gammas = if (method == "cppls") fit$gammas else NULL,
                     cvCoef = if (jackknife) fit$coefficients else NULL
@@ -224,7 +233,10 @@ mvrCv <- function(X, Y, ncomp, Y.add = NULL, weights = NULL,
 
     ## Calculate validation statistics:
     PRESS0 <- apply(Y, 2, var) * nobj^2 / (nobj - 1) # FIXME: Only correct for loocv!
-    PRESS <- colSums((cvPred - c(Y))^2)
+    if(method %in% c("nipalspls", "nipalspc"))
+      PRESS <- colSums((cvPred - c(Y))^2, na.rm=TRUE)
+    else
+      PRESS <- colSums((cvPred - c(Y))^2)
 
     ## Add dimnames:
     objnames <- dnX[[1]]

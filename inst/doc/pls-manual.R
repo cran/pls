@@ -1,29 +1,19 @@
-### R code from vignette source 'pls-manual.Rnw'
-
-###################################################
-### code chunk number 1: pls-manual.Rnw:67-69
-###################################################
-pdf.options(pointsize=10)
+## ----setup, echo=FALSE, results='hide'----------------------------------------
+library(pls)
+knitr::opts_chunk$set(fig.align = "center")
+# Corresponds to pdf.options(pointsize=10) and options(digits = 4) in original
 options(digits = 4)
 
-
-###################################################
-### code chunk number 2: pls-manual.Rnw:304-305
-###################################################
+## ----load-lib-----------------------------------------------------------------
 library(pls)
 
-
-###################################################
-### code chunk number 3: pls-manual.Rnw:332-335
-###################################################
+## ----load-data----------------------------------------------------------------
 data(yarn)
 data(oliveoil)
 data(gasoline)
+data(mayonnaise)
 
-
-###################################################
-### code chunk number 4: pls-manual.Rnw:343-349
-###################################################
+## ----fig-NIR, echo=FALSE, fig.height=1.5, fig.cap="Gasoline NIR spectra"------
 par(mar = c(2, 4, 0, 1) + 0.1)
 matplot(t(gasoline$NIR), type = "l", lty = 1, ylab = "log(1/R)", xaxt = "n")
 ind <- pretty(seq(from = 900, to = 1700, by = 2))
@@ -31,238 +21,134 @@ ind <- ind[ind >= 900 & ind <= 1700]
 ind <- (ind - 898) / 2
 axis(1, ind, colnames(gasoline$NIR)[ind])
 
-
-###################################################
-### code chunk number 5: pls-manual.Rnw:358-360
-###################################################
+## ----split-data---------------------------------------------------------------
 gasTrain <- gasoline[1:50,]
 gasTest <- gasoline[51:60,]
 
-
-###################################################
-### code chunk number 6: pls-manual.Rnw:363-364
-###################################################
+## ----fit-gas1-----------------------------------------------------------------
 gas1 <- plsr(octane ~ NIR, ncomp = 10, data = gasTrain, validation = "LOO")
 
-
-###################################################
-### code chunk number 7: pls-manual.Rnw:369-370
-###################################################
+## ----summary-gas1-------------------------------------------------------------
 summary(gas1)
 
+## ----plot-RMSEP-code, eval=FALSE----------------------------------------------
+# plot(RMSEP(gas1), legendpos = "topright")
 
-###################################################
-### code chunk number 8: pls-manual.Rnw:379-380 (eval = FALSE)
-###################################################
-## plot(RMSEP(gas1), legendpos = "topright")
-
-
-###################################################
-### code chunk number 9: pls-manual.Rnw:385-387
-###################################################
+## ----fig-RMSEP, echo=FALSE, fig.height=2.5, fig.cap="Cross-validated RMSEP curves for the gasoline data"----
 par(mar = c(4, 4, 2.5, 1) + 0.1)
 plot(RMSEP(gas1), legendpos = "topright")
 
+## ----plot-pred-code, eval=FALSE-----------------------------------------------
+# plot(gas1, ncomp = 2, asp = 1, line = TRUE)
 
-###################################################
-### code chunk number 10: pls-manual.Rnw:406-407 (eval = FALSE)
-###################################################
-## plot(gas1, ncomp = 2, asp = 1, line = TRUE)
-
-
-###################################################
-### code chunk number 11: pls-manual.Rnw:413-415
-###################################################
+## ----fig-cvpreds, echo=FALSE, fig.width=3.5, fig.height=3.7, fig.cap="Cross-validated predictions for the gasoline data"----
 par(mar = c(4, 4, 2.5, 1) + 0.1)
 plot(gas1, ncomp = 2, asp = 1, line = TRUE)
 
+## ----plot-scores-code, eval=FALSE---------------------------------------------
+# plot(gas1, plottype = "scores", comps = 1:3)
 
-###################################################
-### code chunk number 12: pls-manual.Rnw:429-430 (eval = FALSE)
-###################################################
-## plot(gas1, plottype = "scores", comps = 1:3)
-
-
-###################################################
-### code chunk number 13: pls-manual.Rnw:435-436
-###################################################
+## ----fig-scores, echo=FALSE, fig.cap="Score plot for the gasoline data"-------
 plot(gas1, plottype = "scores", comps = 1:3)
 
+## ----explvar------------------------------------------------------------------
+explvar(gas1)
 
-###################################################
-### code chunk number 14: pls-manual.Rnw:444-448
-###################################################
+## ----fig-loadings, fig.cap="Loading plot for the gasoline data", fig.height=2.5----
 par(mar = c(4, 4, 0.3, 1) + 0.1)
 plot(gas1, "loadings", comps = 1:2, legendpos = "topleft",
      labels = "numbers", xlab = "nm")
 abline(h = 0)
 
+## ----fig-scores-cv, fig.cap="Calibrated and cross-validated score plots for the gasoline data", fig.height=2.5, fig.width=5----
+par.old <- par(mfrow=c(1,2))
+scoreplot(gas1)
+scoreplot(gas1, estimate="CV")
+par(par.old)
 
-###################################################
-### code chunk number 15: pls-manual.Rnw:462-463
-###################################################
-explvar(gas1)
-
-
-###################################################
-### code chunk number 16: pls-manual.Rnw:469-472 (eval = FALSE)
-###################################################
-## plot(gas1, "loadings", comps = 1:2, legendpos = "topleft",
-##      labels = "numbers", xlab = "nm")
-## abline(h = 0)
-
-
-###################################################
-### code chunk number 17: pls-manual.Rnw:481-482
-###################################################
+## ----predict------------------------------------------------------------------
 predict(gas1, ncomp = 2, newdata = gasTest)
 
-
-###################################################
-### code chunk number 18: pls-manual.Rnw:486-487
-###################################################
+## ----rmsep-test---------------------------------------------------------------
 RMSEP(gas1, newdata = gasTest)
 
-
-###################################################
-### code chunk number 19: pls-manual.Rnw:587-588
-###################################################
+## ----dens1--------------------------------------------------------------------
 dens1 <- plsr(density ~ NIR, ncomp = 5, data = yarn)
 
-
-###################################################
-### code chunk number 20: pls-manual.Rnw:592-594
-###################################################
+## ----olive1-------------------------------------------------------------------
 dim(oliveoil$sensory)
 plsr(sensory ~ chemical, data = oliveoil)
 
-
-###################################################
-### code chunk number 21: pls-manual.Rnw:615-617
-###################################################
+## ----update-------------------------------------------------------------------
 trainind <- which(yarn$train == TRUE)
 dens2 <- update(dens1, subset = trainind)
 
-
-###################################################
-### code chunk number 22: pls-manual.Rnw:621-622
-###################################################
+## ----update2------------------------------------------------------------------
 dens3 <- update(dens1, ncomp = 10)
 
-
-###################################################
-### code chunk number 23: pls-manual.Rnw:652-653
-###################################################
+## ----olive2-------------------------------------------------------------------
 olive1 <- plsr(sensory ~ chemical, scale = TRUE, data = oliveoil)
 
-
-###################################################
-### code chunk number 24: pls-manual.Rnw:658-659
-###################################################
+## ----gas2---------------------------------------------------------------------
 gas2 <- plsr(octane ~ msc(NIR), ncomp = 10, data = gasTrain)
 
+## ----predict-gas2, eval=FALSE-------------------------------------------------
+# predict(gas2, ncomp = 3, newdata = gasTest)
 
-###################################################
-### code chunk number 25: pls-manual.Rnw:664-665 (eval = FALSE)
-###################################################
-## predict(gas2, ncomp = 3, newdata = gasTest)
+## ----selectNcomp-code, eval=FALSE---------------------------------------------
+# ncomp.onesigma <- selectNcomp(gas2, method = "onesigma", plot = TRUE,
+#                               ylim = c(.18, .6))
+# ncomp.permut <- selectNcomp(gas2, method = "randomization", plot = TRUE,
+#                             ylim = c(.18, .6))
 
-
-###################################################
-### code chunk number 26: pls-manual.Rnw:717-721 (eval = FALSE)
-###################################################
-## ncomp.onesigma <- selectNcomp(gas2, method = "onesigma", plot = TRUE,
-##                               ylim = c(.18, .6))
-## ncomp.permut <- selectNcomp(gas2, method = "randomization", plot = TRUE,
-##                             ylim = c(.18, .6))
-
-
-###################################################
-### code chunk number 27: pls-manual.Rnw:735-740
-###################################################
+## ----fig-NComp, echo=FALSE, fig.height=4.5, fig.width=10, fig.cap="The two strategies for suggesting optimal model dimensions: the left plot shows the one-sigma strategy, the right plot the permutation strategy."----
 par(mfrow = c(1,2))
 ncomp.onesigma <- selectNcomp(gas1, "onesigma", plot = TRUE,
                               ylim = c(.18, .6))
 ncomp.permut <- selectNcomp(gas1, "randomization", plot = TRUE,
                             ylim = c(.18, .6))
 
-
-###################################################
-### code chunk number 28: pls-manual.Rnw:760-763
-###################################################
+## ----crossval-----------------------------------------------------------------
 gas2.cv <- crossval(gas2, segments = 10)
 plot(MSEP(gas2.cv), legendpos="topright")
 summary(gas2.cv, what = "validation")
 
+## ----plot-coef-code, eval=FALSE-----------------------------------------------
+# plot(gas1, plottype = "coef", ncomp=1:3, legendpos = "bottomleft",
+#      labels = "numbers", xlab = "nm")
 
-###################################################
-### code chunk number 29: pls-manual.Rnw:818-820 (eval = FALSE)
-###################################################
-## plot(gas1, plottype = "coef", ncomp=1:3, legendpos = "bottomleft",
-##      labels = "numbers", xlab = "nm")
-
-
-###################################################
-### code chunk number 30: pls-manual.Rnw:824-827
-###################################################
+## ----fig-gascoefs, echo=FALSE, fig.height=3, fig.cap="Regression coefficients for the gasoline data"----
 par(mar = c(4, 4, 2.5, 1) + 0.1)
 plot(gas1, plottype = "coef", ncomp=1:3, legendpos = "bottomleft",
      labels = "numbers", xlab = "nm")
 
-
-###################################################
-### code chunk number 31: pls-manual.Rnw:859-861
-###################################################
+## ----fig-corrplot, echo=FALSE, fig.width=3.5, fig.height=3.4, fig.cap="Correlation loadings plot for the gasoline data"----
 par(mar = c(4, 4, 0, 1) + 0.1)
 plot(gas1, plottype = "correlation")
 
-
-###################################################
-### code chunk number 32: pls-manual.Rnw:930-931
-###################################################
+## ----predict2-----------------------------------------------------------------
 predict(gas1, ncomp = 2:3, newdata = gasTest[1:5,])
 
-
-###################################################
-### code chunk number 33: pls-manual.Rnw:943-944
-###################################################
+## ----predict3-----------------------------------------------------------------
 predict(gas1, comps = 2, newdata = gasTest[1:5,])
 
-
-###################################################
-### code chunk number 34: pls-manual.Rnw:961-962
-###################################################
+## ----predict4-----------------------------------------------------------------
 drop(predict(gas1, ncomp = 2:3, newdata = gasTest[1:5,]))
 
+## ----predplot-code, eval=FALSE------------------------------------------------
+# predplot(gas1, ncomp = 2, newdata = gasTest, asp = 1, line = TRUE)
 
-###################################################
-### code chunk number 35: pls-manual.Rnw:1000-1001 (eval = FALSE)
-###################################################
-## predplot(gas1, ncomp = 2, newdata = gasTest, asp = 1, line = TRUE)
-
-
-###################################################
-### code chunk number 36: pls-manual.Rnw:1007-1009
-###################################################
+## ----fig-testPreds, echo=FALSE, fig.width=3.5, fig.height=3.7, fig.cap="Test set predictions"----
 par(mar = c(4, 4, 2.5, 1))
 predplot(gas1, ncomp = 2, newdata = gasTest, asp = 1, line = TRUE)
 
-
-###################################################
-### code chunk number 37: pls-manual.Rnw:1049-1050
-###################################################
+## ----pls.options--------------------------------------------------------------
 pls.options()
 
-
-###################################################
-### code chunk number 38: pls-manual.Rnw:1056-1057
-###################################################
+## ----pls.options-set----------------------------------------------------------
 pls.options(plsralg = "oscorespls")
 
-
-###################################################
-### code chunk number 39: pls-manual.Rnw:1210-1219
-###################################################
+## ----manual-cv----------------------------------------------------------------
 X <- gasTrain$NIR
 Y <- gasTrain$octane
 ncomp <- 5
@@ -273,10 +159,6 @@ for (i in 1:nrow(X)) {
         fit$Ymeans
 }
 
-
-###################################################
-### code chunk number 40: pls-manual.Rnw:1222-1223
-###################################################
+## ----manual-cv-rmsep----------------------------------------------------------
 sqrt(colMeans((cvPreds - Y)^2))
-
 

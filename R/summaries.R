@@ -21,6 +21,10 @@ print.mvr <- function(x, ...) {
            ana = "Partial least squares regression"
            alg = "orthogonal scores"
          },
+         nipalspls = {
+           ana = "Partial least squares regression"
+           alg = "NIPALS"
+         },
          cppls = {
            ana = "Canonical powered partial least squares"
            alg = "cppls"
@@ -28,6 +32,10 @@ print.mvr <- function(x, ...) {
          svdpc = {
            ana = "Principal component regression"
            alg = "singular value decomposition"
+         },
+         nipalspc = {
+           ana = "Principal component regression"
+           alg = "nipals algorithm"
          },
          stop("Unknown fit method.")
   )
@@ -113,6 +121,11 @@ summary.mvr <- function(object, what = c("all", "validation", "training"),
       print(RMSEP(object), digits = digits, print.gap = print.gap, ...)
     }
   }
+  # Warn if missing data have been removed
+  if(object$nobj < object$nobjOrig){
+    cat("(", object$nobjOrig - object$nobj,
+        " observations deleted due to missingness)\n", sep = "")
+  }
 }
 
 ## Print method for mvrVal objects:
@@ -160,6 +173,9 @@ as.data.frame.mvrVal <- function(x, row.names = NULL, optional = FALSE,
          simpls = {
            alg = "simpls"
          },
+         nipalspls = {
+           alg = "nipalspls"
+         },
          oscorespls = {
            if(shortAlgs)
              alg = "orthScores"
@@ -174,6 +190,9 @@ as.data.frame.mvrVal <- function(x, row.names = NULL, optional = FALSE,
              alg = "svd"
            else
              alg = "singular value decomposition"
+         },
+         nipalspc = {
+           alg = "nipals pca"
          },
          stop("Unknown fit method.")
   )

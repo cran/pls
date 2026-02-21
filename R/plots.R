@@ -135,6 +135,11 @@ plot.mvr <- function(x, plottype = c("prediction", "validation",
 #' @aliases scoreplot scoreplot.default plot.scores loadingplot
 #' loadingplot.default plot.loadings corrplot
 #' @param object an object.  The fitted model.
+#' @param estimate optional character vector passed to \code{scores()} so
+#'   \code{scoreplot()} can request the training, CV or test estimate when
+#'   plotting.
+#' @param newdata optional data frame supplied to \code{scores()} when
+#'   \code{estimate = "test"}.
 #' @param comps integer vector.  The components to plot.
 #' @param scatter logical.  Whether the loadings should be plotted as a scatter
 #' instead of as lines.
@@ -225,13 +230,21 @@ plot.mvr <- function(x, plottype = c("prediction", "validation",
 #' corrplot(mod, comps = 1:3)
 #' }
 #'
+#' # Use of labels in plots and x scales
+#' data(gasoline)
+#' colnames(gasoline$NIR) <- paste(seq(900, 1700, 2), "nm")
+#' gas <- plsr(octane ~ NIR, ncomp = 10, data = gasoline)
+#' loadingplot(gas, labels="numbers")
+#' loadingplot(gas, labels="names")
+#' loadingplot(gas, labels="names", scatter=TRUE)
+#'
 #' @export
 scoreplot <- function(object, ...) UseMethod("scoreplot")
 
 #' @rdname scoreplot
 #' @export
 scoreplot.default <- function(object, comps = 1:2, labels, identify = FALSE,
-                              type = "p", xlab, ylab, ...)
+                              type = "p", xlab, ylab, estimate, newdata, ...)
 {
   ## Check arguments
   nComps <- length(comps)
@@ -246,8 +259,20 @@ scoreplot.default <- function(object, comps = 1:2, labels, identify = FALSE,
     ## Assume this is already a score matrix
     S <- object[,comps, drop = FALSE]
   } else {
-    ## Try to get the scores
-    S <- scores(object)[,comps, drop = FALSE]
+    ## Try to get the scores using the supplied estimate/newdata
+    scoreArgs <- list()
+    if (!missing(estimate)) scoreArgs$estimate <- estimate
+    if (!missing(newdata)) scoreArgs$newdata <- newdata
+    args <- if (length(scoreArgs))
+      c(list(object), scoreArgs)
+    else
+      list(object)
+    scoreObj <- do.call(scores, args)
+    S <- scoreObj[,comps, drop = FALSE]
+    expl_attr <- attr(scoreObj, "explvar")
+    if (!is.null(expl_attr))
+      attr(S, "explvar") <- expl_attr[seq_len(ncol(S))]
+    class(S) <- class(scoreObj)
     if (is.null(S))
       stop("`", deparse(substitute(object)), "' has no scores.")
   }
@@ -262,7 +287,7 @@ scoreplot.default <- function(object, comps = 1:2, labels, identify = FALSE,
     labels <- as.character(labels)
     type <- "n"
   }
-  varlab <- compnames(object, comps, explvar = TRUE)
+  varlab <- compnames(S, comps, explvar = TRUE)
   if (nComps <= 2) {
     if (nComps == 1) {
       ## One component versus index
@@ -1433,7 +1458,7 @@ biplot.mvr <- function(x, comps = 1:2,
     mc$xlabs <- rep("o", nrow(objects))
   if (!missing(ylabs) && isFALSE(ylabs))
     mc$ylabs <- rep("o", nrow(vars))
-  mc[[1]] <- as.name("biplot")
+  mc[[1]] <- quote(biplot)
   ## Evaluate the call:
   eval(mc, parent.frame())
 }
